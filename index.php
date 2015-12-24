@@ -45,6 +45,6 @@ function get_instance(){
 
 // get application base url
 function base_url(){
-    $__base_dir = explode('/', strrev(trim(__DIR__, '/')));
-    return 'http' . (isset($_SERVER["HTTPS"]) == 'on' ? $_SERVER["HTTPS"] == 'on' ? 's' : '' : '') . '://' . $_SERVER['HTTP_HOST'] . '/' . trim(strrev($__base_dir[0]), '/') . '/';
+    $base_dir = explode('/', strrev(trim(__DIR__, '/')));
+    return 'http' . (isset($_SERVER["HTTPS"]) == 'on' ? $_SERVER["HTTPS"] == 'on' ? 's' : '' : '') . '://' . $_SERVER['HTTP_HOST'] . '/' . trim(strrev($base_dir[0])) . '/';
 }

@@ -12,6 +12,7 @@ class Testing {
 
         //echo Encryption::encode('Text to encrypt', 'ENCRYPT KEY');
         echo lang('home');
+        echo base_url();
     }
 
 }
