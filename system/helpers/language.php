@@ -6,8 +6,8 @@
  */
 
 function lang($key){
-    global $___lang;
-    if(isset($___lang[$key])){
-        return $___lang[$key];
+    global $lang;
+    if(isset($lang[$key])){
+        return $lang[$key];
     }
 }

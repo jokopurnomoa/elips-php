@@ -70,6 +70,7 @@ class Loader {
 
     public static function loadLanguage($language){
         if(file_exists(APP_PATH . 'lang/' . $language . '/' . $language . '_lang.php')){
+            global $lang;
             require APP_PATH . 'lang/' . $language . '/' . $language . '_lang.php';
         } elseif(file_exists(SYSTEM_PATH . 'lang/' . $language . '/' . $language . '_lang.php')){
             require SYSTEM_PATH . 'lang/' . $language . '/' . $language . '_lang.php';

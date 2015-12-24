@@ -43,14 +43,7 @@ class Core {
         if(isset($autoload['languages'])){
             if($autoload['languages'] != null){
                 foreach($autoload['languages'] as $language){
-                    if(file_exists(APP_PATH . 'lang/' . $language . '/' . $language . '_lang.php')){
-                        $lang = null;
-                        require(APP_PATH . 'lang/' . $language . '/' . $language . '_lang.php');
-                        global $___lang;
-                        $___lang = $lang;
-                    } else {
-                        errorDump('File \'' . APP_PATH . 'lang/' . $language . '/' . $language . '_lang.php\' not found!');die();
-                    }
+                    Loader::loadLanguage($language);
                 }
             }
         }

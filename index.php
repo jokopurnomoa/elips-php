@@ -17,8 +17,8 @@ define('SYSTEM_PATH', 'system/');
 // Path to the application folder
 define('APP_PATH', 'app/');
 
-$___instance = null;
-$___lang = null;
+$instance = null;
+$lang = null;
 
 if(ENVIRONTMENT === 'development'){
     error_reporting(E_ALL);
@@ -34,13 +34,13 @@ if(ENVIRONTMENT === 'development'){
 require SYSTEM_PATH . 'base/Core.php';
 
 // instantiate core class
-$___instance = new Core();
-$___instance->run();
+$instance = new Core();
+$instance->run();
 
 // get core class instance
-function __getInstance(){
-    global $___instance;
-    return $___instance;
+function get_instance(){
+    global $instance;
+    return $instance;
 }
 
 // get application base url

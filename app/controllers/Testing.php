@@ -11,7 +11,7 @@ class Testing {
     public function index(){
 
         //echo Encryption::encode('Text to encrypt', 'ENCRYPT KEY');
-
+        echo lang('home');
     }
 
 }
