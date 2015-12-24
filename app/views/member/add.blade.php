@@ -39,7 +39,7 @@
                             <h3 class="box-title">Add Member</h3>
                         </div><!-- /.box-header -->
                         <!-- form start -->
-                        <form class="form-horizontal">
+                        <form class="form-horizontal" method="post" action="{{base_url()}}member/add_member" enctype="multipart/form-data">
                             <div class="box-body">
                                 <div class="form-group">
                                     <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
@@ -53,6 +53,12 @@
                                         <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                                                    <label for="inputPassword3" class="col-sm-2 control-label">Image</label>
+                                                                    <div class="col-sm-5">
+                                                                        <input type="file" name="image">
+                                                                    </div>
+                                                                </div>
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">
                                         <div class="checkbox">

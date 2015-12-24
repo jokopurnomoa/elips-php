@@ -16,4 +16,19 @@ class Member extends Base {
         Blade::render('member/add', $this->data);
     }
 
+    public function add_member(){
+        Loader::loadLibrary('Upload');
+
+        Upload::setConfig(array(
+            'upload_path' => '/storage',
+            'filename' => 'test_image'
+        ));
+
+        if(Upload::doUpload('image')){
+            echo 'Success uploading file';
+        }
+
+        echo Upload::getError();
+    }
+
 }
