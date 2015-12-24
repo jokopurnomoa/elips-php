@@ -37,18 +37,22 @@ class SessionFile {
             self::$session_max_size = $config['session']['max_size'];
         }
 
+        self::generateSession();
+
         if(time() - self::get('DATE_CREATED') > self::$session_expire){
 
         }
     }
 
     private static function generateSession(){
-        $session_id = $_SERVER['REMOTE_ADDR'] . self::$seperator . $_SERVER['HTTP_USER_AGENT'] . self::$seperator . $_SERVER['SERVER_ADDR'] . self::$seperator . $_SERVER['REQUEST_TIME_FLOAT'] . self::$seperator . md5(rand(9, 999999999));
-        self::$session_id = Encryption::encode($session_id, self::$session_key);
-        setcookie(self::$session_name, self::$session_id, time() + self::$session_expire);
-        self::set('DATE_CREATED', time());
-        self::set('LAST_ACTIVITY', time());
-        return self::$session_id;
+        if(!isset($_COOKIE[self::$session_name])) {
+            $session_id = $_SERVER['REMOTE_ADDR'] . self::$seperator . $_SERVER['HTTP_USER_AGENT'] . self::$seperator . $_SERVER['REQUEST_TIME_FLOAT'] . self::$seperator . md5(rand(9, 999999999));
+            self::$session_id = Encryption::encode($session_id, self::$session_key);
+            setcookie(self::$session_name, self::$session_id, time() + self::$session_expire);
+            self::set('DATE_CREATED', time());
+            self::set('LAST_ACTIVITY', time());
+            return self::$session_id;
+        }
     }
 
     private static function getSessionID(){
@@ -106,12 +110,6 @@ class SessionFile {
 
     public static function set($key, $value){
         $session_id = self::getSessionID();
-        if($session_id == null){
-            $session_id = self::generateSession();
-            if($session_id != null){
-                $session_id = Encryption::decode($session_id, self::$session_key);
-            }
-        }
 
         if($session_id != null){
             $session_id = sha1($session_id);
