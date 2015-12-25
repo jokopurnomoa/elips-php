@@ -15,6 +15,7 @@ class Testing {
         //echo base_url();
         //Session::set('name', 'Joko');
         //echo Session::get('name');
+        /*
         Loader::loadLibrary('ImageLib');
         ImageLib::setConfig(array(
             'source_image' => './storage/the-lorax-2.jpg',
@@ -25,6 +26,7 @@ class Testing {
         ));
 
         ImageLib::resize();
+        */
     }
 
 }
