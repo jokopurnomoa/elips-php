@@ -3,7 +3,7 @@
 class Dashboard extends Base {
 
     public function index(){
-        require APP_PATH . 'external/example.php';
+        require PROJECT_PATH . 'vendor/Example/example.php';
 
         $this->data['execution_time'] = Benchmark::getTime('execution_time');
         Blade::render('dashboard', $this->data);

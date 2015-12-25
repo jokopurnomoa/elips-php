@@ -11,6 +11,9 @@
 // Set application environtment
 define('APP_ENV', 'development');
 
+// Path to the project / current path
+define('PROJECT_PATH', './');
+
 // Path to the system folder
 define('FW_PATH', 'framework/');
 
