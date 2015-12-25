@@ -11,8 +11,9 @@ class Route {
     public static function run(){
         if(file_exists(APP_PATH . 'config/route.php')){
             require_once APP_PATH . 'config/route.php';
-        } else {
-            error_dump('File \'' . APP_PATH . 'config/route.php\' not found');die();
+        } elseif(APP_ENV === 'development') {
+            error_dump('File \'' . APP_PATH . 'config/route.php\' not found');
+            die();
         }
 
         $classname = '';
@@ -76,7 +77,7 @@ class Route {
                                     }
                                 }
                             }
-                        } else {
+                        } elseif(APP_ENV === 'development') {
                             error_dump('Routing error!');die();
                         }
                     }

@@ -20,7 +20,10 @@ class Loader {
                 $library::init();
             }
         } else {
-            error_dump('File \'' . APP_PATH . 'libraries/' . $library . '.php\' not found!');die();
+            if(APP_ENV === 'development') {
+                error_dump('File \'' . APP_PATH . 'libraries/' . $library . '.php\' not found!');
+                die();
+            }
         }
     }
 
@@ -31,7 +34,10 @@ class Loader {
                 $model::init();
             }
         } else {
-            error_dump('File \'' . APP_PATH . 'models/' . $model . '.php\' not found!');die();
+            if(APP_ENV === 'development') {
+                error_dump('File \'' . APP_PATH . 'models/' . $model . '.php\' not found!');
+                die();
+            }
         }
     }
 
@@ -54,7 +60,10 @@ class Loader {
                 echo $buffer;
             }
         } else {
-            error_dump('File \'' . APP_PATH . 'views/' . $view . '.php\' not found!');die();
+            if(APP_ENV === 'development') {
+                error_dump('File \'' . APP_PATH . 'views/' . $view . '.php\' not found!');
+                die();
+            }
         }
     }
 
@@ -64,7 +73,10 @@ class Loader {
         } elseif(file_exists(FW_PATH . 'helpers/' . $helper . '.php')){
             require FW_PATH . 'helpers/' . $helper . '.php';
         } else {
-            error_dump('File \'' . APP_PATH . 'helpers/' . $helper . '.php\' not found!');die();
+            if(APP_ENV === 'development') {
+                error_dump('File \'' . APP_PATH . 'helpers/' . $helper . '.php\' not found!');
+                die();
+            }
         }
     }
 
@@ -75,7 +87,10 @@ class Loader {
         } elseif(file_exists(FW_PATH . 'lang/' . $language . '/' . $language . '_lang.php')){
             require FW_PATH . 'lang/' . $language . '/' . $language . '_lang.php';
         } else {
-            error_dump('File \'' . APP_PATH . 'helpers/' . $language . '.php\' not found!');die();
+            if(APP_ENV === 'development') {
+                error_dump('File \'' . APP_PATH . 'helpers/' . $language . '.php\' not found!');
+                die();
+            }
         }
     }
 

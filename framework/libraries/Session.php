@@ -16,7 +16,7 @@ class Session {
         if(file_exists(APP_PATH . 'config/app.php')){
             require(APP_PATH . 'config/app.php');
             self::$config = $config;
-        } else {
+        } elseif(APP_ENV === 'development') {
             error_dump('File \'' . APP_PATH . 'config/app.php\' not found!');die();
         }
 
@@ -24,7 +24,7 @@ class Session {
             require_once('SessionDriver/SessionFile.php');
             self::$session_driver = new SessionFile();
             self::$session_driver->init(self::$config);
-        } else {
+        } elseif(APP_ENV === 'development') {
             error_dump('Session Driver \'' . self::$config['session']['driver'] . '\' not avaiable.');die();
         }
     }

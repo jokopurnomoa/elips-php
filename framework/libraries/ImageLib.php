@@ -52,10 +52,10 @@ class ImageLib {
             if(file_exists($source_image_path)){
                 if(self::$image_library === 'gd2'){
                     self::resizeGD2($source_image_path, $source_new_image_path);
-                } else {
+                } elseif(APP_ENV === 'development') {
                     error_dump('Image library not supported!');die();
                 }
-            } else {
+            } elseif(APP_ENV === 'development') {
                 error_dump('File \''.self::$source_image.'\' not found!');
             }
         }
@@ -75,7 +75,7 @@ class ImageLib {
             $source = imagecreatefromgif($source_image_path);
         } elseif($ext == 'bmp'){
             $source = imagecreatefromwbmp($source_image_path);
-        } else {
+        } elseif(APP_ENV === 'development') {
             error_dump('Image format not supported!');die();
         }
 

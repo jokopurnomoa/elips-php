@@ -165,7 +165,10 @@ class Blade {
                 echo $__buffer;
             }
         } else {
-            error_dump('Blade : File \'' . APP_PATH . 'views/' . $view . '.blade.php\' not found!');die();
+            if(APP_ENV === 'development') {
+                error_dump('Blade : File \'' . APP_PATH . 'views/' . $view . '.blade.php\' not found!');
+                die();
+            }
         }
         return null;
     }
