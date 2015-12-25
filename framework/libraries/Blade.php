@@ -165,7 +165,7 @@ class Blade {
                 echo $__buffer;
             }
         } else {
-            errorDump('Blade : File \'' . APP_PATH . 'views/' . $view . '.blade.php\' not found!');die();
+            error_dump('Blade : File \'' . APP_PATH . 'views/' . $view . '.blade.php\' not found!');die();
         }
         return null;
     }

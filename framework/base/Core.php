@@ -30,7 +30,7 @@ class Core {
         if(file_exists(APP_PATH . 'config/autoload.php')){
             require(APP_PATH . 'config/autoload.php');
         } else {
-            errorDump('File \'' . APP_PATH . 'config/autoload.php\' not found!');die();
+            error_dump('File \'' . APP_PATH . 'config/autoload.php\' not found!');die();
         }
 
         $this->autoloadLanguage($autoload);

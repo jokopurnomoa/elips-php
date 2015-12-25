@@ -15,7 +15,7 @@ class Database {
         if(file_exists(APP_PATH . 'config/database.php')){
             require APP_PATH . 'config/database.php';
         } else {
-            errorDump('File \'' . APP_PATH . 'config/database.php\' not found!');die();
+            error_dump('File \'' . APP_PATH . 'config/database.php\' not found!');die();
         }
 
         if($config['db']['main']['driver'] == 'mysqli'){
@@ -24,7 +24,7 @@ class Database {
             self::$db_driver->init($config['db']['main']);
             self::$db_driver->connect();
         } else {
-            errorDump('Database Driver \'' . $config['db']['main']['driver'] . '\' not avaiable.');die();
+            error_dump('Database Driver \'' . $config['db']['main']['driver'] . '\' not avaiable.');die();
         }
     }
 

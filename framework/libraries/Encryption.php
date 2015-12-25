@@ -18,17 +18,17 @@ class Encryption {
         if(file_exists(APP_PATH . 'config/app.php')){
             require APP_PATH . 'config/app.php';
         } else {
-            errorDump('File \'' . APP_PATH . 'config/app.php\' not found!');die();
+            error_dump('File \'' . APP_PATH . 'config/app.php\' not found!');die();
         }
 
         if(isset($config['encryption_key'])){
             if($config['encryption_key'] != ''){
                 self::$key_std = $config['encryption_key'];
             } else {
-                errorDump('Encryption key not yet set in \'' . APP_PATH . 'config/app.php\'!');die();
+                error_dump('Encryption key not yet set in \'' . APP_PATH . 'config/app.php\'!');die();
             }
         } else {
-            errorDump('Encryption key not yet set in \'' . APP_PATH . 'config/app.php\'!');die();
+            error_dump('Encryption key not yet set in \'' . APP_PATH . 'config/app.php\'!');die();
         }
     }
 

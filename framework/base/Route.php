@@ -12,7 +12,7 @@ class Route {
         if(file_exists(APP_PATH . 'config/route.php')){
             require_once APP_PATH . 'config/route.php';
         } else {
-            errorDump('File \'' . APP_PATH . 'config/route.php\' not found');die();
+            error_dump('File \'' . APP_PATH . 'config/route.php\' not found');die();
         }
 
         $classname = '';
@@ -32,7 +32,7 @@ class Route {
                         if(file_exists(APP_PATH . 'controllers/' . $route['root_controller'] . '.php')){
                             require_once APP_PATH . 'controllers/' . $route['root_controller'] . '.php';
                         } elseif(APP_ENV === 'development'){
-                            errorDump('File \'' . APP_PATH . 'controllers/' . $route['root_controller'] . '.php\' not found');die();
+                            error_dump('File \'' . APP_PATH . 'controllers/' . $route['root_controller'] . '.php\' not found');die();
                         }
                     }
                 }
@@ -77,7 +77,7 @@ class Route {
                                 }
                             }
                         } else {
-                            errorDump('Routing error!');die();
+                            error_dump('Routing error!');die();
                         }
                     }
                 } elseif(isset($route['default_controller'])){
@@ -98,7 +98,7 @@ class Route {
                 $class = new $classname();
                 $class->$methodname();
             } elseif(APP_ENV === 'development'){
-                errorDump('File \'' . APP_PATH . 'controllers/' . $classname . '.php\' not found');die();
+                error_dump('File \'' . APP_PATH . 'controllers/' . $classname . '.php\' not found');die();
             }
         }
     }
