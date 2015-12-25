@@ -9,10 +9,10 @@
  */
 
 // Set application environtment
-define('ENVIRONTMENT', 'development');
+define('APP_ENV', 'development');
 
 // Path to the system folder
-define('SYSTEM_PATH', 'system/');
+define('FW_PATH', 'framework/');
 
 // Path to the application folder
 define('APP_PATH', 'app/');
@@ -20,10 +20,10 @@ define('APP_PATH', 'app/');
 $instance = null;
 $lang = null;
 
-if(ENVIRONTMENT === 'development'){
+if(APP_ENV === 'development'){
     error_reporting(E_ALL);
     ini_set('display_errors', 'on');
-} elseif(ENVIRONTMENT === 'testing' || ENVIRONTMENT === 'production'){
+} elseif(APP_ENV === 'testing' || APP_ENV === 'production'){
     error_reporting(0);
     ini_set('display_errors', 'off');
 } else {
@@ -31,7 +31,7 @@ if(ENVIRONTMENT === 'development'){
 }
 
 // get core class
-require SYSTEM_PATH . 'base/Core.php';
+require FW_PATH . 'base/Core.php';
 
 // instantiate core class
 $instance = new Core();

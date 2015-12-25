@@ -9,10 +9,10 @@
 class Core {
 
     public function run(){
-        require SYSTEM_PATH . 'helpers/error.php';
-        require SYSTEM_PATH . 'libraries/URI.php';
-        require SYSTEM_PATH . 'libraries/Benchmark.php';
-        require SYSTEM_PATH . 'libraries/Encryption.php';
+        require FW_PATH . 'helpers/error.php';
+        require FW_PATH . 'libraries/URI.php';
+        require FW_PATH . 'libraries/Benchmark.php';
+        require FW_PATH . 'libraries/Encryption.php';
 
         require 'Loader.php';
         require 'Route.php';

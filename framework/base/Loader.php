@@ -14,8 +14,8 @@ class Loader {
             if(method_exists($library, 'init')) {
                 $library::init();
             }
-        } elseif(file_exists(SYSTEM_PATH . 'libraries/' . $library . '.php')){
-            require SYSTEM_PATH . 'libraries/' . $library . '.php';
+        } elseif(file_exists(FW_PATH . 'libraries/' . $library . '.php')){
+            require FW_PATH . 'libraries/' . $library . '.php';
             if(method_exists($library, 'init')) {
                 $library::init();
             }
@@ -61,8 +61,8 @@ class Loader {
     public static function loadHelper($helper){
         if(file_exists(APP_PATH . 'helpers/' . $helper . '.php')){
             require APP_PATH . 'helpers/' . $helper . '.php';
-        } elseif(file_exists(SYSTEM_PATH . 'helpers/' . $helper . '.php')){
-            require SYSTEM_PATH . 'helpers/' . $helper . '.php';
+        } elseif(file_exists(FW_PATH . 'helpers/' . $helper . '.php')){
+            require FW_PATH . 'helpers/' . $helper . '.php';
         } else {
             errorDump('File \'' . APP_PATH . 'helpers/' . $helper . '.php\' not found!');die();
         }
@@ -72,8 +72,8 @@ class Loader {
         if(file_exists(APP_PATH . 'lang/' . $language . '/' . $language . '_lang.php')){
             global $lang;
             require APP_PATH . 'lang/' . $language . '/' . $language . '_lang.php';
-        } elseif(file_exists(SYSTEM_PATH . 'lang/' . $language . '/' . $language . '_lang.php')){
-            require SYSTEM_PATH . 'lang/' . $language . '/' . $language . '_lang.php';
+        } elseif(file_exists(FW_PATH . 'lang/' . $language . '/' . $language . '_lang.php')){
+            require FW_PATH . 'lang/' . $language . '/' . $language . '_lang.php';
         } else {
             errorDump('File \'' . APP_PATH . 'helpers/' . $language . '.php\' not found!');die();
         }
