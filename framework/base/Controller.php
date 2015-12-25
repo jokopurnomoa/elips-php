@@ -12,7 +12,7 @@ class Controller {
     var $instance;
 
     public function __construct(){
-        $this->instance = __getInstance();
+        $this->instance = get_instance();
     }
 
 }
