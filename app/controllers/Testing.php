@@ -30,11 +30,11 @@ class Testing extends Base {
         //Loader::loadLibrary('Cookies');
 
         //Cookies::set('example', 'Content');
-        Encryption::decode('');
+        //Encryption::decode('');
 
         $this->data['var1'] = 'John';
         $this->data['page'] = '{{$var1}}';
-        Blade::render('testing', $this->data);
+        //Blade::render('testing', $this->data);
     }
 
 }

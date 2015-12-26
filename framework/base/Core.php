@@ -29,11 +29,9 @@ class Core {
         $autoload = null;
         if(file_exists(APP_PATH . 'config/autoload.php')){
             require(APP_PATH . 'config/autoload.php');
-        } else {
-            if(APP_ENV === 'development') {
-                error_dump('File \'' . APP_PATH . 'config/autoload.php\' not found!');
-                die();
-            }
+        } elseif(APP_ENV === 'development') {
+            error_dump('File \'' . APP_PATH . 'config/autoload.php\' not found!');
+            die();
         }
 
         $this->autoloadLanguage($autoload);

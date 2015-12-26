@@ -22,7 +22,7 @@ $autoload['libraries'] = array('Database', 'Session');
  *
  */
 
-$autoload['models'] = array('MemberModel');
+$autoload['models'] = array();
 
 
 /**
