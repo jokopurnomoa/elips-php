@@ -32,12 +32,18 @@ class Testing extends Base {
         //Cookies::set('example', 'Content');
         //Encryption::decode('');
 
-        $this->data['var1'] = 'John';
-        $this->data['page'] = '{{$var1}}';
-        Session::set('data', $this->data);
+        //$this->data['var1'] = 'John';
+        //$this->data['page'] = '{{$var1}}';
+        //Session::set('data', $this->data);
 
-        print_r(Session::get('data'));
+        //print_r(Session::get('data'));
         //Blade::render('testing', $this->data);
+
+        Loader::loadLibrary('Security');
+        //Security::generateCSRFToken('f1');
+
+        //echo Security::getCSRFToken('f1');
+        //echo Security::xssFilter('Hello!~!@#$%^&*()_+;\' a " a " "');
     }
 
 }
