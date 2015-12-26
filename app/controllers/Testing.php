@@ -34,6 +34,9 @@ class Testing extends Base {
 
         $this->data['var1'] = 'John';
         $this->data['page'] = '{{$var1}}';
+        Session::set('data', $this->data);
+
+        print_r(Session::get('data'));
         //Blade::render('testing', $this->data);
     }
 
