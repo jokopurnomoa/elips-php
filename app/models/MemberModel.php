@@ -9,4 +9,8 @@ class MemberModel extends Model {
         parent::setFieldId('member_id');
     }
 
+    public static function getAll($where = null, $order = null, $limit = null){
+        return Database::getAll(MemberModel::$table, $where, $order, $limit);
+    }
+
 }

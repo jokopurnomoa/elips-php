@@ -37,10 +37,6 @@ class Database {
         return self::$db_driver->escape($string);
     }
 
-    public static function realEscape($string){
-        return self::$db_driver->realEscape($string);
-    }
-
     public static function getCountQuery($sql){
         return self::$db_driver->getCountQuery($sql);
     }

@@ -49,8 +49,4 @@ class Model {
         return Database::escape($string);
     }
 
-    public static function realEscape($string){
-        return Database::realEscape($string);
-    }
-
 }

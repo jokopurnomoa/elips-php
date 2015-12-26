@@ -33,10 +33,6 @@ class MySQLiDriver {
     }
 
     public function escape($string){
-        return mysqli_escape_string($this->link, $string);
-    }
-
-    public function realEscape($string){
         return mysqli_real_escape_string($this->link, $string);
     }
 
@@ -52,9 +48,9 @@ class MySQLiDriver {
             $_i = 0;
             foreach($where as $key => $val){
                 if($_i == 0){
-                    $sql .= " $key = '$val' ";
+                    $sql .= " $key = '" . $this->escape($val) . "' ";
                 } else {
-                    $sql .= " AND $key = '$val' ";
+                    $sql .= " AND $key = '" . $this->escape($val) . "' ";
                 }
 
                 $_i++;
@@ -87,9 +83,9 @@ class MySQLiDriver {
             $_i = 0;
             foreach($where as $key => $val){
                 if($_i == 0){
-                    $sql .= " $key = '$val' ";
+                    $sql .= " $key = '" . $this->escape($val) . "' ";
                 } else {
-                    $sql .= " AND $key = '$val' ";
+                    $sql .= " AND $key = '" . $this->escape($val) . "' ";
                 }
 
                 $_i++;
@@ -139,9 +135,9 @@ class MySQLiDriver {
             $_i = 0;
             foreach($where as $key => $val){
                 if($_i == 0){
-                    $sql .= " $key = '$val' ";
+                    $sql .= " $key = '" . $this->escape($val) . "' ";
                 } else {
-                    $sql .= " AND $key = '$val' ";
+                    $sql .= " AND $key = '" . $this->escape($val) . "' ";
                 }
 
                 $_i++;
@@ -184,9 +180,9 @@ class MySQLiDriver {
             $_i = 0;
             foreach($where as $key => $val){
                 if($_i == 0){
-                    $sql .= " $key = '$val' ";
+                    $sql .= " $key = '" . $this->escape($val) . "' ";
                 } else {
-                    $sql .= " AND $key = '$val' ";
+                    $sql .= " AND $key = '" . $this->escape($val) . "' ";
                 }
 
                 $_i++;
@@ -236,9 +232,9 @@ class MySQLiDriver {
             $_i = 0;
             foreach($where as $key => $val){
                 if($_i == 0){
-                    $sql .= " $key = '$val' ";
+                    $sql .= " $key = '" . $this->escape($val) . "' ";
                 } else {
-                    $sql .= " AND $key = '$val' ";
+                    $sql .= " AND $key = '" . $this->escape($val) . "' ";
                 }
 
                 $_i++;
@@ -279,10 +275,10 @@ class MySQLiDriver {
             foreach($data as $key => $val){
                 if($_i == 0){
                     $_fields .= $key;
-                    $_values .= '\'' . $val . '\'';
+                    $_values .= '\'' . " . $this->escape($val) . " . '\'';
                 } else {
                     $_fields .= ',' . $key;
-                    $_values .= ',\'' . $val . '\'';
+                    $_values .= ',\'' . " . $this->escape($val) . " . '\'';
                 }
 
                 $_i++;
@@ -306,14 +302,14 @@ class MySQLiDriver {
             $_i = 0;
             foreach($data as $key => $val){
                 if($_i == 0){
-                    $sql .= "$key = '$val' ";
+                    $sql .= "$key = '" . $this->escape($val) . "' ";
                 } else {
-                    $sql .= ",$key = '$val' ";
+                    $sql .= ",$key = '" . $this->escape($val) . "' ";
                 }
 
                 $_i++;
             }
-            $sql .= " WHERE $field = '$id' ";
+            $sql .= " WHERE $field = '" . $this->escape($id) . "' ";
             return $this->updateQuery($sql);
         }
         return false;
@@ -325,12 +321,12 @@ class MySQLiDriver {
     }
 
     public function delete($table, $field, $id){
-        $sql = "DELETE FROM $table WHERE $field = '$id' LIMIT 1";
+        $sql = "DELETE FROM $table WHERE $field = '" . $this->escape($id) . "' LIMIT 1";
         return $this->deleteQuery($sql);
     }
 
     public function deleteAll($table, $field, $id){
-        $sql = "DELETE FROM $table WHERE $field = '$id'";
+        $sql = "DELETE FROM $table WHERE $field = '" . $this->escape($id) . "'";
         return $this->deleteQuery($sql);
     }
 
