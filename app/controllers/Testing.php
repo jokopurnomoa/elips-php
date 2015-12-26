@@ -6,7 +6,7 @@
  * Time: 12:02 PM
  */
 
-class Testing {
+class Testing extends Base {
 
     public function index(){
 
@@ -27,6 +27,9 @@ class Testing {
 
         ImageLib::resize();
         */
+        $this->data['var1'] = 'John';
+        $this->data['page'] = '{{$var1}}';
+        Blade::render('testing', $this->data);
     }
 
 }

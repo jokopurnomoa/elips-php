@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
-    {{$tpl_head}}
+    @include('slices.head')
     <style>
         .title-center{
             text-align: center;
@@ -11,9 +11,8 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
-    {{$tpl_header}}
-
-    {{$tpl_sidebar}}
+    @include('slices.header')
+    @include('slices.sidebar')
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -93,7 +92,7 @@
     <div class="control-sidebar-bg"></div>
 </div><!-- ./wrapper -->
 
-{{$tpl_footer}}
+@include('slices.footer')
 
 <script>
     $(function () {
