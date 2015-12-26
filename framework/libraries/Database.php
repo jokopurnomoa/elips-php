@@ -102,8 +102,8 @@ class Database {
         return self::$db_driver->deleteAll($table, $field, $id);
     }
 
-    public static function startTransaction(){
-        return self::$db_driver->startTransaction();
+    public static function beginTransaction(){
+        return self::$db_driver->beginTransaction();
     }
 
     public static function commit(){

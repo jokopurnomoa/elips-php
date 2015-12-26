@@ -8,36 +8,36 @@
 
 class MySQLiDriver {
 
-    private static $link;
-    private static $config;
-    private static $transaction_status;
+    private $link;
+    private $config;
+    private $transaction_status;
 
-    public static function init($config = null){
-        self::$config = $config;
+    public function init($config = null){
+        $this->config = $config;
     }
 
-    public static function connect(){
-        self::$link = mysqli_connect(self::$config['host'], self::$config['user'], self::$config['pass'], self::$config['db']);
+    public function connect(){
+        $this->link = mysqli_connect($this->config['host'], $this->config['user'], $this->config['pass'], $this->config['db']);
     }
 
-    public static function disconnect(){
-        mysqli_close(self::$link);
+    public function disconnect(){
+        mysqli_close($this->link);
     }
 
-    public static function escape($string){
-        return mysqli_escape_string(self::$link, $string);
+    public function escape($string){
+        return mysqli_escape_string($this->link, $string);
     }
 
-    public static function realEscape($string){
-        return mysqli_real_escape_string(self::$link, $string);
+    public function realEscape($string){
+        return mysqli_real_escape_string($this->link, $string);
     }
 
-    public static function getCountQuery($sql){
-        $query = mysqli_query(self::$link, $sql);
+    public function getCountQuery($sql){
+        $query = mysqli_query($this->link, $sql);
         return mysqli_num_rows($query);
     }
 
-    public static function getCount($table, $where = null, $limit = null){
+    public function getCount($table, $where = null, $limit = null){
         $sql = "SELECT * FROM $table ";
         if($where != null){
             $sql .= " WHERE ";
@@ -56,11 +56,11 @@ class MySQLiDriver {
         if($limit != null){
             $sql .= " LIMIT $limit";
         }
-        return self::getCountQuery($sql);
+        return $this->getCountQuery($sql);
     }
 
-    public static function getAllQuery($sql){
-        $query = mysqli_query(self::$link, $sql);
+    public function getAllQuery($sql){
+        $query = mysqli_query($this->link, $sql);
         if(mysqli_num_rows($query) > 0){
             $result = array();
             while($data = mysqli_fetch_assoc($query)){
@@ -72,7 +72,7 @@ class MySQLiDriver {
         }
     }
 
-    public static function getAll($table, $where = null, $order = null, $limit = null){
+    public function getAll($table, $where = null, $order = null, $limit = null){
         $sql = "SELECT * FROM $table ";
         if($where != null){
             $sql .= " WHERE ";
@@ -106,10 +106,10 @@ class MySQLiDriver {
             $sql .= " LIMIT $limit";
         }
 
-        return self::getAllQuery($sql);
+        return $this->getAllQuery($sql);
     }
 
-    public static function getAllField($table, $field = null, $where = null, $order = null, $limit = null){
+    public function getAllField($table, $field = null, $where = null, $order = null, $limit = null){
         $sql = "SELECT ";
         if($field != null){
             $_i = 0;
@@ -157,11 +157,11 @@ class MySQLiDriver {
         if($limit != null){
             $sql .= " LIMIT $limit";
         }
-        return self::getAllQuery($sql);
+        return $this->getAllQuery($sql);
     }
 
-    public static function getFirstQuery($sql){
-        $query = mysqli_query(self::$link, $sql);
+    public function getFirstQuery($sql){
+        $query = mysqli_query($this->link, $sql);
         if(mysqli_num_rows($query) > 0){
             return (object)mysqli_fetch_assoc($query);
         } else {
@@ -169,7 +169,7 @@ class MySQLiDriver {
         }
     }
 
-    public static function getFirst($table, $where = null, $order = null, $limit = null){
+    public function getFirst($table, $where = null, $order = null, $limit = null){
         $sql = "SELECT * FROM $table ";
         if($where != null){
             $sql .= " WHERE ";
@@ -203,10 +203,10 @@ class MySQLiDriver {
             $sql .= " LIMIT $limit";
         }
 
-        return self::getFirstQuery($sql);
+        return $this->getFirstQuery($sql);
     }
 
-    public static function getFirstField($table, $field = null, $where = null, $order = null, $limit = null){
+    public function getFirstField($table, $field = null, $where = null, $order = null, $limit = null){
         $sql = "SELECT ";
         if($field != null){
             $_i = 0;
@@ -254,15 +254,15 @@ class MySQLiDriver {
         if($limit != null){
             $sql .= " LIMIT $limit";
         }
-        return self::getFirstQuery($sql);
+        return $this->getFirstQuery($sql);
     }
 
-    public static function insertQuery($sql){
-        mysqli_query(self::$link, $sql);
-        return mysqli_affected_rows(self::$link) > 0 ? true : false;
+    public function insertQuery($sql){
+        mysqli_query($this->link, $sql);
+        return mysqli_affected_rows($this->link) > 0 ? true : false;
     }
 
-    public static function insert($table, $data){
+    public function insert($table, $data){
         if($data != null){
             $sql = "INSERT INTO $table ";
             $_i = 0;
@@ -282,17 +282,17 @@ class MySQLiDriver {
             $_fields .= ")";
             $_values .= ")";
             $sql .= $_fields . " VALUES " . $_values;
-            return self::insertQuery($sql);
+            return $this->insertQuery($sql);
         }
         return false;
     }
 
-    public static function updateQuery($sql){
-        mysqli_query(self::$link, $sql);
-        return mysqli_affected_rows(self::$link) > 0 ? true : false;
+    public function updateQuery($sql){
+        mysqli_query($this->link, $sql);
+        return mysqli_affected_rows($this->link) > 0 ? true : false;
     }
 
-    public static function update($table, $field, $id, $data){
+    public function update($table, $field, $id, $data){
         if($data != null && $field != '' && $id != ''){
             $sql = "UPDATE $table SET ";
             $_i = 0;
@@ -306,51 +306,51 @@ class MySQLiDriver {
                 $_i++;
             }
             $sql .= " WHERE $field = '$id' ";
-            return self::updateQuery($sql);
+            return $this->updateQuery($sql);
         }
         return false;
     }
 
-    public static function deleteQuery($sql){
-        mysqli_query(self::$link, $sql);
-        return mysqli_affected_rows(self::$link) > 0 ? true : false;
+    public function deleteQuery($sql){
+        mysqli_query($this->link, $sql);
+        return mysqli_affected_rows($this->link) > 0 ? true : false;
     }
 
-    public static function delete($table, $field, $id){
+    public function delete($table, $field, $id){
         $sql = "DELETE FROM $table WHERE $field = '$id' LIMIT 1";
-        return self::deleteQuery($sql);
+        return $this->deleteQuery($sql);
     }
 
-    public static function deleteAll($table, $field, $id){
+    public function deleteAll($table, $field, $id){
         $sql = "DELETE FROM $table WHERE $field = '$id'";
-        return self::deleteQuery($sql);
+        return $this->deleteQuery($sql);
     }
 
-    public static function startTransaction(){
-        self::$transaction_status = false;
-        return mysqli_autocommit(self::$link, FALSE);
+    public function beginTransaction(){
+        $this->transaction_status = false;
+        return mysqli_autocommit($this->link, FALSE);
     }
 
-    public static function commit(){
-        self::$transaction_status = mysqli_commit(self::$link);
-        mysqli_autocommit(self::$link, TRUE);
-        return self::$transaction_status;
+    public function commit(){
+        $this->transaction_status = mysqli_commit($this->link);
+        mysqli_autocommit($this->link, TRUE);
+        return $this->transaction_status;
     }
 
-    public static function rollback(){
-        return mysqli_rollback(self::$link);
+    public function rollback(){
+        return mysqli_rollback($this->link);
     }
 
-    public static function transactionStatus(){
-        return self::$transaction_status;
+    public function transactionStatus(){
+        return $this->transaction_status;
     }
 
-    public static function insertId(){
-        return mysqli_insert_id(self::$link);
+    public function insertId(){
+        return mysqli_insert_id($this->link);
     }
 
-    public static function affectedRows(){
-        return mysqli_affected_rows(self::$link);
+    public function affectedRows(){
+        return mysqli_affected_rows($this->link);
     }
 
 }
