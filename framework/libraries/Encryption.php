@@ -54,17 +54,26 @@ class Encryption {
         $iv_dec = substr($ciphertext_dec, 0, $iv_size);
         $ciphertext_dec = substr($ciphertext_dec, $iv_size);
 
-        return mcrypt_decrypt(self::$cipher, $key, $ciphertext_dec, self::$mode, $iv_dec);
+        ob_start();
+        echo mcrypt_decrypt(self::$cipher, $key, $ciphertext_dec, self::$mode, $iv_dec);
+        $result = ob_get_contents();
+        @ob_end_clean();
+
+        if(strpos($result, '<b>Warning</b>:  mcrypt_decrypt():') === false){
+            return $result;
+        } elseif(APP_ENV === 'development'){
+            error_dump($result);
+            die();
+        }
+
+        return null;
     }
 
     private static function getKey($key){
         if($key === ''){
-            $key = sha1(self::$key_std);
-        } else {
-            $key = sha1($key);
+            $key = self::$key_std;
         }
-
-        return md5($key);
+        return md5(sha1($key));
     }
 
     public static function setCipher($cipher){

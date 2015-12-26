@@ -5,7 +5,7 @@
  *
  */
 
-$config['session']['name']   = 'ELIPS_PHP_SESS_548fb063b6a54e337c070dc285f3c10c251861a6';
+$config['session']['name']   = 'ELIPS_PHP_SESS';
 $config['session']['driver'] = 'file';
 $config['session']['expire'] = 7200;
 $config['session']['match_ip'] = true;

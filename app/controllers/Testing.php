@@ -27,6 +27,11 @@ class Testing extends Base {
 
         ImageLib::resize();
         */
+        //Loader::loadLibrary('Cookies');
+
+        //Cookies::set('example', 'Content');
+        Encryption::decode('');
+
         $this->data['var1'] = 'John';
         $this->data['page'] = '{{$var1}}';
         Blade::render('testing', $this->data);
