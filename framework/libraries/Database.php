@@ -20,8 +20,7 @@ class Database {
 
         if($config['db']['main']['driver'] == 'mysqli'){
             require 'DBDriver/MySQLi.php';
-            self::$db_driver = new MySQLiDriver();
-            self::$db_driver->init($config['db']['main']);
+            self::$db_driver = new MySQLiDriver($config['db']['main']);
             self::$db_driver->connect();
         } elseif(APP_ENV === 'development') {
             error_dump('Database Driver \'' . $config['db']['main']['driver'] . '\' not avaiable.');die();

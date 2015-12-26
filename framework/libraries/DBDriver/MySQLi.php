@@ -12,6 +12,14 @@ class MySQLiDriver {
     private $config;
     private $transaction_status;
 
+    public function __construct($config = null){
+        $this->config = $config;
+    }
+
+    public function __destruct(){
+        $this->disconnect();
+    }
+
     public function init($config = null){
         $this->config = $config;
     }
