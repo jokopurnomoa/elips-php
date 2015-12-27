@@ -7,7 +7,7 @@ class Member extends Base {
         // Loader::loadLibrary('Session');
         Loader::loadModel('MemberModel');
 
-        $this->data['member_list'] = MemberModel::getAll();
+        $this->data['member_list'] = MemberModel::getAll(null, null, 200);
 
         Blade::render('member/list', $this->data);
     }

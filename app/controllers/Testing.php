@@ -39,11 +39,23 @@ class Testing extends Base {
         //print_r(Session::get('data'));
         //Blade::render('testing', $this->data);
 
-        Loader::loadLibrary('Security');
+        //Loader::loadLibrary('Security');
         //Security::generateCSRFToken('f1');
 
         //echo Security::getCSRFToken('f1');
         //echo Security::xssFilter('Hello!~!@#$%^&*()_+;\' a " a " "');
+
+        $this->data['member_list'] = Cache::getCache('member_list_cache');
+
+        if($this->data['member_list'] == null){
+            echo 'AAA';
+            $sql = "SELECT *, (SELECT COUNT(member_id) FROM gxa_members) AS total_member FROM gxa_members LIMIT 200";
+            $this->data['member_list'] = Database::getAllQuery($sql);
+            Cache::setCache('member_list_cache', $this->data['member_list']);
+        }
+
+        print_r($this->data['member_list']);
+
     }
 
 }

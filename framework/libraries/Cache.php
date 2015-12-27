@@ -10,6 +10,7 @@ class Cache {
     private static $cache_active = false;
     private static $max_cache_size = 1024000;
     private static $cache_encrypt = false;
+    private static $cache_driver;
 
     public static function init(){
         $config = null;
@@ -20,47 +21,23 @@ class Cache {
         }
 
         self::$cache_active = $config['cache']['active'];
+        self::$max_cache_size = $config['cache']['max_size'];
         self::$cache_encrypt = $config['cache']['encrypt'];
+        if($config['cache']['driver'] === 'file'){
+            require 'CacheDriver/CacheFile.php';
+            self::$cache_driver = new CacheFile();
+            self::$cache_driver->cache_active = self::$cache_active;
+            self::$cache_driver->cache_encrypt = self::$cache_encrypt;
+            self::$cache_driver->max_cache_size = self::$max_cache_size;
+        }
     }
 
-    public static function setCache($flag, $data, $max_age = 3600){
-        if(self::$cache_active){
-            $handle = fopen(PROJECT_PATH . 'storage/cache/' . sha1($flag), 'w');
-            $cache = array(
-                'DATE_CREATED' => time(),
-                'MAX_AGE' => $max_age,
-                'DATA' => htmlspecialchars($data)
-            );
-
-            if(self::$cache_encrypt){
-                fwrite($handle, Encryption::encode(json_encode($cache)));
-            } else {
-                fwrite($handle, json_encode($cache));
-            }
-            return fclose($handle);
-        }
-        return false;
+    public static function setCache($flag, $data, $max_age = 60){
+        return self::$cache_driver->setCache($flag, $data, $max_age);
     }
 
     public static function getCache($flag){
-        if(self::$cache_active){
-            if(file_exists(PROJECT_PATH . 'storage/cache/' . sha1($flag))){
-                $handle = fopen(PROJECT_PATH . 'storage/cache/' . sha1($flag), 'r');
-                $cache = fread($handle, self::$max_cache_size);
-                if($cache != null){
-                    if(self::$cache_encrypt) {
-                        $cache = (array)json_decode(Encryption::decode($cache));
-                    } else {
-                        $cache = (array)json_decode($cache);
-                    }
-
-                    if(($cache['DATE_CREATED'] + $cache['MAX_AGE']) > time()){
-                        return htmlspecialchars_decode($cache['DATA']);
-                    }
-                }
-            }
-        }
-        return null;
+        return self::$cache_driver->getCache($flag);
     }
 
 }
