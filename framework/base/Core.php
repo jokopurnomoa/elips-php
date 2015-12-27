@@ -13,7 +13,7 @@ class Core {
         require FW_PATH . 'libraries/URI.php';
         require FW_PATH . 'libraries/Benchmark.php';
         require FW_PATH . 'libraries/Encryption.php';
-        require FW_PATH . 'libraries/CacheControl.php';
+        require FW_PATH . 'libraries/Cache.php';
 
         require 'Loader.php';
         require 'Route.php';
@@ -22,7 +22,7 @@ class Core {
 
         Benchmark::startTime('execution_time');
         Encryption::init();
-        CacheControl::init();
+        Cache::init();
         $this->handleAutoload();
         Route::run();
     }

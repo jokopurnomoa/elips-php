@@ -1,11 +1,11 @@
 <?php
 /**
- * CacheControl library
+ * Cache library
  *
  *
  */
 
-class CacheControl {
+class Cache {
 
     private static $cache_active = false;
     private static $max_cache_size = 1024000;
