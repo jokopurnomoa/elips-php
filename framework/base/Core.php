@@ -10,19 +10,20 @@ class Core {
 
     public function run(){
         require FW_PATH . 'helpers/error.php';
-        require FW_PATH . 'libraries/URI.php';
         require FW_PATH . 'libraries/Benchmark.php';
-        require FW_PATH . 'libraries/Encryption.php';
-        require FW_PATH . 'libraries/Cache.php';
+
+        Benchmark::startTime('execution_time');
 
         require 'Loader.php';
         require 'Route.php';
         require 'Model.php';
         require 'Controller.php';
 
-        Benchmark::startTime('execution_time');
-        Encryption::init();
-        Cache::init();
+        Loader::loadLibrary('Encryption');
+        Loader::loadLibrary('Cache');
+        Loader::loadLibrary('Blade');
+        Loader::loadLibrary('URI');
+
         $this->handleAutoload();
         Route::run();
     }
