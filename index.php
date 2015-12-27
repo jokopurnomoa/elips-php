@@ -58,6 +58,13 @@ function get_instance(){
 
 // get application base url
 function base_url(){
+    global $config;
+    if(isset($config['base_url'])){
+        if($config['base_url'] !== ''){
+            return trim($config['base_url'], '/') . '/';
+        }
+    }
+
     $base_dir = explode('/', strrev(trim(__DIR__, '/')));
     return 'http' . (isset($_SERVER["HTTPS"]) == 'on' ? $_SERVER["HTTPS"] == 'on' ? 's' : '' : '') . '://' . $_SERVER['HTTP_HOST'] . '/' . trim(strrev($base_dir[0])) . '/';
 }
