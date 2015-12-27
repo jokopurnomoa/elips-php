@@ -32,12 +32,12 @@ class Cache {
         }
     }
 
-    public static function setCache($flag, $data, $max_age = 60){
-        return self::$cache_driver->setCache($flag, $data, $max_age);
+    public static function store($flag, $data, $max_age = 60){
+        return self::$cache_driver->store($flag, $data, $max_age);
     }
 
-    public static function getCache($flag){
-        return self::$cache_driver->getCache($flag);
+    public static function get($flag){
+        return self::$cache_driver->get($flag);
     }
 
 }
