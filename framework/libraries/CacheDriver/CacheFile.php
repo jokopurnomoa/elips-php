@@ -13,7 +13,7 @@ class CacheFile {
 
     public function store($flag, $data, $max_age = 60){
         if($this->cache_active){
-            $handle = fopen(PROJECT_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')), 'w');
+            $handle = fopen(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')), 'w');
             $cache = array(
                 'DATE_CREATED' => time(),
                 'MAX_AGE' => $max_age,
@@ -31,8 +31,8 @@ class CacheFile {
 
     public function get($flag){
         if($this->cache_active){
-            if(file_exists(PROJECT_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')))){
-                $handle = fopen(PROJECT_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')), 'r');
+            if(file_exists(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')))){
+                $handle = fopen(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')), 'r');
                 $cache = trim(fread($handle, $this->max_cache_size));
                 if($cache != null){
                     if($this->cache_encrypt) {

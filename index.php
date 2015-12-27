@@ -12,7 +12,7 @@
 define('APP_ENV', 'development');
 
 // Path to the project / current path
-define('PROJECT_PATH', './');
+define('MAIN_PATH', './');
 
 // Path to the system folder
 define('FW_PATH', 'framework/');
