@@ -21,6 +21,7 @@ class Core {
 
         Loader::loadLibrary('Encryption');
         Loader::loadLibrary('Cache');
+        Loader::loadLibrary('View');
         Loader::loadLibrary('Blade');
         Loader::loadLibrary('URI');
 
