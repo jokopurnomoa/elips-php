@@ -9,4 +9,4 @@
 
 $route['default_controller'] = 'Welcome';
 $route['root_controller'] = 'Base';
-$route['404'] = 'Error';
+$route['404'] = '';

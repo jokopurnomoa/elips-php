@@ -15,6 +15,8 @@ class Welcome extends Base {
     }
 
     public function testCache(){
+        Loader::loadLibrary('Database');
+
         $member_list = Cache::get('member_list_cache');
 
         if($member_list == null){
