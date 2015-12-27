@@ -13,13 +13,7 @@ class Cache {
     private static $cache_driver;
 
     public static function init(){
-        $config = null;
-        if(file_exists(APP_PATH . 'config/app.php')){
-            require APP_PATH . 'config/app.php';
-        } elseif(APP_ENV === 'development') {
-            error_dump('File \'' . APP_PATH . 'config/app.php\' not found!');die();
-        }
-
+        global $config;
         self::$cache_active = $config['cache']['active'];
         self::$max_cache_size = $config['cache']['max_size'];
         self::$cache_encrypt = $config['cache']['encrypt'];

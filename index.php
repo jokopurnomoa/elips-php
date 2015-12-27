@@ -33,6 +33,16 @@ if(APP_ENV === 'development'){
     echo 'Application Environtment not set correctly...';die();
 }
 
+// get error helper
+require FW_PATH . 'helpers/error.php';
+
+// get app config
+if(file_exists(APP_PATH . 'config/app.php')){
+    require APP_PATH . 'config/app.php';
+} elseif(APP_ENV === 'development') {
+    error_dump('File \'' . APP_PATH . 'config/app.php\' not found!');die();
+}
+
 // get core class
 require FW_PATH . 'base/Core.php';
 

@@ -12,7 +12,7 @@
  *
  */
 
-$autoload['libraries'] = array('Database', 'Session');
+$autoload['libraries'] = array();
 
 
 /**
@@ -32,7 +32,7 @@ $autoload['models'] = array();
  *
  */
 
-$autoload['helpers'] = array('language');
+$autoload['helpers'] = array();
 
 
 /**
@@ -42,6 +42,6 @@ $autoload['helpers'] = array('language');
  *
  */
 
-$autoload['languages'] = array('en');
+$autoload['languages'] = array();
 
 

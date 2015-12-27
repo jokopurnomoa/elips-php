@@ -13,14 +13,7 @@ class Encryption {
     private static $mode = MCRYPT_MODE_CBC;
 
     public static function init(){
-        $config = null;
-
-        if(file_exists(APP_PATH . 'config/app.php')){
-            require APP_PATH . 'config/app.php';
-        } elseif(APP_ENV === 'development') {
-            error_dump('File \'' . APP_PATH . 'config/app.php\' not found!');die();
-        }
-
+        global $config;
         if(isset($config['encryption_key'])){
             if($config['encryption_key'] != ''){
                 self::$key_std = $config['encryption_key'];

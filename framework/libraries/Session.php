@@ -9,23 +9,15 @@
 class Session {
 
     private static $session_driver;
-    private static $config = null;
 
     public static function init(){
-        $config = null;
-        if(file_exists(APP_PATH . 'config/app.php')){
-            require(APP_PATH . 'config/app.php');
-            self::$config = $config;
-        } elseif(APP_ENV === 'development') {
-            error_dump('File \'' . APP_PATH . 'config/app.php\' not found!');die();
-        }
-
-        if(self::$config['session']['driver'] == 'file'){
+        global $config;
+        if($config['session']['driver'] == 'file'){
             require_once('SessionDriver/SessionFile.php');
             self::$session_driver = new SessionFile();
-            self::$session_driver->init(self::$config);
+            self::$session_driver->init($config);
         } elseif(APP_ENV === 'development') {
-            error_dump('Session Driver \'' . self::$config['session']['driver'] . '\' not avaiable.');die();
+            error_dump('Session Driver \'' . $config['session']['driver'] . '\' not avaiable.');die();
         }
     }
 

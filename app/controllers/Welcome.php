@@ -51,4 +51,11 @@ class Welcome extends Base {
         echo Email::getErrorInfo();
     }
 
+    public function testSession(){
+        Loader::loadLibrary('Session');
+
+        Session::set('name', 'Joko');
+        echo Session::get('name');
+    }
+
 }

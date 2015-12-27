@@ -9,7 +9,6 @@
 class Core {
 
     public function run(){
-        require FW_PATH . 'helpers/error.php';
         require FW_PATH . 'libraries/Benchmark.php';
 
         Benchmark::startTime('execution_time');
