@@ -19,12 +19,6 @@
     .wrapper .content{
         font-size: 48px;
     }
-
-    .wrapper .footer{
-        font-size: 18px;
-        margin-top: 24px;
-        font-weight: 300;
-    }
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -34,9 +28,6 @@
         </div>
         <div class="content">
             Page Not Found!
-        </div>
-        <div class="footer">
-            The page you requested does not exist. Click <a href="{{ base_url() }}">here</a> to continue.
         </div>
     </div>
 </body>
