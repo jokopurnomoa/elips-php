@@ -3,8 +3,8 @@
 <head lang="en">
     <style>
     body{
-        font-family: Helvetica, Arial, Verdana, sans-serif;
-        background: #efefef;
+        font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+        font-weight: 100;
     }
 
     .wrapper{
@@ -21,9 +21,10 @@
     }
 
     .wrapper .footer{
-            font-size: 15px;
-            margin-top: 24px;
-        }
+        font-size: 18px;
+        margin-top: 24px;
+        font-weight: 300;
+    }
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
