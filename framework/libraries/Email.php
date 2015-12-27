@@ -10,7 +10,7 @@ class Email {
     private static $phpMailer;
 
     public static function init(){
-        require 'PHPMailer/PHPMailerAutoload.php';
+        require MAIN_PATH . 'vendor/PHPMailer/PHPMailerAutoload.php';
         self::$phpMailer = new PHPMailer();
         self::$phpMailer->isMail();
     }
