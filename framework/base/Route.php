@@ -19,6 +19,7 @@ class Route {
         $classname = '';
         $methodname = 'index';
         $root_controller = '';
+        $page_404 = '';
 
         $uri = URI::getURI();
         $arr_uri = explode('/', $uri);
@@ -26,6 +27,8 @@ class Route {
         $route_found = false;
         if(isset($route)){
             if($route != null){
+                $page_404 = $route['404'];
+
                 /* Load root controller */
                 if(isset($route['root_controller'])){
                     if($route['root_controller'] !== ''){
@@ -98,8 +101,12 @@ class Route {
                 require_once APP_PATH . 'controllers/' . $classname . '.php';
                 $class = new $classname();
                 $class->$methodname();
+            } elseif(file_exists(APP_PATH . 'controllers/' . $page_404 . '.php')) {
+                require_once APP_PATH . 'controllers/' . $page_404 . '.php';
+                $class = new $page_404();
+                $class->index();
             } elseif(APP_ENV === 'development'){
-                error_dump('File \'' . APP_PATH . 'controllers/' . $classname . '.php\' not found');die();
+                error_dump('404 page not found!');die();
             }
         }
     }
