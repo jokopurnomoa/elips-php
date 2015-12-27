@@ -33,4 +33,19 @@ class URI {
 
         return str_replace(array('//', '../'), '/', trim($uri, '/'));
     }
+
+    public static function getFullURI(){
+        if (!isset($_SERVER['REQUEST_URI']) OR !isset($_SERVER['SCRIPT_NAME'])){
+            return '';
+        }
+
+        $uri = $_SERVER['REQUEST_URI'];
+        if (strpos($uri, $_SERVER['SCRIPT_NAME']) === 0){
+            $uri = substr($uri, strlen($_SERVER['SCRIPT_NAME']));
+        } elseif (strpos($uri, dirname($_SERVER['SCRIPT_NAME'])) === 0){
+            $uri = substr($uri, strlen(dirname($_SERVER['SCRIPT_NAME'])));
+        }
+
+        return str_replace(array('//', '../'), '/', trim($uri, '/'));
+    }
 }
