@@ -38,7 +38,10 @@ class MySQLiDriver {
 
     public function getCountQuery($sql){
         $query = mysqli_query($this->link, $sql);
-        return mysqli_num_rows($query);
+        if($query) {
+            return mysqli_num_rows($query);
+        }
+        return 0;
     }
 
     public function getCount($table, $where = null, $limit = null){
@@ -65,14 +68,16 @@ class MySQLiDriver {
 
     public function getAllQuery($sql){
         $query = mysqli_query($this->link, $sql);
-        if(mysqli_num_rows($query) > 0){
-            $result = array();
-            while($data = mysqli_fetch_assoc($query)){
-                $result[] = (object)$data;
+        if($query){
+            if(mysqli_num_rows($query) > 0){
+                $result = array();
+                while($data = mysqli_fetch_assoc($query)){
+                    $result[] = (object)$data;
+                }
+                return $result;
+            } else {
+                return null;
             }
-            return $result;
-        } else {
-            return null;
         }
     }
 
@@ -166,11 +171,12 @@ class MySQLiDriver {
 
     public function getFirstQuery($sql){
         $query = mysqli_query($this->link, $sql);
-        if(mysqli_num_rows($query) > 0){
-            return (object)mysqli_fetch_assoc($query);
-        } else {
-            return null;
+        if($query) {
+            if(mysqli_num_rows($query) > 0) {
+                return (object)mysqli_fetch_assoc($query);
+            }
         }
+        return null;
     }
 
     public function getFirst($table, $where = null, $order = null, $limit = null){
@@ -267,6 +273,7 @@ class MySQLiDriver {
     }
 
     public function insert($table, $data){
+        $_this = $this;
         if($data != null){
             $sql = "INSERT INTO $table ";
             $_i = 0;
@@ -275,10 +282,10 @@ class MySQLiDriver {
             foreach($data as $key => $val){
                 if($_i == 0){
                     $_fields .= $key;
-                    $_values .= '\'' . " . $this->escape($val) . " . '\'';
+                    $_values .= "'" . $_this->escape($val) . "'";
                 } else {
                     $_fields .= ',' . $key;
-                    $_values .= ',\'' . " . $this->escape($val) . " . '\'';
+                    $_values .= ",'" . $_this->escape($val) . "'";
                 }
 
                 $_i++;
@@ -320,19 +327,16 @@ class MySQLiDriver {
         return mysqli_affected_rows($this->link) > 0 ? true : false;
     }
 
-    public function delete($table, $field, $id){
-        $sql = "DELETE FROM $table WHERE $field = '" . $this->escape($id) . "' LIMIT 1";
-        return $this->deleteQuery($sql);
-    }
-
-    public function deleteAll($table, $field, $id){
-        $sql = "DELETE FROM $table WHERE $field = '" . $this->escape($id) . "'";
+    public function delete($table, $field, $id, $limit = 1){
+        $limit = (int)$limit;
+        $sql = "DELETE FROM $table WHERE $field = '" . $this->escape($id) . "' LIMIT $limit";
         return $this->deleteQuery($sql);
     }
 
     public function beginTransaction(){
         $this->transaction_status = false;
-        return mysqli_autocommit($this->link, FALSE);
+        mysqli_autocommit($this->link, FALSE);
+        return mysqli_begin_transaction($this->link);
     }
 
     public function commit(){

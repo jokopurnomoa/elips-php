@@ -89,12 +89,8 @@ class Database {
         return self::$db_driver->deleteQuery($sql);
     }
 
-    public static function delete($table, $field, $id){
-        return self::$db_driver->delete($table, $field, $id);
-    }
-
-    public static function deleteAll($table, $field, $id){
-        return self::$db_driver->deleteAll($table, $field, $id);
+    public static function delete($table, $field, $id, $limit = 1){
+        return self::$db_driver->delete($table, $field, $id, $limit);
     }
 
     public static function beginTransaction(){
