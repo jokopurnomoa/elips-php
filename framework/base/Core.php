@@ -8,8 +8,12 @@
 
 class Core {
 
+    /**
+     * Run Core
+     */
     public function run(){
         require FW_PATH . 'libraries/Benchmark.php';
+        require FW_PATH . 'helpers/file.php';
 
         Benchmark::startTime('execution_time');
 
@@ -28,6 +32,9 @@ class Core {
         Route::run();
     }
 
+    /**
+     * Handle Autoload
+     */
     private function handleAutoload(){
         $autoload = null;
         if(file_exists(APP_PATH . 'config/autoload.php')){
@@ -43,6 +50,11 @@ class Core {
         $this->autoloadHelpers($autoload);
     }
 
+    /**
+     * Autoload Language
+     *
+     * @param $autoload
+     */
     private function autoloadLanguage($autoload){
         if(isset($autoload['languages'])){
             if($autoload['languages'] != null){
@@ -53,6 +65,11 @@ class Core {
         }
     }
 
+    /**
+     * Autoload Libraries
+     *
+     * @param $autoload
+     */
     private function autoloadLibraries($autoload){
         if(isset($autoload['libraries'])){
             if($autoload['libraries'] != null){
@@ -63,6 +80,11 @@ class Core {
         }
     }
 
+    /**
+     * Autoload Models
+     *
+     * @param $autoload
+     */
     private function autoloadModels($autoload){
         if(isset($autoload['models'])){
             if($autoload['models'] != null){
@@ -73,6 +95,11 @@ class Core {
         }
     }
 
+    /**
+     * Autoload Helpers
+     *
+     * @param $autoload
+     */
     private function autoloadHelpers($autoload){
         if(isset($autoload['helpers'])){
             if($autoload['helpers'] != null){
