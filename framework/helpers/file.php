@@ -13,6 +13,7 @@
  */
 function read_file($file){
     if(file_exists($file)){
+        $string = null;
         $handle = fopen($file, 'r');
         flock($handle, LOCK_SH);
         if(filesize($file) > 0){

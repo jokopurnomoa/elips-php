@@ -108,20 +108,15 @@ class SessionFile {
         }
 
         if($session_id != null){
-            $session_id = sha1($session_id);
-            if(file_exists('storage/sessions/' . $session_id)) {
-                $handle = fopen('storage/sessions/' . $session_id, 'r');
-                $string = fread($handle, $this->session_max_size);
-                fclose($handle);
+            $string = read_file('storage/sessions/' . sha1($session_id));
 
-                $session_data = null;
-                if($string != ''){
-                    $session_data = (array)json_decode(trim(Encryption::decode($string, $this->session_key)));
-                }
+            $session_data = null;
+            if($string != ''){
+                $session_data = (array)json_decode(trim(Encryption::decode($string, $this->session_key)));
+            }
 
-                if(isset($session_data[$key])){
-                    return $session_data[$key];
-                }
+            if(isset($session_data[$key])){
+                return $session_data[$key];
             }
         }
         return null;
@@ -141,11 +136,16 @@ class SessionFile {
             $session_id = sha1($session_id);
             $session_data = null;
 
+            $filesize = 0;
             if(!file_exists('storage/sessions/' . $session_id)){
                 $session_data['DATE_CREATED'] = time();
+            } else {
+                $filesize = filesize('storage/sessions/' . $session_id);
             }
+
+            $filesize = $filesize > $this->session_max_size ? $filesize : $this->session_max_size;
             $handle = fopen('storage/sessions/' . $session_id, 'w+');
-            $string = fread($handle, $this->session_max_size);
+            $string = fread($handle, $filesize);
 
             if($string != '') {
                 $session_data = (array)json_decode(trim(Encryption::decode($string, $this->session_key)));

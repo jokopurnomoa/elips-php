@@ -45,7 +45,6 @@ class Testing extends Base {
         Email::password('secret');
         Email::SMTPSecure('ssl');
         Email::port(465);
-        Email::SMTPAuth(true);
 
         Email::from('email@gmail.com', 'Name');
         Email::to('jokopurnomoa@gmail.com');
