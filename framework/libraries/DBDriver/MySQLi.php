@@ -75,10 +75,9 @@ class MySQLiDriver {
                     $result[] = (object)$data;
                 }
                 return $result;
-            } else {
-                return null;
             }
         }
+        return null;
     }
 
     public function getAll($table, $where = null, $order = null, $limit = null){
