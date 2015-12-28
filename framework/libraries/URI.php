@@ -1,6 +1,6 @@
 <?php
 /**
- * URI
+ * URI Library
  *
  * Get uri segment
  *
@@ -8,12 +8,23 @@
 
 class URI {
 
+    /**
+     * Get URI Segment
+     *
+     * @param $segment
+     * @return string
+     */
     public static function segment($segment){
         $segment = $segment > 0 ? $segment : 1;
         $uri = explode('/', URI::getURI());
         return (isset($uri[$segment - 1]) ? $uri[$segment - 1] : '');
     }
 
+    /**
+     * Get URI Without Get Parameter
+     *
+     * @return mixed
+     */
     public static function getURI(){
         if (!isset($_SERVER['REQUEST_URI']) OR !isset($_SERVER['SCRIPT_NAME'])){
             return '';
@@ -34,6 +45,11 @@ class URI {
         return str_replace(array('//', '../'), '/', trim($uri, '/'));
     }
 
+    /**
+     * Get Full URI With Get Parameter
+     *
+     * @return mixed
+     */
     public static function getFullURI(){
         if (!isset($_SERVER['REQUEST_URI']) OR !isset($_SERVER['SCRIPT_NAME'])){
             return '';

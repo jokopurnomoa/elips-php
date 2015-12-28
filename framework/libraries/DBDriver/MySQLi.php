@@ -12,30 +12,59 @@ class MySQLiDriver {
     private $config;
     private $transaction_status;
 
+    /**
+     * Constructor
+     *
+     * @param null $config
+     */
     public function __construct($config = null){
         $this->config = $config;
     }
 
+    /**
+     * Destructor
+     */
     public function __destruct(){
         $this->disconnect();
     }
 
+    /**
+     * Initialize Driver
+     *
+     * @param null $config
+     */
     public function init($config = null){
         $this->config = $config;
     }
 
+    /**
+     * Connnect
+     */
     public function connect(){
         $this->link = mysqli_connect($this->config['host'], $this->config['user'], $this->config['pass'], $this->config['db']);
     }
 
+    /**
+     * Disconnect
+     */
     public function disconnect(){
         mysqli_close($this->link);
     }
 
+    /**
+     * @param $string
+     * @return string
+     */
     public function escape($string){
         return mysqli_real_escape_string($this->link, $string);
     }
 
+    /**
+     * Get Count Data Using Query
+     *
+     * @param $sql
+     * @return int
+     */
     public function getCountQuery($sql){
         $query = mysqli_query($this->link, $sql);
         if($query) {
@@ -44,6 +73,14 @@ class MySQLiDriver {
         return 0;
     }
 
+    /**
+     * Get Count Data
+     *
+     * @param $table
+     * @param null $where
+     * @param null $limit
+     * @return int
+     */
     public function getCount($table, $where = null, $limit = null){
         $sql = "SELECT * FROM $table ";
         if($where != null){
@@ -66,6 +103,12 @@ class MySQLiDriver {
         return $this->getCountQuery($sql);
     }
 
+    /**
+     * Get All Data Using Query
+     *
+     * @param $sql
+     * @return array|null
+     */
     public function getAllQuery($sql){
         $query = mysqli_query($this->link, $sql);
         if($query){
@@ -80,6 +123,15 @@ class MySQLiDriver {
         return null;
     }
 
+    /**
+     * Get All Data
+     *
+     * @param $table
+     * @param null $where
+     * @param null $order
+     * @param null $limit
+     * @return array|null
+     */
     public function getAll($table, $where = null, $order = null, $limit = null){
         $sql = "SELECT * FROM $table ";
         if($where != null){
@@ -117,6 +169,16 @@ class MySQLiDriver {
         return $this->getAllQuery($sql);
     }
 
+    /**
+     * Get All Data By Field
+     *
+     * @param $table
+     * @param null $field
+     * @param null $where
+     * @param null $order
+     * @param null $limit
+     * @return array|null
+     */
     public function getAllField($table, $field = null, $where = null, $order = null, $limit = null){
         $sql = "SELECT ";
         if($field != null){
@@ -168,6 +230,12 @@ class MySQLiDriver {
         return $this->getAllQuery($sql);
     }
 
+    /**
+     * Get First Data Using Query
+     *
+     * @param $sql
+     * @return null|object
+     */
     public function getFirstQuery($sql){
         $query = mysqli_query($this->link, $sql);
         if($query) {
@@ -178,6 +246,15 @@ class MySQLiDriver {
         return null;
     }
 
+    /**
+     * Get First Data
+     *
+     * @param $table
+     * @param null $where
+     * @param null $order
+     * @param null $limit
+     * @return null|object
+     */
     public function getFirst($table, $where = null, $order = null, $limit = null){
         $sql = "SELECT * FROM $table ";
         if($where != null){
@@ -215,6 +292,16 @@ class MySQLiDriver {
         return $this->getFirstQuery($sql);
     }
 
+    /**
+     * Get First Data By Field
+     *
+     * @param $table
+     * @param null $field
+     * @param null $where
+     * @param null $order
+     * @param null $limit
+     * @return null|object
+     */
     public function getFirstField($table, $field = null, $where = null, $order = null, $limit = null){
         $sql = "SELECT ";
         if($field != null){
@@ -266,11 +353,24 @@ class MySQLiDriver {
         return $this->getFirstQuery($sql);
     }
 
+    /**
+     * Insert Data Using Query
+     *
+     * @param $sql
+     * @return bool
+     */
     public function insertQuery($sql){
         mysqli_query($this->link, $sql);
         return mysqli_affected_rows($this->link) > 0 ? true : false;
     }
 
+    /**
+     * Insert Data
+     *
+     * @param $table
+     * @param $data
+     * @return bool
+     */
     public function insert($table, $data){
         $_this = $this;
         if($data != null){
@@ -297,11 +397,26 @@ class MySQLiDriver {
         return false;
     }
 
+    /**
+     * Update Data Using Query
+     *
+     * @param $sql
+     * @return bool
+     */
     public function updateQuery($sql){
         mysqli_query($this->link, $sql);
         return mysqli_affected_rows($this->link) > 0 ? true : false;
     }
 
+    /**
+     * Update Data
+     *
+     * @param $table
+     * @param $field
+     * @param $id
+     * @param $data
+     * @return bool
+     */
     public function update($table, $field, $id, $data){
         if($data != null && $field != '' && $id != ''){
             $sql = "UPDATE $table SET ";
@@ -321,41 +436,84 @@ class MySQLiDriver {
         return false;
     }
 
+    /**
+     * Delete Data Using Query
+     *
+     * @param $sql
+     * @return bool
+     */
     public function deleteQuery($sql){
         mysqli_query($this->link, $sql);
         return mysqli_affected_rows($this->link) > 0 ? true : false;
     }
 
+    /**
+     * Delete Data
+     *
+     * @param $table
+     * @param $field
+     * @param $id
+     * @param int $limit
+     * @return bool
+     */
     public function delete($table, $field, $id, $limit = 1){
         $limit = (int)$limit;
         $sql = "DELETE FROM $table WHERE $field = '" . $this->escape($id) . "' LIMIT $limit";
         return $this->deleteQuery($sql);
     }
 
+    /**
+     * Begin Transaction
+     *
+     * @return bool
+     */
     public function beginTransaction(){
         $this->transaction_status = false;
         mysqli_autocommit($this->link, FALSE);
         return mysqli_begin_transaction($this->link);
     }
 
+    /**
+     * Commit Transaction
+     *
+     * @return bool
+     */
     public function commit(){
         $this->transaction_status = mysqli_commit($this->link);
         mysqli_autocommit($this->link, TRUE);
         return $this->transaction_status;
     }
 
+    /**
+     * Rollback Transaction
+     *
+     * @return bool
+     */
     public function rollback(){
         return mysqli_rollback($this->link);
     }
 
+    /**
+     * @return mixed
+     */
     public function transactionStatus(){
         return $this->transaction_status;
     }
 
+    /**
+     * Get Insert Id
+     *
+     * @return int|string
+     */
     public function insertId(){
         return mysqli_insert_id($this->link);
     }
 
+    /**
+     * Get Affected Rows
+     *
+     * @return int
+     */
     public function affectedRows(){
         return mysqli_affected_rows($this->link);
     }

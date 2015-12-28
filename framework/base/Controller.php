@@ -1,9 +1,8 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: jokopurnomoa
- * Date: 12/17/15
- * Time: 11:50 PM
+ * Base Controller
+ *
+ *
  */
 
 class Controller {
@@ -11,6 +10,9 @@ class Controller {
     var $data;
     var $instance;
 
+    /**
+     * Controller Constructor
+     */
     public function __construct(){
         $this->instance = get_instance();
     }

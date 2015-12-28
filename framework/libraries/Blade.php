@@ -1,6 +1,6 @@
 <?php
 /**
- * Blade
+ * Blade Templating Library
  *
  * Simple blade templating
  *
@@ -8,6 +8,14 @@
 
 class Blade {
 
+    /**
+     * Render View
+     *
+     * @param $view
+     * @param null $data
+     * @param bool $buffered
+     * @return mixed|null|string
+     */
     public static function render($view, $data = null, $buffered = false){
         $view = str_replace('.', '/', $view);
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * SessionFile
+ * SessionFile Driver
  *
  * Custom session uses file as storage
  *
@@ -16,6 +16,11 @@ class SessionFile {
     var $seperator = '#SESSION_SEPARATOR#';
     var $session_max_size = 1048576;
 
+    /**
+     * Initialize Config
+     *
+     * @param null $config
+     */
     public function init($config = null){
         if(isset($config['session']['name'])){
             $this->session_name = $config['session']['name'];
@@ -44,6 +49,11 @@ class SessionFile {
         }
     }
 
+    /**
+     * Generate Session
+     *
+     * @return string
+     */
     private function generateSession(){
         if(!isset($_COOKIE[$this->session_name])) {
             $session_id = $_SERVER['REMOTE_ADDR'] . $this->seperator . $_SERVER['HTTP_USER_AGENT'] . $this->seperator . $_SERVER['REQUEST_TIME_FLOAT'] . $this->seperator . md5(rand(9, 999999999));
@@ -53,6 +63,11 @@ class SessionFile {
         }
     }
 
+    /**
+     * Get Session Id
+     *
+     * @return null|string
+     */
     private function getSessionID(){
         if(isset($_COOKIE[$this->session_name])){
             if($_COOKIE[$this->session_name] != ''){
@@ -64,6 +79,12 @@ class SessionFile {
         return null;
     }
 
+    /**
+     * Get Session Data
+     *
+     * @param $key
+     * @return null
+     */
     public function get($key){
         $session_id = $this->getSessionID();
 
@@ -106,6 +127,13 @@ class SessionFile {
         return null;
     }
 
+    /**
+     * Set Session Data
+     *
+     * @param $key
+     * @param $value
+     * @return bool
+     */
     public function set($key, $value){
         $session_id = $this->getSessionID();
 
@@ -131,6 +159,12 @@ class SessionFile {
         return false;
     }
 
+    /**
+     * Remove Session Data
+     *
+     * @param $key
+     * @return bool
+     */
     public function remove($key){
         $session_id = $this->getSessionID();
 
@@ -149,6 +183,11 @@ class SessionFile {
         return false;
     }
 
+    /**
+     * Destroy Session Data
+     *
+     * @return bool
+     */
     public function destroy(){
         $session_id = sha1($this->getSessionID());
         if(file_exists('storage/sessions/' . $session_id) && $session_id != '') {

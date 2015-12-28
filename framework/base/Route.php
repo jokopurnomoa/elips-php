@@ -1,6 +1,6 @@
 <?php
 /**
- * ROUTE
+ * Base Route
  *
  * Routing application controller
  *
@@ -8,6 +8,9 @@
 
 class Route {
 
+    /**
+     * Run Routing
+     */
     public static function run(){
         if(file_exists(APP_PATH . 'config/route.php')){
             require_once APP_PATH . 'config/route.php';

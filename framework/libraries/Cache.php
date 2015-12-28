@@ -1,6 +1,6 @@
 <?php
 /**
- * Cache library
+ * Cache Library
  *
  *
  */

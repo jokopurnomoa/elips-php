@@ -1,6 +1,6 @@
 <?php
 /**
- * Encryption
+ * Encryption Library
  *
  * Security encrypt & decrypt data
  *
@@ -9,9 +9,20 @@
 class Encryption {
 
     private static $key_std;
+
+    /**
+     * @var string
+     */
+
     private static $cipher = MCRYPT_RIJNDAEL_256;
+    /**
+     * @var string
+     */
     private static $mode = MCRYPT_MODE_CBC;
 
+    /**
+     * Initialize Library
+     */
     public static function init(){
         global $config;
         if(isset($config['encryption_key'])){
@@ -25,6 +36,13 @@ class Encryption {
         }
     }
 
+    /**
+     * Encrypt Data
+     *
+     * @param $plaintext
+     * @param string $key
+     * @return string
+     */
     public static function encode($plaintext, $key = ''){
         $key = self::getKey($key);
 
@@ -35,6 +53,13 @@ class Encryption {
         return base64_encode($iv . $ciphertext);
     }
 
+    /**
+     * Decrypt Data
+     *
+     * @param $ciphertext
+     * @param string $key
+     * @return null|string
+     */
     public static function decode($ciphertext, $key = ''){
         if (preg_match('/[^a-zA-Z0-9\/\+=]/', $ciphertext)){
             return false;
@@ -62,6 +87,12 @@ class Encryption {
         return null;
     }
 
+    /**
+     * Get Encryption Key
+     *
+     * @param $key
+     * @return string
+     */
     private static function getKey($key){
         if($key === ''){
             $key = self::$key_std;
@@ -69,10 +100,20 @@ class Encryption {
         return md5(sha1($key));
     }
 
+    /**
+     * Set Encryption Cipher
+     *
+     * @param $cipher
+     */
     public static function setCipher($cipher){
         self::$cipher = $cipher;
     }
 
+    /**
+     * Set Encryption Mode
+     *
+     * @param $mode
+     */
     public static function setMode($mode){
         self::$mode = $mode;
     }

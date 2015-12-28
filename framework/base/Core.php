@@ -1,6 +1,6 @@
 <?php
 /**
- * CORE
+ * Core Library
  *
  * Loading base system
  *

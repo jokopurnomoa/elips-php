@@ -17,6 +17,11 @@ class ImageLib {
     private static $height = 0;
     private static $quality = 100;
 
+    /**
+     * Set Config
+     *
+     * @param array $config
+     */
     public static function setConfig($config = array()){
         if($config != null){
             foreach($config as $key => $value){
@@ -25,6 +30,9 @@ class ImageLib {
         }
     }
 
+    /**
+     * Reset Config
+     */
     public static function resetConfig(){
         self::$image_library = 'gd2';
         self::$source_image = '';
@@ -37,6 +45,9 @@ class ImageLib {
         self::$quality = 100;
     }
 
+    /**
+     * Resize Image
+     */
     public static function resize(){
         self::$quality = (int)self::$quality;
         if(self::$quality > 100){
@@ -61,6 +72,12 @@ class ImageLib {
         }
     }
 
+    /**
+     * Resize Image Using GD2 Library
+     *
+     * @param $source_image_path
+     * @param $source_new_image_path
+     */
     public static function resizeGD2($source_image_path, $source_new_image_path){
         $ext = trim(pathinfo($source_image_path, PATHINFO_EXTENSION));
 

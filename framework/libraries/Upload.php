@@ -1,6 +1,6 @@
 <?php
 /**
- * Upload
+ * Upload Library
  *
  * Upload files
  *
@@ -23,6 +23,11 @@ class Upload {
     private static $error_message = '';
     private static $data_upload = '';
 
+    /**
+     * Set Config
+     *
+     * @param array $config
+     */
     public static function setConfig($config = array()){
         if($config != null){
             foreach($config as $key => $value){
@@ -33,7 +38,11 @@ class Upload {
         }
     }
 
-    public static function resetConfig($config = array()){
+    /**
+     * Reset Config
+     *
+     */
+    public static function resetConfig(){
         self::$upload_path = '';
         self::$filename = '';
         self::$max_size = 0;
@@ -50,6 +59,12 @@ class Upload {
         self::$data_upload = '';
     }
 
+    /**
+     * Do Upload Process
+     *
+     * @param string $fieldname
+     * @return bool
+     */
     public static function doUpload($fieldname = 'userfile'){
         if(self::$filename === ''){
             self::$filename = $_FILES[$fieldname]['name'];
@@ -124,6 +139,12 @@ class Upload {
         return false;
     }
 
+    /**
+     * Get File Type
+     *
+     * @param $type
+     * @return string
+     */
     private static function getFileType($type){
         if(file_exists(APP_PATH . 'config/mimes.php')){
             $mimes = null;
@@ -148,10 +169,20 @@ class Upload {
         }
     }
 
+    /**
+     * Get Upload Data Info
+     *
+     * @return string
+     */
     public static function getUploadData(){
         return self::$data_upload;
     }
 
+    /**
+     * Get Upload Error Info
+     *
+     * @return string
+     */
     public static function getError(){
         return self::$error_message;
     }
