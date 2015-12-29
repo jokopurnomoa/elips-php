@@ -65,7 +65,16 @@ class MySQLiDriver {
      * @param $sql
      * @return int
      */
-    public function getCountQuery($sql){
+    public function getCountQuery($sql, $params = null){
+        if($params != null){
+            foreach($params as $param){
+                $param_pos = strpos($sql, '?');
+                if($param_pos !== false) {
+                    $sql = substr_replace($sql, '\'' . $this->escape($param) . '\'', $param_pos, 1);
+                }
+            }
+        }
+
         $query = mysqli_query($this->link, $sql);
         if($query) {
             return mysqli_num_rows($query);
@@ -109,7 +118,16 @@ class MySQLiDriver {
      * @param $sql
      * @return array|null
      */
-    public function getAllQuery($sql){
+    public function getAllQuery($sql, $params = null){
+        if($params != null){
+            foreach($params as $param){
+                $param_pos = strpos($sql, '?');
+                if($param_pos !== false) {
+                    $sql = substr_replace($sql, '\'' . $this->escape($param) . '\'', $param_pos, 1);
+                }
+            }
+        }
+
         $query = mysqli_query($this->link, $sql);
         if($query){
             if(mysqli_num_rows($query) > 0){
@@ -236,7 +254,16 @@ class MySQLiDriver {
      * @param $sql
      * @return null|object
      */
-    public function getFirstQuery($sql){
+    public function getFirstQuery($sql, $params = null){
+        if($params != null){
+            foreach($params as $param){
+                $param_pos = strpos($sql, '?');
+                if($param_pos !== false) {
+                    $sql = substr_replace($sql, '\'' . $this->escape($param) . '\'', $param_pos, 1);
+                }
+            }
+        }
+
         $query = mysqli_query($this->link, $sql);
         if($query) {
             if(mysqli_num_rows($query) > 0) {
@@ -359,7 +386,16 @@ class MySQLiDriver {
      * @param $sql
      * @return bool
      */
-    public function insertQuery($sql){
+    public function insertQuery($sql, $params = null){
+        if($params != null){
+            foreach($params as $param){
+                $param_pos = strpos($sql, '?');
+                if($param_pos !== false) {
+                    $sql = substr_replace($sql, '\'' . $this->escape($param) . '\'', $param_pos, 1);
+                }
+            }
+        }
+
         mysqli_query($this->link, $sql);
         return mysqli_affected_rows($this->link) > 0 ? true : false;
     }
@@ -403,7 +439,16 @@ class MySQLiDriver {
      * @param $sql
      * @return bool
      */
-    public function updateQuery($sql){
+    public function updateQuery($sql, $params = null){
+        if($params != null){
+            foreach($params as $param){
+                $param_pos = strpos($sql, '?');
+                if($param_pos !== false) {
+                    $sql = substr_replace($sql, '\'' . $this->escape($param) . '\'', $param_pos, 1);
+                }
+            }
+        }
+
         mysqli_query($this->link, $sql);
         return mysqli_affected_rows($this->link) > 0 ? true : false;
     }
@@ -442,7 +487,16 @@ class MySQLiDriver {
      * @param $sql
      * @return bool
      */
-    public function deleteQuery($sql){
+    public function deleteQuery($sql, $params = null){
+        if($params != null){
+            foreach($params as $param){
+                $param_pos = strpos($sql, '?');
+                if($param_pos !== false) {
+                    $sql = substr_replace($sql, '\'' . $this->escape($param) . '\'', $param_pos, 1);
+                }
+            }
+        }
+
         mysqli_query($this->link, $sql);
         return mysqli_affected_rows($this->link) > 0 ? true : false;
     }

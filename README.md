@@ -1,4 +1,4 @@
-## Elips PHP Framework
+## ELIPS PHP Framework
 
 Simple, Fast &amp; Efficient PHP Framework with less configuration
 

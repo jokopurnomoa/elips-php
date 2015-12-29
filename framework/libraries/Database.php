@@ -55,8 +55,8 @@ class Database {
      * @param $sql
      * @return mixed
      */
-    public static function getCountQuery($sql){
-        return self::$db_driver->getCountQuery($sql);
+    public static function getCountQuery($sql, $params = null){
+        return self::$db_driver->getCountQuery($sql, $params);
     }
 
     /**
@@ -78,8 +78,8 @@ class Database {
      * @param $sql
      * @return mixed
      */
-    public static function getAllQuery($sql){
-        return self::$db_driver->getAllQuery($sql);
+    public static function getAllQuery($sql, $params = null){
+        return self::$db_driver->getAllQuery($sql, $params);
     }
 
     /**
@@ -115,8 +115,8 @@ class Database {
      * @param $sql
      * @return mixed
      */
-    public static function getFirstQuery($sql){
-        return self::$db_driver->getFirstQuery($sql);
+    public static function getFirstQuery($sql, $params = null){
+        return self::$db_driver->getFirstQuery($sql, $params);
     }
 
     /**
@@ -152,8 +152,8 @@ class Database {
      * @param $sql
      * @return mixed
      */
-    public static function insertQuery($sql){
-        return self::$db_driver->insertQuery($sql);
+    public static function insertQuery($sql, $params = null){
+        return self::$db_driver->insertQuery($sql, $params);
     }
 
     /**
@@ -173,8 +173,8 @@ class Database {
      * @param $sql
      * @return mixed
      */
-    public function updateQuery($sql){
-        return self::$db_driver->updateQuery($sql);
+    public function updateQuery($sql, $params = null){
+        return self::$db_driver->updateQuery($sql, $params);
     }
 
     /**
@@ -196,8 +196,8 @@ class Database {
      * @param $sql
      * @return mixed
      */
-    public static function deleteQuery($sql){
-        return self::$db_driver->deleteQuery($sql);
+    public static function deleteQuery($sql, $params = null){
+        return self::$db_driver->deleteQuery($sql, $params);
     }
 
     /**

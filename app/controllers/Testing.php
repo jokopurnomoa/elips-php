@@ -8,6 +8,10 @@
 
 class Testing extends Base {
 
+    public function index(){
+
+    }
+
     public function cache(){
         Loader::loadLibrary('Database');
 
@@ -34,6 +38,16 @@ class Testing extends Base {
         Database::update('test', 'test_id', $insert_id - 1, array('val1' => 'A2', 'val2' => 'B2'));
         Database::delete('test', 'val1', 'A2');
         Database::commit();
+    }
+
+    public function database2(){
+        Loader::loadLibrary('Database');
+
+        $sql = "SELECT * FROM gxa_members WHERE email = ? AND name LIKE ?";
+        $data = Database::getAllQuery($sql, array('jokopurnomoa@gmail.com', '%Elips%'));
+        echo '<pre>';
+        print_r($data);
+        echo '</pre>';
     }
 
     public function email(){
