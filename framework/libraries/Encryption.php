@@ -13,8 +13,8 @@ class Encryption {
     /**
      * @var string
      */
-
     private static $cipher = MCRYPT_RIJNDAEL_256;
+
     /**
      * @var string
      */
