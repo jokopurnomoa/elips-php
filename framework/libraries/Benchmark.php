@@ -46,4 +46,13 @@ class Benchmark {
         return 0;
     }
 
+    /**
+     * Get Memory Usage
+     *
+     * @return int
+     */
+    public static function memoryUsage($real_usage = false){
+        return memory_get_usage($real_usage);
+    }
+
 }

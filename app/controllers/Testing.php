@@ -13,6 +13,7 @@ class Testing extends Base {
     }
 
     public function cache(){
+
         Loader::loadLibrary('Database');
 
         $member_list = Cache::get('member_list_cache');
@@ -80,6 +81,12 @@ class Testing extends Base {
 
     public function methodGet(){
         echo get_input('name');
+    }
+
+    public function memory(){
+        echo Benchmark::memoryUsage();
+        echo '<br>';
+
     }
 
 }
