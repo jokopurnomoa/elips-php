@@ -104,4 +104,14 @@ class Testing extends Base {
         }
     }
 
+    public function cookie(){
+        Loader::loadLibrary('Cookie');
+
+        Cookie::set('test', 'AAA');
+        Cookie::delete('test');
+        echo Cookie::get('test');
+
+
+    }
+
 }

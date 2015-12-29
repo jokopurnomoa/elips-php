@@ -1,12 +1,12 @@
 <?php
 /**
- * Cookies
+ * Cookie
  *
- * Cookies library
+ * Cookie library
  *
  */
 
-class Cookies {
+class Cookie {
 
     /**
      * Set Cookie
@@ -35,6 +35,16 @@ class Cookies {
             return $_COOKIE[$cookie_name];
         }
         return null;
+    }
+
+    /**
+     * Delete Cookie
+     *
+     * @param $cookie_name
+     * @return bool
+     */
+    public static function delete($cookie_name){
+        return setcookie($cookie_name, null, -1);
     }
 
 }
