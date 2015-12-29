@@ -7,8 +7,6 @@
 
 $config['base_url'] = '';
 
-$config['cache']['encrypt'] = false;
-
 $config['session']['name']   = 'ELIPS_PHP_SESS';
 $config['session']['driver'] = 'file';
 $config['session']['expire'] = 7200;
