@@ -1,6 +1,6 @@
 <?php
 
-class MemberModel extends Model {
+class ExampleModel extends Model {
 
     static $table = 'gxa_members';
 

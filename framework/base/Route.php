@@ -103,19 +103,29 @@ class Route {
             $methodname = isset($arr_uri[1]) ? $arr_uri[1] : 'index';
         }
 
-        if($classname !== '' && $methodname !== '' && strtolower($classname) !== strtolower($root_controller)){
-            if(file_exists(APP_PATH . 'controllers/' . $classname . '.php')){
-                require_once APP_PATH . 'controllers/' . $classname . '.php';
-                $class = new $classname();
-                $class->$methodname();
-            } elseif(file_exists(APP_PATH . 'views/404.blade.php')) {
-                require_once FW_PATH . 'base/' . $page_404 . '.php';
-                $class = new $page_404();
-                $class->index();
-            } elseif(APP_ENV === 'development'){
-                error_dump('404 page not found!');die();
-            }
+        $module_path = trim('modules/' . trim(strtolower($classname)), '/') . '/';
+
+        if(file_exists(APP_PATH . 'controllers/' . $classname . '.php')){
+            require_once APP_PATH . 'controllers/' . $classname . '.php';
+            $class = new $classname();
+            $class->$methodname();
         }
+        elseif(file_exists(APP_PATH . $module_path . 'controllers/' . $classname . '.php')){
+            require_once APP_PATH . $module_path . 'controllers/' . $classname . '.php';
+            $class = new $classname();
+            global $__module_path;
+            $__module_path = $module_path;
+            $class->$methodname();
+        }
+        elseif(file_exists(APP_PATH . 'views/404.blade.php')) {
+            require_once FW_PATH . 'base/' . $page_404 . '.php';
+            $class = new $page_404();
+            $class->index();
+        }
+        elseif(APP_ENV === 'development'){
+            error_dump('404 page not found!');die();
+        }
+
     }
 
 }

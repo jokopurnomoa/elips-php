@@ -1,6 +1,6 @@
 <?php
 /**
- * APPLICATION ENVIRONTMENT
+ * Application Environtment
  *
  *      development
  *      testing
@@ -20,9 +20,24 @@ define('FW_PATH', 'framework/');
 // Path to the application folder
 define('APP_PATH', 'app/');
 
+/**
+ * Instance Core Class
+ */
 $instance = null;
+
+/**
+ * Language Var
+ */
 $lang = null;
 
+/**
+ * Module Path
+ */
+$__module_path = '';
+
+/**
+ * Checking Application Environtment
+ */
 if(APP_ENV === 'development'){
     error_reporting(E_ALL);
     ini_set('display_errors', 'on');
@@ -33,30 +48,30 @@ if(APP_ENV === 'development'){
     echo 'Application Environtment not set correctly...';die();
 }
 
-// get error helper
+// Get error helper
 require FW_PATH . 'helpers/error.php';
 
-// get app config
+// Get app config
 if(file_exists(APP_PATH . 'config/app.php')){
     require APP_PATH . 'config/app.php';
 } elseif(APP_ENV === 'development') {
     error_dump('File \'' . APP_PATH . 'config/app.php\' not found!');die();
 }
 
-// get core class
+// Get core class
 require FW_PATH . 'base/Core.php';
 
-// instantiate core class
+// Instantiate core class
 $instance = new Core();
 $instance->run();
 
-// get core class instance
+// Get core class instance
 function get_instance(){
     global $instance;
     return $instance;
 }
 
-// get application base url
+// Get application base url
 function base_url(){
     global $config;
     if(isset($config['base_url'])){

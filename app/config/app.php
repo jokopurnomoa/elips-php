@@ -1,11 +1,13 @@
 <?php
 /**
- * APP CONFIG
+ * Application Config
  *
  *
  */
 
 $config['base_url'] = '';
+
+$config['cache']['encrypt'] = false;
 
 $config['session']['name']   = 'ELIPS_PHP_SESS';
 $config['session']['driver'] = 'file';
@@ -18,4 +20,3 @@ $config['encryption_key'] = '427ba3403980c1b3471f3fe226b1b92a896063e2';
 $config['cache']['driver'] = 'file';
 $config['cache']['active'] = false;
 $config['cache']['encrypt'] = false;
-
