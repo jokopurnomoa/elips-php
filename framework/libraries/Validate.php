@@ -21,20 +21,30 @@ class Validate {
      * Validate URL
      *
      * @param $url
+     * @param string $flag
      * @return mixed
      */
-    public static function url($url){
-        return filter_var($url, FILTER_VALIDATE_URL);
+    public static function url($url, $flag = ''){
+        if($flag != ''){
+            return filter_var($url, FILTER_VALIDATE_URL, $flag);
+        } else {
+            return filter_var($url, FILTER_VALIDATE_URL);
+        }
     }
 
     /**
      * Validate IP Address
      *
      * @param $ip
+     * @param string $flag
      * @return mixed
      */
-    public static function ip($ip){
-        return filter_var($ip, FILTER_VALIDATE_IP);
+    public static function ip($ip, $flag = ''){
+        if($flag != ''){
+            return filter_var($ip, FILTER_VALIDATE_IP, $flag);
+        } else {
+            return filter_var($ip, FILTER_VALIDATE_IP);
+        }
     }
 
     /**
@@ -61,10 +71,15 @@ class Validate {
      * Validate Float
      *
      * @param $float
+     * @param string $flag
      * @return mixed
      */
-    public static function float($float){
-        return filter_var($float, FILTER_VALIDATE_FLOAT);
+    public static function float($float, $flag = ''){
+        if($flag != ''){
+            return filter_var($float, FILTER_VALIDATE_FLOAT, $flag);
+        } else {
+            return filter_var($float, FILTER_VALIDATE_FLOAT);
+        }
     }
 
     /**
@@ -73,8 +88,12 @@ class Validate {
      * @param $int
      * @return mixed
      */
-    public static function int($int){
-        return filter_var($int, FILTER_VALIDATE_INT);
+    public static function int($int, $flag = ''){
+        if($flag != ''){
+            return filter_var($int, FILTER_VALIDATE_INT, $flag);
+        } else {
+            return filter_var($int, FILTER_VALIDATE_INT);
+        }
     }
 
     /**

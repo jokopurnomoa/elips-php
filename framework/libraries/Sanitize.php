@@ -31,20 +31,30 @@ class Sanitize {
      * Sanitize Special Chars
      *
      * @param $string
+     * @param string $flag
      * @return mixed
      */
-    public static function specialChars($string){
-        return filter_var($string, FILTER_SANITIZE_SPECIAL_CHARS);
+    public static function specialChars($string, $flag = ''){
+        if($flag != ''){
+            return filter_var($string, FILTER_SANITIZE_SPECIAL_CHARS, $flag);
+        } else {
+            return filter_var($string, FILTER_SANITIZE_SPECIAL_CHARS);
+        }
     }
 
     /**
      * Sanitize Full Special Chars
      *
      * @param $string
+     * @param $string
      * @return mixed
      */
-    public static function fullSpecialChars($string){
-        return filter_var($string, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    public static function fullSpecialChars($string, $flag = ''){
+        if($flag != '') {
+            return filter_var($string, FILTER_SANITIZE_FULL_SPECIAL_CHARS, $flag);
+        } else {
+            return filter_var($string, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        }
     }
 
     /**
@@ -61,10 +71,15 @@ class Sanitize {
      * Sanitize String
      *
      * @param $string
+     * @param $string
      * @return mixed
      */
-    public static function string($string){
-        return filter_var($string, FILTER_SANITIZE_STRING);
+    public static function string($string, $flag = ''){
+        if($flag != '') {
+            return filter_var($string, FILTER_SANITIZE_STRING, $flag);
+        } else {
+            return filter_var($string, FILTER_SANITIZE_STRING);
+        }
     }
 
     /**
@@ -81,10 +96,11 @@ class Sanitize {
      * Sanitize Number Float
      *
      * @param $number_float
+     * @param int $flag
      * @return mixed
      */
-    public static function float($number_float){
-        return filter_var($number_float, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    public static function float($number_float, $flag = FILTER_FLAG_ALLOW_FRACTION){
+        return filter_var($number_float, FILTER_SANITIZE_NUMBER_FLOAT, $flag);
     }
 
     /**
@@ -95,6 +111,21 @@ class Sanitize {
      */
     public static function stripped($string){
         return filter_var($string, FILTER_SANITIZE_STRIPPED);
+    }
+
+    /**
+     * Sanitize Encoded
+     *
+     * @param $string
+     * @param string $flag
+     * @return mixed
+     */
+    public static function encoded($string, $flag = ''){
+        if($flag != ''){
+            return filter_var($string, FILTER_SANITIZE_ENCODED, $flag);
+        } else {
+            return filter_var($string, FILTER_SANITIZE_ENCODED);
+        }
     }
 
 }
