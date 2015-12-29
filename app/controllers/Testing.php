@@ -78,4 +78,8 @@ class Testing extends Base {
         echo Session::get('name');
     }
 
+    public function methodGet(){
+        echo get_input('name');
+    }
+
 }

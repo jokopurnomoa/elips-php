@@ -31,6 +31,7 @@ class Core {
         Loader::loadLibrary('Encryption');
         Loader::loadLibrary('Cache');
         Loader::loadLibrary('Blade');
+        Loader::loadHelper('input');
 
         $this->handleAutoload();
         Route::run();
