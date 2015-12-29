@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
+    <title>404 - Page Not Found!</title>
     <style>
     body{
         font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;

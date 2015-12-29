@@ -121,7 +121,7 @@ class Route {
                 $class = new $page_404();
                 $class->index();
             } elseif (APP_ENV === 'development') {
-                error_dump('404 page not found!');
+                error_dump('404 Page Not Found!');
                 die();
             }
         }
