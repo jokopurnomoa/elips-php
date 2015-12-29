@@ -14,7 +14,12 @@ class Security {
      * @return string
      */
     public static function generateCSRFToken($token_name){
-        $token = sha1(bin2hex(openssl_random_pseudo_bytes(40, $cstrong)));
+        if(function_exists('openssl_random_pseudo_bytes')){
+            $token = sha1(bin2hex(openssl_random_pseudo_bytes(40, $cstrong)));
+        } else {
+            $token = sha1(uniqid() . rand(0, 99999999));
+        }
+
         Session::set('CSRF_TOKEN_' . $token_name, $token);
         return $token;
     }
@@ -36,7 +41,7 @@ class Security {
      * @param $token
      * @return bool
      */
-    public static function isTokenValid($token_name, $token){
+    public static function isCSRFTokenValid($token_name, $token){
         if(Session::get('CSRF_TOKEN_' . $token_name) === $token){
             return true;
         }

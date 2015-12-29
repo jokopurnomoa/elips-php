@@ -89,4 +89,19 @@ class Testing extends Base {
 
     }
 
+    public function sanitize(){
+        Loader::loadLibrary('Sanitize');
+        Loader::loadLibrary('Validate');
+
+        $email = Sanitize::email('jokopurnomoa@gmail.com');
+        if(Validate::email($email)){
+            echo $email;
+        }
+
+        $string = Sanitize::float('123.98');
+        if(Validate::float($string)){
+            echo $string;
+        }
+    }
+
 }

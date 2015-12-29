@@ -29,8 +29,10 @@ class Core {
 
         Loader::loadLibrary('URI');
         Loader::loadLibrary('Encryption');
+        Loader::loadLibrary('Security');
         Loader::loadLibrary('Cache');
         Loader::loadLibrary('Blade');
+        Loader::loadLibrary('Input');
         Loader::loadHelper('input');
 
         $this->handleAutoload();
