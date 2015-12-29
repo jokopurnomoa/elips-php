@@ -30,6 +30,20 @@ class Security {
     }
 
     /**
+     * Check Token Valid
+     *
+     * @param $token_name
+     * @param $token
+     * @return bool
+     */
+    public static function isTokenValid($token_name, $token){
+        if(Session::get('CSRF_TOKEN_' . $token_name) === $token){
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * XSS Filter
      *
      * @param $string
