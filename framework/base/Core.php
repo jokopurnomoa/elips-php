@@ -9,6 +9,11 @@
 class Core {
 
     /**
+     * @var
+     */
+    public $data;
+
+    /**
      * Run Core
      */
     public function run(){
@@ -22,11 +27,10 @@ class Core {
         require 'Model.php';
         require 'Controller.php';
 
+        Loader::loadLibrary('URI');
         Loader::loadLibrary('Encryption');
         Loader::loadLibrary('Cache');
-        Loader::loadLibrary('View');
         Loader::loadLibrary('Blade');
-        Loader::loadLibrary('URI');
 
         $this->handleAutoload();
         Route::run();
