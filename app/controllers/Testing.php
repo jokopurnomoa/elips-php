@@ -85,8 +85,6 @@ class Testing extends Base {
 
     public function memory(){
         echo Benchmark::memoryUsage();
-        echo '<br>';
-
     }
 
     public function sanitize(){
@@ -111,7 +109,10 @@ class Testing extends Base {
         Cookie::delete('test');
         echo Cookie::get('test');
 
+    }
 
+    public function showMessage(){
+        echo 'This is a test message';
     }
 
 }

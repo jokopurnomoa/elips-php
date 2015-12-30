@@ -21,6 +21,7 @@ class Route {
 
         $classname = '';
         $methodname = 'index';
+        $method_separator = '_';
         $root_controller = '';
         $page_404 = 'Error';
 
@@ -33,6 +34,12 @@ class Route {
                 if(isset($route['404'])) {
                     if ($route['404'] !== '') {
                         $page_404 = $route['404'];
+                    }
+                }
+
+                if(isset($route['method_separator'])) {
+                    if ($route['method_separator'] !== '') {
+                        $method_separator = $route['method_separator'];
                     }
                 }
 
@@ -105,17 +112,44 @@ class Route {
 
         if($classname !== '' && $methodname !== '' && strtolower($classname) !== strtolower($root_controller)) {
             $module_path = trim('modules/' . trim(strtolower($classname)), '/') . '/';
+            $classname = ucfirst($classname);
 
             if (file_exists(APP_PATH . 'controllers/' . $classname . '.php')) {
                 require_once APP_PATH . 'controllers/' . $classname . '.php';
                 $class = new $classname();
-                $class->$methodname();
+                if(!method_exists($classname, $methodname)) {
+                    $separator_found = substr_count($methodname, $method_separator);
+                    if($separator_found > 0){
+                        for($i=0;$i<$separator_found;$i++){
+                            $separator_pos = strpos($methodname, $method_separator);
+                            if($separator_pos !== false){
+                                $methodname = substr($methodname, 0, $separator_pos) . ucfirst(substr($methodname, $separator_pos + 1, strlen($methodname) - $separator_pos - 1));
+                            }
+                        }
+                    }
+                    $class->$methodname();
+                } else {
+                    $class->$methodname();
+                }
             } elseif (file_exists(APP_PATH . $module_path . 'controllers/' . $classname . '.php')) {
                 require_once APP_PATH . $module_path . 'controllers/' . $classname . '.php';
                 $class = new $classname();
                 global $__module_path;
                 $__module_path = $module_path;
-                $class->$methodname();
+                if(!method_exists($classname, $methodname)) {
+                    $separator_found = substr_count($methodname, $method_separator);
+                    if($separator_found > 0){
+                        for($i=0;$i<$separator_found;$i++){
+                            $separator_pos = strpos($methodname, $method_separator);
+                            if($separator_pos !== false){
+                                $methodname = substr($methodname, 0, $separator_pos) . ucfirst(substr($methodname, $separator_pos + 1, strlen($methodname) - $separator_pos - 1));
+                            }
+                        }
+                    }
+                    $class->$methodname();
+                } else {
+                    $class->$methodname();
+                }
             } elseif (file_exists(APP_PATH . 'views/404.blade.php')) {
                 require_once FW_PATH . 'base/' . $page_404 . '.php';
                 $class = new $page_404();
