@@ -198,4 +198,14 @@ class Email {
     public static function getErrorInfo(){
         return self::$phpMailer->ErrorInfo;
     }
+
+    /**
+     * Set Timeout
+     *
+     * @param int $time
+     * @return int
+     */
+    public static function setTimeout($time = 30){
+        return self::$phpMailer->Timeout = $time;
+    }
 }
