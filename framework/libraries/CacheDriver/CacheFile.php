@@ -50,7 +50,7 @@ class CacheFile {
     public function get($flag){
         if($this->cache_active){
             $cache = read_file(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')));
-            if($cache !== null){
+            if($cache !== null && $cache !== ''){
                 if($this->cache_encrypt) {
                     $cache = (array)unserialize(trim(Encryption::decode($cache)));
                 } else {
