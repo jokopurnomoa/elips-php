@@ -115,4 +115,19 @@ class Testing extends Base {
         echo 'This is a test message';
     }
 
+    public function resizeImage(){
+        Loader::loadLibrary('ImageLib');
+
+        ImageLib::setConfig(array(
+            'source_image' => './storage/the-lorax.jpg',
+            'new_image' => './storage/the-lorax-thumb.jpg',
+            'create_thumb' => true,
+            'maintain_ratio' => true,
+            'width' => 500,
+            'height' => 500
+        ));
+
+        ImageLib::resize();
+    }
+
 }

@@ -72,7 +72,8 @@ class Blade {
 
     private static function parse($__buffer){
         if($__buffer !== ''){
-            for($__i = 0; $__i < strlen($__buffer); $__i++) {
+            $max_loop = strlen($__buffer);
+            for($__i = 0; $__i < $max_loop; $__i++) {
                 // include template
                 if(strpos($__buffer, '@include(') !== false){
                     $__start_pos = strpos($__buffer, '@include(');
@@ -93,7 +94,7 @@ class Blade {
                 // end include template
             }
 
-            for($__i = 0; $__i < strlen($__buffer); $__i++) {
+            for($__i = 0; $__i < $max_loop; $__i++) {
                 // echo escaped variable
                 if (strpos($__buffer, '{{{') !== false && strpos($__buffer, '}}}') !== false) {
                     $__start_pos = strpos($__buffer, '{{{');
@@ -108,7 +109,7 @@ class Blade {
                 // end echo escaped variable
             }
 
-            for($__i = 0; $__i < strlen($__buffer); $__i++) {
+            for($__i = 0; $__i < $max_loop; $__i++) {
                 // comment
                 if (strpos($__buffer, '{{--') !== false && strpos($__buffer, '--}}') !== false) {
                     $__start_pos = strpos($__buffer, '{{--');
@@ -123,7 +124,7 @@ class Blade {
                 // end comment
             }
 
-            for($__i = 0; $__i < strlen($__buffer); $__i++) {
+            for($__i = 0; $__i < $max_loop; $__i++) {
                 // echo variable
                 if (strpos($__buffer, '{{') !== false && strpos($__buffer, '}}') !== false) {
                     $__start_pos = strpos($__buffer, '{{');
@@ -138,7 +139,7 @@ class Blade {
                 // end echo variable
             }
 
-            for($__i = 0; $__i < strlen($__buffer); $__i++){
+            for($__i = 0; $__i < $max_loop; $__i++){
                 // if
                 if(strpos($__buffer, '@if((((') !== false){
                     $__start_pos = strpos($__buffer, '@if((((');
@@ -209,7 +210,7 @@ class Blade {
                 // endif
             }
 
-            for($__i = 0; $__i < strlen($__buffer); $__i++){
+            for($__i = 0; $__i < $max_loop; $__i++){
                 // foreach
                 if(strpos($__buffer, '@foreach') !== false){
                     $__start_pos = strpos($__buffer, '@foreach');
@@ -228,7 +229,7 @@ class Blade {
                 // endforeach
             }
 
-            for($__i = 0; $__i < strlen($__buffer); $__i++){
+            for($__i = 0; $__i < $max_loop; $__i++){
                 // for
                 if(strpos($__buffer, '@for(') !== false){
                     $__start_pos = strpos($__buffer, '@for(');
@@ -247,7 +248,7 @@ class Blade {
                 // endfor
             }
 
-            for($__i = 0; $__i < strlen($__buffer); $__i++){
+            for($__i = 0; $__i < $max_loop; $__i++){
                 // while
                 if(strpos($__buffer, '@while((((') !== false){
                     $__start_pos = strpos($__buffer, '@while((((');

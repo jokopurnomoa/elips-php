@@ -22,10 +22,10 @@ class Core {
 
         Benchmark::startTime('execution_time');
 
-        require 'Loader.php';
-        require 'Route.php';
-        require 'Model.php';
-        require 'Controller.php';
+        require FW_PATH . 'base/Loader.php';
+        require FW_PATH . 'base/Route.php';
+        require FW_PATH . 'base/Model.php';
+        require FW_PATH . 'base/Controller.php';
 
         Loader::loadLibrary('URI');
         Loader::loadLibrary('Encryption');

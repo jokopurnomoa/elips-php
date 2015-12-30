@@ -78,7 +78,7 @@ class ImageLib {
      * @param $source_image_path
      * @param $source_new_image_path
      */
-    public static function resizeGD2($source_image_path, $source_new_image_path){
+    private static function resizeGD2($source_image_path, $source_new_image_path){
         $ext = trim(pathinfo($source_image_path, PATHINFO_EXTENSION));
 
         list($width, $height) = getimagesize($source_image_path);
@@ -97,7 +97,6 @@ class ImageLib {
         }
 
         if($source !== null){
-
             $is_size_maintained = false;
             if(self::$maintain_size){
                 if(self::$width > $width && self::$height > $height){
@@ -108,10 +107,14 @@ class ImageLib {
             }
 
             if(!$is_size_maintained){
-                if($width > $height){
-                    self::$height = $height * (self::$height / $width);
-                } elseif($width < $height){
-                    self::$width = $width * (self::$width / $height);
+                if(self::$maintain_ratio) {
+                    if ($width > $height) {
+                        self::$height = self::$width / ($width / $height);
+                    } elseif ($width < $height) {
+                        self::$width = self::$height / ($height / $width);
+                    } else {
+                        self::$width = self::$height;
+                    }
                 }
             }
 

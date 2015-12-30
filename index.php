@@ -12,13 +12,13 @@
 define('APP_ENV', 'development');
 
 // Path to the project / current path
-define('MAIN_PATH', './');
+define('MAIN_PATH', __DIR__ . '/');
 
 // Path to the system folder
-define('FW_PATH', 'framework/');
+define('FW_PATH', __DIR__ . '/framework/');
 
 // Path to the application folder
-define('APP_PATH', 'app/');
+define('APP_PATH', __DIR__ . '/app/');
 
 /**
  * Instance Core Class
