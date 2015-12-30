@@ -6,6 +6,9 @@
  * Time: 12:02 PM
  */
 
+use JasonGrimes\Paginator;
+use Gregwar\Captcha\CaptchaBuilder;
+
 class Testing extends Base {
 
     public function index(){
@@ -138,4 +141,61 @@ class Testing extends Base {
         echo Security::xssFilter('<script>alert("malicious code");</script>');
     }
 
+    public function curlGet(){
+        echo '<pre>';
+        echo 'ID   : ' . Input::get('id');
+        echo '<br>';
+        echo 'Name : ' . Input::get('name');
+        echo '</pre>';
+    }
+
+    public function curlPost(){
+        echo '<pre>';
+        echo 'ID   : ' . Input::post('id');
+        echo '<br>';
+        echo 'Name : ' . Input::post('name');
+        echo '</pre>';
+    }
+
+    public function curl(){
+        Loader::loadLibrary('CURL');
+
+        echo 'CURL get<br>';
+        echo CURL::get(URI::baseUrl() . 'testing/curl_get?id=100&name=Joko Purnomo A');
+        echo '<br><br>CURL post<br>';
+        echo CURL::post(URI::baseUrl() . 'testing/curl_post', array('id' => 200, 'name' => 'Joko Purnomo A'));
+    }
+
+    public function pagination(){
+        require MAIN_PATH . 'vendor/php-paginator/src/JasonGrimes/Paginator.php';
+
+        $totalItems = 100000;
+        $itemsPerPage = 50;
+        $currentPage = 1900;
+        $urlPattern = '/foo/page/(:num)';
+
+        $paginator = new Paginator($totalItems, $itemsPerPage, $currentPage, $urlPattern);
+        $paginator->setMaxPagesToShow(7);
+        echo $paginator;
+    }
+
+    public function captcha(){
+        Loader::loadLibrary('Session');
+
+        require MAIN_PATH . 'vendor/Gregwar/Captcha/autoload.php';
+
+        $builder = new CaptchaBuilder;
+        $builder->build();
+
+        Session::set('captcha', $builder->getPhrase());
+
+        if($builder->testPhrase(Session::get('captcha'))) {
+            // instructions if user phrase is good
+        }
+        else {
+            // user phrase is wrong
+        }
+        header('Content-type: image/jpeg');
+        $builder->output();
+    }
 }

@@ -5,7 +5,6 @@
  * Get uri segment
  *
  */
-
 class URI {
 
     /**
@@ -63,5 +62,23 @@ class URI {
         }
 
         return str_replace(array('//', '../'), '/', trim($uri, '/'));
+    }
+
+    /**
+     * Redirect
+     *
+     * @param $link
+     */
+    public static function redirect($url){
+        header('location:' . $url);
+    }
+
+    /**
+     * Base URL
+     *
+     * @return string
+     */
+    public static function baseUrl(){
+        return base_url();
     }
 }
