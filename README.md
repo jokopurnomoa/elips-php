@@ -6,7 +6,7 @@ Server Requirements
 -------------------
 
 - PHP version 5.3.0 or newer.
-- enable mod_rewrite
+- enable mod_rewrite module in apache
 
 License
 -------
