@@ -23,7 +23,7 @@ class ImageLib {
      * @param array $config
      */
     public static function setConfig($config = array()){
-        if($config != null){
+        if($config !== null){
             foreach($config as $key => $value){
                 self::$$key = $value;
             }
@@ -88,15 +88,15 @@ class ImageLib {
             $source = imagecreatefrompng($source_image_path);
         } elseif($ext === 'jpg' || $ext === 'jpeg'){
             $source = imagecreatefromjpeg($source_image_path);
-        } elseif($ext == 'gif'){
+        } elseif($ext === 'gif'){
             $source = imagecreatefromgif($source_image_path);
-        } elseif($ext == 'bmp'){
+        } elseif($ext === 'bmp'){
             $source = imagecreatefromwbmp($source_image_path);
         } elseif(APP_ENV === 'development') {
             error_dump('Image format not supported!');die();
         }
 
-        if($source != null){
+        if($source !== null){
 
             $is_size_maintained = false;
             if(self::$maintain_size){
@@ -122,9 +122,9 @@ class ImageLib {
                 self::$new_image !== '' ? imagepng($thumb, $source_new_image_path, self::$quality) : imagepng($thumb, $source_image_path, self::$quality);
             } elseif($ext === 'jpg' || $ext === 'jpeg'){
                 self::$new_image !== '' ? imagejpeg($thumb, $source_new_image_path, self::$quality) : imagejpeg($thumb, $source_image_path, self::$quality);
-            } elseif($ext == 'gif'){
+            } elseif($ext === 'gif'){
                 self::$new_image !== '' ? imagegif($thumb, $source_new_image_path, self::$quality) : imagegif($thumb, $source_image_path, self::$quality);
-            } elseif($ext == 'bmp'){
+            } elseif($ext === 'bmp'){
                 self::$new_image !== '' ? imagewbmp($thumb, $source_new_image_path, self::$quality) : imagewbmp($thumb, $source_image_path, self::$quality);
             }
 

@@ -99,7 +99,7 @@ class Loader {
 
         if(file_exists(APP_PATH . 'views/' . $view . '.php')){
             ob_start();
-            if($data != null){
+            if($data !== null){
                 foreach($data as $key => $val){
                     $$key = $val;
                 }
@@ -117,7 +117,7 @@ class Loader {
         }
         elseif(file_exists(APP_PATH . $module_path . 'views/' . $view . '.php')){
             ob_start();
-            if($data != null){
+            if($data !== null){
                 foreach($data as $key => $val){
                     $$key = $val;
                 }

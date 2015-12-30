@@ -30,7 +30,7 @@ class Route {
 
         $route_found = false;
         if(isset($route)){
-            if($route != null){
+            if($route !== null){
                 if(isset($route['404'])) {
                     if ($route['404'] !== '') {
                         $page_404 = $route['404'];
@@ -56,7 +56,7 @@ class Route {
                 }
                 /* End load root controller */
 
-                if($uri != '/' && $uri != ''){
+                if($uri !== '/' && $uri !== ''){
                     foreach($route as $key => $value){
                         $key = trim($key, '/');
                         $value = trim($value, '/');
@@ -65,8 +65,8 @@ class Route {
                         $arr_value = explode('/', $value);
 
                         if(count($arr_value) > 0 && count($arr_key) > 0){
-                            if($uri == $key){
-                                if(count($arr_value) == 1){
+                            if($uri === $key){
+                                if(count($arr_value) === 1){
                                     $classname = $arr_value[0];
                                     $route_found = true;
                                 }
@@ -78,9 +78,9 @@ class Route {
                                 break;
                             } else {
                                 if(count($arr_key) > 1){
-                                    if($arr_uri[0] == $arr_key[0]){
-                                        if($arr_key[1] == '(:any)'){
-                                            if(count($arr_value) == 1){
+                                    if($arr_uri[0] === $arr_key[0]){
+                                        if($arr_key[1] === '(:any)'){
+                                            if(count($arr_value) === 1){
                                                 $classname = $arr_value[0];
                                                 $route_found = true;
                                             }

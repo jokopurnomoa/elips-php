@@ -21,7 +21,7 @@ class Database {
             error_dump('File \'' . APP_PATH . 'config/database.php\' not found!');die();
         }
 
-        if($config['db']['main']['driver'] == 'mysqli'){
+        if($config['db']['main']['driver'] === 'mysqli'){
             require 'DBDriver/MySQLi.php';
             self::$db_driver = new MySQLiDriver($config['db']['main']);
             self::$db_driver->connect();
@@ -34,7 +34,7 @@ class Database {
      * Destructor
      */
     public static function destruct(){
-        if(self::$db_driver != null){
+        if(self::$db_driver !== null){
             self::$db_driver->disconnect();
         }
     }

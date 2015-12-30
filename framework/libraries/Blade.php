@@ -59,7 +59,7 @@ class Blade {
 
     private static function run($__buffer, $data){
         ob_start();
-        if($data != null){
+        if($data !== null){
             foreach($data as $key => $val){
                 $$key = $val;
             }
@@ -71,7 +71,7 @@ class Blade {
     }
 
     private static function parse($__buffer){
-        if($__buffer != ''){
+        if($__buffer !== ''){
             for($__i = 0; $__i < strlen($__buffer); $__i++) {
                 // include template
                 if(strpos($__buffer, '@include(') !== false){

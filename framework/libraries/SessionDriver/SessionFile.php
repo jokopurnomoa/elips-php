@@ -70,10 +70,10 @@ class SessionFile {
      */
     private function getSessionID(){
         if(isset($_COOKIE[$this->session_name])){
-            if($_COOKIE[$this->session_name] != ''){
+            if($_COOKIE[$this->session_name] !== ''){
                 return Encryption::decode($_COOKIE[$this->session_name], $this->session_key);
             }
-        } else if($this->session_id != ''){
+        } else if($this->session_id !== ''){
             return Encryption::decode($this->session_id, $this->session_key);
         }
         return null;
@@ -90,28 +90,28 @@ class SessionFile {
 
         $ip_addr = null;
         $user_agent = null;
-        if($session_id != ''){
+        if($session_id !== ''){
             $arr_session_id = explode($this->seperator, $session_id);
-            if(count($arr_session_id) == 4){
+            if(count($arr_session_id) === 4){
                 $ip_addr = $arr_session_id[0];
                 $user_agent = $arr_session_id[1];
                 if($this->session_match_ip){
-                    if($_SERVER['REMOTE_ADDR'] != $ip_addr || $_SERVER['HTTP_USER_AGENT'] != $user_agent){
+                    if($_SERVER['REMOTE_ADDR'] !== $ip_addr || $_SERVER['HTTP_USER_AGENT'] !== $user_agent){
                         $session_id = null;
                     }
                 } else {
-                    if($_SERVER['HTTP_USER_AGENT'] != $user_agent){
+                    if($_SERVER['HTTP_USER_AGENT'] !== $user_agent){
                         $session_id = null;
                     }
                 }
             }
         }
 
-        if($session_id != null){
+        if($session_id !== null){
             $string = read_file('storage/sessions/' . sha1($session_id));
 
             $session_data = null;
-            if($string != ''){
+            if($string !== ''){
                 $session_data = (array)json_decode(trim(Encryption::decode($string, $this->session_key)));
             }
 
@@ -132,7 +132,7 @@ class SessionFile {
     public function set($key, $value){
         $session_id = $this->getSessionID();
 
-        if($session_id != null){
+        if($session_id !== null){
             $session_id = sha1($session_id);
             $session_data = null;
 
@@ -147,7 +147,7 @@ class SessionFile {
             $handle = fopen('storage/sessions/' . $session_id, 'w+');
             $string = fread($handle, $filesize);
 
-            if($string != '') {
+            if($string !== '') {
                 $session_data = (array)json_decode(trim(Encryption::decode($string, $this->session_key)));
             }
             $session_data[$key] = $value;
@@ -168,11 +168,11 @@ class SessionFile {
     public function remove($key){
         $session_id = $this->getSessionID();
 
-        if(file_exists('storage/sessions/' . $session_id) && $session_id != '') {
+        if(file_exists('storage/sessions/' . $session_id) && $session_id !== '') {
             $handle = fopen('storage/sessions/' . $session_id, 'w+');
             $string = fread($handle, $this->session_max_size);
             $session_data = null;
-            if($string != '') {
+            if($string !== '') {
                 $session_data = (array)json_decode(trim(Encryption::decode($string, $this->session_key)));
             }
             unset($session_data[$key]);
@@ -190,7 +190,7 @@ class SessionFile {
      */
     public function destroy(){
         $session_id = sha1($this->getSessionID());
-        if(file_exists('storage/sessions/' . $session_id) && $session_id != '') {
+        if(file_exists('storage/sessions/' . $session_id) && $session_id !== '') {
             return unlink('storage/sessions/' . $session_id);
         }
         return false;

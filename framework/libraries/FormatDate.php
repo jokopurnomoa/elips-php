@@ -46,7 +46,7 @@ class FormatDate {
         $month = substr($date, 3, 2);
         $year = substr($date, 6, 4);
 
-        if($date == '00-00-0000' || $date == ''){
+        if($date === '00-00-0000' || $date === '' || $date === null){
             return null;
         }
         return $year.$separator.$month.$separator.$day;
@@ -64,7 +64,7 @@ class FormatDate {
         $month = substr($date, 5, 2);
         $day = substr($date, 8, 2);
 
-        if($date == '0000-00-00' || $date == ''){
+        if($date === '00-00-0000' || $date === '' || $date === null){
             return null;
         }
         return $day.$separator.$month.$separator.$year;
@@ -81,7 +81,7 @@ class FormatDate {
         $month = substr($date, 5, 2);
         $day = substr($date, 8, 2);
 
-        if($date == '0000-00-00 00:00:00' || $date == ''){
+        if($date === '0000-00-00 00:00:00' || $date === '' || $date === null){
             return null;
         }
         return $day.' '.(self::$lang === self::EN ? self::$arr_month_en[$month*1] : self::$arr_month_id[$month*1]).' '.$year;
@@ -101,7 +101,7 @@ class FormatDate {
         $hour = substr($date, 11, 2);
         $minute = substr($date, 14, 2);
 
-        if($date == '0000-00-00 00:00:00' || $date == ''){
+        if($date === '0000-00-00 00:00:00' || $date === '' || $date === null){
             return null;
         }
         return $day.' '.(self::$lang === self::EN ? self::$arr_month_en[$month*1] : self::$arr_month_id[$month*1]).' '.$year.' - '.$hour.':'.$minute;
@@ -122,7 +122,7 @@ class FormatDate {
         $minute = substr($date, 14, 2);
         $second = substr($date, 17, 2);
 
-        if($date == '0000-00-00 00:00:00' || $date == ''){
+        if($date === '0000-00-00 00:00:00' || $date === '' || $date === null){
             return null;
         }
         return $day.' '.(self::$lang === self::EN ? self::$arr_month_en[$month*1] : self::$arr_month_id[$month*1]).' '.$year.' - '.$hour.':'.$minute.':'.$second;
@@ -143,7 +143,7 @@ class FormatDate {
         $hour = substr($date, 11, 2);
         $minute = substr($date, 14, 2);
 
-        if($date == '0000-00-00 00:00:00' || $date == ''){
+        if($date === '0000-00-00 00:00:00' || $date === '' || $date === null){
             return null;
         }
         return $day.$separator.$month.$separator.$year.' '.$hour.':'.$minute;
@@ -163,7 +163,7 @@ class FormatDate {
         $hour = substr($date, 11, 2);
         $minute = substr($date, 14, 2);
 
-        if($date == '0000-00-00 00:00:00' || $date == ''){
+        if($date === '0000-00-00 00:00:00' || $date === '' || $date === null){
             return null;
         }
         return $year.'-'.$month.'-'.$day.' '.$hour.':'.$minute;
@@ -176,7 +176,7 @@ class FormatDate {
      * @return string
      */
     public static function day($date){
-        if($date == '0000-00-00 00:00:00' || $date == ''){
+        if($date === '0000-00-00 00:00:00' || $date === '' || $date === null){
             return null;
         }
         return substr($date, 8, 2);
@@ -189,7 +189,7 @@ class FormatDate {
      * @return string
      */
     public static function month($date){
-        if($date == '0000-00-00 00:00:00' || $date == ''){
+        if($date === '0000-00-00 00:00:00' || $date === '' || $date === null){
             return null;
         }
         return substr($date, 5, 2);
@@ -202,7 +202,7 @@ class FormatDate {
      * @return string
      */
     public static function year($date){
-        if($date == '0000-00-00 00:00:00' || $date == ''){
+        if($date === '0000-00-00 00:00:00' || $date === '' || $date === null){
             return null;
         }
         return substr($date, 0, 4);
@@ -215,7 +215,7 @@ class FormatDate {
      * @return mixed
      */
     public static function monthName($date){
-        if($date == '0000-00-00 00:00:00' || $date == ''){
+        if($date === '0000-00-00 00:00:00' || $date === '' || $date === null){
             return null;
         }
         $month = substr($date, 5, 2);

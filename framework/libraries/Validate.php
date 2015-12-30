@@ -25,7 +25,7 @@ class Validate {
      * @return mixed
      */
     public static function url($url, $flag = ''){
-        if($flag != ''){
+        if($flag !== ''){
             return filter_var($url, FILTER_VALIDATE_URL, $flag);
         } else {
             return filter_var($url, FILTER_VALIDATE_URL);
@@ -40,7 +40,7 @@ class Validate {
      * @return mixed
      */
     public static function ip($ip, $flag = ''){
-        if($flag != ''){
+        if($flag !== ''){
             return filter_var($ip, FILTER_VALIDATE_IP, $flag);
         } else {
             return filter_var($ip, FILTER_VALIDATE_IP);
@@ -75,7 +75,7 @@ class Validate {
      * @return mixed
      */
     public static function float($float, $flag = ''){
-        if($flag != ''){
+        if($flag !== ''){
             return filter_var($float, FILTER_VALIDATE_FLOAT, $flag);
         } else {
             return filter_var($float, FILTER_VALIDATE_FLOAT);
@@ -89,7 +89,7 @@ class Validate {
      * @return mixed
      */
     public static function int($int, $flag = ''){
-        if($flag != ''){
+        if($flag !== ''){
             return filter_var($int, FILTER_VALIDATE_INT, $flag);
         } else {
             return filter_var($int, FILTER_VALIDATE_INT);
