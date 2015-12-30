@@ -37,7 +37,7 @@ class Testing extends Base {
         Database::insert('test', array('val1' => 'A', 'val2' => 'B'));
         $insert_id = Database::insertId();
         Database::update('test', 'test_id', $insert_id - 1, array('val1' => 'A2', 'val2' => 'B2'));
-        Database::delete('test', 'val1', 'A2');
+        Database::delete('test', 'test_id', $insert_id - 3);
         Database::commit();
     }
 

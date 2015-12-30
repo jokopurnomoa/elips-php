@@ -524,7 +524,7 @@ class MySQLiDriver {
     public function beginTransaction(){
         $this->transaction_status = false;
         mysqli_autocommit($this->link, FALSE);
-        return mysqli_begin_transaction($this->link);
+        return mysqli_query($this->link, "START TRANSACTION");
     }
 
     /**
