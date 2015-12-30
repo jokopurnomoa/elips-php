@@ -131,7 +131,7 @@ class MySQLiDriver {
         $query = mysqli_query($this->link, $sql);
         if($query){
             if(mysqli_num_rows($query) > 0){
-                $result = array();
+                $result = null;
                 while($data = mysqli_fetch_assoc($query)){
                     $result[] = (object)$data;
                 }
