@@ -5,7 +5,7 @@ Simple, Fast &amp; Efficient PHP Framework with less configuration
 Server Requirements
 -------------------
 
-- PHP version 5.3.0 or newer.
+- PHP version 5.3.0 or newer
 - enable mod_rewrite module in apache
 
 License

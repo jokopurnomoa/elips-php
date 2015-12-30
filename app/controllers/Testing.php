@@ -130,4 +130,12 @@ class Testing extends Base {
         ImageLib::resize();
     }
 
+    public function security(){
+        Loader::loadLibrary('Session');
+        Security::generateCSRFToken('test');
+        echo Security::getCSRFToken('test');
+        echo '<br>';
+        echo Security::xssFilter('<script>alert("malicious code");</script>');
+    }
+
 }
