@@ -64,7 +64,7 @@ class Core {
      */
     private function autoloadLanguage($autoload){
         if(isset($autoload['languages'])){
-            if($autoload['languages'] !== null){
+            if($autoload['languages'] != null){
                 foreach($autoload['languages'] as $language){
                     Loader::loadLanguage($language);
                 }
@@ -79,7 +79,7 @@ class Core {
      */
     private function autoloadLibraries($autoload){
         if(isset($autoload['libraries'])){
-            if($autoload['libraries'] !== null){
+            if($autoload['libraries'] != null){
                 foreach($autoload['libraries'] as $library){
                     Loader::loadLibrary($library);
                 }
@@ -94,7 +94,7 @@ class Core {
      */
     private function autoloadModels($autoload){
         if(isset($autoload['models'])){
-            if($autoload['models'] !== null){
+            if($autoload['models'] != null){
                 foreach($autoload['models'] as $model){
                     Loader::loadModel($model);
                 }
@@ -109,7 +109,7 @@ class Core {
      */
     private function autoloadHelpers($autoload){
         if(isset($autoload['helpers'])){
-            if($autoload['helpers'] !== null){
+            if($autoload['helpers'] != null){
                 foreach($autoload['helpers'] as $helper){
                     Loader::loadHelper($helper);
                 }

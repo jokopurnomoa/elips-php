@@ -36,7 +36,7 @@ class CURL {
      */
     public static function post($url, $post_field = array(), $timeout = 30){
         $_post_field = '';
-        if($post_field !== null && $post_field !== ''){
+        if($post_field != null){
             if(is_array($post_field)){
                 $_i = 0;
                 foreach($post_field as $key => $val){

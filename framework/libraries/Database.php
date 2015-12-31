@@ -31,15 +31,6 @@ class Database {
     }
 
     /**
-     * Destructor
-     */
-    public static function destruct(){
-        if(self::$db_driver !== null){
-            self::$db_driver->disconnect();
-        }
-    }
-
-    /**
      * Escaping String
      *
      * @param $string

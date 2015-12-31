@@ -6,7 +6,7 @@
  * Time: 12:02 PM
  */
 
-class Welcome extends Base {
+class Welcome extends Controller {
 
     public function index(){
 

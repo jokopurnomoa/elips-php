@@ -17,7 +17,7 @@ class Cookie {
      * @return bool
      */
     public static function set($cookie_name, $cookie_value, $expire = null){
-        if($expire !== null){
+        if($expire != null){
             return setcookie($cookie_name, $cookie_value, time() + $expire);
         } else {
             return setcookie($cookie_name, $cookie_value, time() + 7200);

@@ -66,7 +66,7 @@ class MySQLiDriver {
      * @return int
      */
     public function getCountQuery($sql, $params = null){
-        if($params !== null){
+        if($params != null){
             foreach($params as $param){
                 $param_pos = strpos($sql, '?');
                 if($param_pos !== false) {
@@ -92,7 +92,7 @@ class MySQLiDriver {
      */
     public function getCount($table, $where = null, $limit = null){
         $sql = "SELECT * FROM $table ";
-        if($where !== null){
+        if($where != null){
             $sql .= " WHERE ";
             $_i = 0;
             foreach($where as $key => $val){
@@ -106,7 +106,7 @@ class MySQLiDriver {
             }
         }
 
-        if($limit !== null){
+        if($limit != null){
             $sql .= " LIMIT $limit";
         }
         return $this->getCountQuery($sql);
@@ -119,7 +119,7 @@ class MySQLiDriver {
      * @return array|null
      */
     public function getAllQuery($sql, $params = null){
-        if($params !== null){
+        if($params != null){
             foreach($params as $param){
                 $param_pos = strpos($sql, '?');
                 if($param_pos !== false) {
@@ -152,7 +152,7 @@ class MySQLiDriver {
      */
     public function getAll($table, $where = null, $order = null, $limit = null){
         $sql = "SELECT * FROM $table ";
-        if($where !== null){
+        if($where != null){
             $sql .= " WHERE ";
             $_i = 0;
             foreach($where as $key => $val){
@@ -166,7 +166,7 @@ class MySQLiDriver {
             }
         }
 
-        if($order !== null){
+        if($order != null){
             $sql .= " ORDER BY ";
             $_i = 0;
             foreach($order as $key => $val){
@@ -180,7 +180,7 @@ class MySQLiDriver {
             }
         }
 
-        if($limit !== null){
+        if($limit != null){
             $sql .= " LIMIT $limit";
         }
 
@@ -199,7 +199,7 @@ class MySQLiDriver {
      */
     public function getAllField($table, $field = null, $where = null, $order = null, $limit = null){
         $sql = "SELECT ";
-        if($field !== null){
+        if($field != null){
             $_i = 0;
             foreach($field as $val){
                 if($_i === 0){
@@ -214,7 +214,7 @@ class MySQLiDriver {
 
         $sql .= " FROM $table ";
 
-        if($where !== null){
+        if($where != null){
             $sql .= " WHERE ";
             $_i = 0;
             foreach($where as $key => $val){
@@ -228,7 +228,7 @@ class MySQLiDriver {
             }
         }
 
-        if($order !== null){
+        if($order != null){
             $sql .= " ORDER BY ";
             $_i = 0;
             foreach($order as $key => $val){
@@ -242,7 +242,7 @@ class MySQLiDriver {
             }
         }
 
-        if($limit !== null){
+        if($limit != null){
             $sql .= " LIMIT $limit";
         }
         return $this->getAllQuery($sql);
@@ -255,7 +255,7 @@ class MySQLiDriver {
      * @return null|object
      */
     public function getFirstQuery($sql, $params = null){
-        if($params !== null){
+        if($params != null){
             foreach($params as $param){
                 $param_pos = strpos($sql, '?');
                 if($param_pos !== false) {
@@ -284,7 +284,7 @@ class MySQLiDriver {
      */
     public function getFirst($table, $where = null, $order = null, $limit = null){
         $sql = "SELECT * FROM $table ";
-        if($where !== null){
+        if($where != null){
             $sql .= " WHERE ";
             $_i = 0;
             foreach($where as $key => $val){
@@ -298,7 +298,7 @@ class MySQLiDriver {
             }
         }
 
-        if($order !== null){
+        if($order != null){
             $sql .= " ORDER BY ";
             $_i = 0;
             foreach($order as $key => $val){
@@ -312,7 +312,7 @@ class MySQLiDriver {
             }
         }
 
-        if($limit !== null){
+        if($limit != null){
             $sql .= " LIMIT $limit";
         }
 
@@ -331,7 +331,7 @@ class MySQLiDriver {
      */
     public function getFirstField($table, $field = null, $where = null, $order = null, $limit = null){
         $sql = "SELECT ";
-        if($field !== null){
+        if($field != null){
             $_i = 0;
             foreach($field as $val){
                 if($_i === 0){
@@ -346,7 +346,7 @@ class MySQLiDriver {
 
         $sql .= " FROM $table ";
 
-        if($where !== null){
+        if($where != null){
             $sql .= " WHERE ";
             $_i = 0;
             foreach($where as $key => $val){
@@ -360,7 +360,7 @@ class MySQLiDriver {
             }
         }
 
-        if($order !== null){
+        if($order != null){
             $sql .= " ORDER BY ";
             $_i = 0;
             foreach($order as $key => $val){
@@ -374,7 +374,7 @@ class MySQLiDriver {
             }
         }
 
-        if($limit !== null){
+        if($limit != null){
             $sql .= " LIMIT $limit";
         }
         return $this->getFirstQuery($sql);
@@ -387,7 +387,7 @@ class MySQLiDriver {
      * @return bool
      */
     public function insertQuery($sql, $params = null){
-        if($params !== null){
+        if($params != null){
             foreach($params as $param){
                 $param_pos = strpos($sql, '?');
                 if($param_pos !== false) {
@@ -409,7 +409,7 @@ class MySQLiDriver {
      */
     public function insert($table, $data){
         $_this = $this;
-        if($data !== null){
+        if($data != null){
             $sql = "INSERT INTO $table ";
             $_i = 0;
             $_fields = "(";
@@ -440,7 +440,7 @@ class MySQLiDriver {
      * @return bool
      */
     public function updateQuery($sql, $params = null){
-        if($params !== null){
+        if($params != null){
             foreach($params as $param){
                 $param_pos = strpos($sql, '?');
                 if($param_pos !== false) {
@@ -463,7 +463,7 @@ class MySQLiDriver {
      * @return bool
      */
     public function update($table, $field, $id, $data){
-        if($data !== null && $field !== '' && $id !== ''){
+        if($data != null && $field != '' && $id != ''){
             $sql = "UPDATE $table SET ";
             $_i = 0;
             foreach($data as $key => $val){
@@ -488,7 +488,7 @@ class MySQLiDriver {
      * @return bool
      */
     public function deleteQuery($sql, $params = null){
-        if($params !== null){
+        if($params != null){
             foreach($params as $param){
                 $param_pos = strpos($sql, '?');
                 if($param_pos !== false) {

@@ -35,7 +35,7 @@ class Sanitize {
      * @return mixed
      */
     public static function specialChars($string, $flag = ''){
-        if($flag !== ''){
+        if($flag != ''){
             return filter_var($string, FILTER_SANITIZE_SPECIAL_CHARS, $flag);
         } else {
             return filter_var($string, FILTER_SANITIZE_SPECIAL_CHARS);
@@ -50,7 +50,7 @@ class Sanitize {
      * @return mixed
      */
     public static function fullSpecialChars($string, $flag = ''){
-        if($flag !== '') {
+        if($flag != '') {
             return filter_var($string, FILTER_SANITIZE_FULL_SPECIAL_CHARS, $flag);
         } else {
             return filter_var($string, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -75,7 +75,7 @@ class Sanitize {
      * @return mixed
      */
     public static function string($string, $flag = ''){
-        if($flag !== '') {
+        if($flag != '') {
             return filter_var($string, FILTER_SANITIZE_STRING, $flag);
         } else {
             return filter_var($string, FILTER_SANITIZE_STRING);
@@ -121,7 +121,7 @@ class Sanitize {
      * @return mixed
      */
     public static function encoded($string, $flag = ''){
-        if($flag !== ''){
+        if($flag != ''){
             return filter_var($string, FILTER_SANITIZE_ENCODED, $flag);
         } else {
             return filter_var($string, FILTER_SANITIZE_ENCODED);

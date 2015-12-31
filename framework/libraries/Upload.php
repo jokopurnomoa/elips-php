@@ -29,7 +29,7 @@ class Upload {
      * @param array $config
      */
     public static function setConfig($config = array()){
-        if($config !== null){
+        if($config != null){
             foreach($config as $key => $value){
                 if(isset(self::$$key)){
                     self::$$key = $value;
@@ -75,7 +75,7 @@ class Upload {
 
         self::$file_type = self::getFileType($_FILES[$fieldname]['type']);
         self::$file_size = $_FILES[$fieldname]['size'];
-        self::$is_image = (getimagesize($_FILES[$fieldname]['tmp_name']) !== false ? true : false);
+        self::$is_image = (getimagesize($_FILES[$fieldname]['tmp_name']) != false ? true : false);
 
         if(self::$is_image){
             $image_size = getimagesize($_FILES[$fieldname]['tmp_name']);
@@ -85,7 +85,7 @@ class Upload {
 
         $upload_ok = true;
 
-        if(self::$allowed_types !== null){
+        if(self::$allowed_types != null){
             $is_allowed = false;
             foreach(self::$allowed_types as $row){
                 if(trim($row) === self::$file_type){
@@ -149,10 +149,10 @@ class Upload {
         if(file_exists(APP_PATH . 'config/mimes.php')){
             $mimes = null;
             require APP_PATH . 'config/mimes.php';
-            if($mimes !== null){
+            if($mimes != null){
                 foreach($mimes as $key => $value){
                     if(is_array($value)){
-                        if($value !== null){
+                        if($value != null){
                             foreach($value as $val){
                                 if(trim($val) === $type){
                                     return trim($key);

@@ -32,20 +32,20 @@ class Route {
         if(isset($route)){
             if($route !== null){
                 if(isset($route['404'])) {
-                    if ($route['404'] !== '') {
+                    if ($route['404'] != '') {
                         $page_404 = $route['404'];
                     }
                 }
 
                 if(isset($route['method_separator'])) {
-                    if ($route['method_separator'] !== '') {
+                    if ($route['method_separator'] != '') {
                         $method_separator = $route['method_separator'];
                     }
                 }
 
                 /* Load root controller */
                 if(isset($route['root_controller'])){
-                    if($route['root_controller'] !== ''){
+                    if($route['root_controller'] != ''){
                         $root_controller = $route['root_controller'];
                         if(file_exists(APP_PATH . 'controllers/' . $route['root_controller'] . '.php')){
                             require_once APP_PATH . 'controllers/' . $route['root_controller'] . '.php';
@@ -56,7 +56,7 @@ class Route {
                 }
                 /* End load root controller */
 
-                if($uri !== '/' && $uri !== ''){
+                if($uri != '/' && $uri != ''){
                     foreach($route as $key => $value){
                         $key = trim($key, '/');
                         $value = trim($value, '/');
@@ -110,7 +110,7 @@ class Route {
             $methodname = isset($arr_uri[1]) ? $arr_uri[1] : 'index';
         }
 
-        if($classname !== '' && $methodname !== '' && strtolower($classname) !== strtolower($root_controller)) {
+        if($classname != '' && $methodname != '' && strtolower($classname) != strtolower($root_controller)) {
             $module_path = trim('modules/' . trim(strtolower($classname)), '/') . '/';
             $classname = ucfirst($classname);
 

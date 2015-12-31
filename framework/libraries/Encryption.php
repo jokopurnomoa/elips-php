@@ -26,7 +26,7 @@ class Encryption {
     public static function init(){
         global $config;
         if(isset($config['encryption_key'])){
-            if($config['encryption_key'] !== ''){
+            if($config['encryption_key'] != ''){
                 self::$key_std = $config['encryption_key'];
             } elseif(APP_ENV === 'development') {
                 error_dump('Encryption key not yet set in \'' . APP_PATH . 'config/app.php\'!');die();

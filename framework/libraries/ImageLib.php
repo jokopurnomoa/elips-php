@@ -23,7 +23,7 @@ class ImageLib {
      * @param array $config
      */
     public static function setConfig($config = array()){
-        if($config !== null){
+        if($config != null){
             foreach($config as $key => $value){
                 self::$$key = $value;
             }
@@ -56,7 +56,7 @@ class ImageLib {
             self::$quality = 0;
         }
 
-        if(self::$source_image !== ''){
+        if(self::$source_image != ''){
             $source_image_path = str_replace('//', '/', __DIR__ . '/../../' . self::$source_image);
             $source_new_image_path = str_replace('//', '/', __DIR__ . '/../../' . self::$new_image);
 
@@ -96,7 +96,7 @@ class ImageLib {
             error_dump('Image format not supported!');die();
         }
 
-        if($source !== null){
+        if($source != null){
             $is_size_maintained = false;
             if(self::$maintain_size){
                 if(self::$width > $width && self::$height > $height){
@@ -122,13 +122,13 @@ class ImageLib {
             imagecopyresized($thumb, $source, 0, 0, 0, 0, self::$width, self::$height, $width, $height);
 
             if($ext === 'png'){
-                self::$new_image !== '' ? imagepng($thumb, $source_new_image_path, self::$quality) : imagepng($thumb, $source_image_path, self::$quality);
+                self::$new_image != '' ? imagepng($thumb, $source_new_image_path, self::$quality) : imagepng($thumb, $source_image_path, self::$quality);
             } elseif($ext === 'jpg' || $ext === 'jpeg'){
-                self::$new_image !== '' ? imagejpeg($thumb, $source_new_image_path, self::$quality) : imagejpeg($thumb, $source_image_path, self::$quality);
+                self::$new_image != '' ? imagejpeg($thumb, $source_new_image_path, self::$quality) : imagejpeg($thumb, $source_image_path, self::$quality);
             } elseif($ext === 'gif'){
-                self::$new_image !== '' ? imagegif($thumb, $source_new_image_path, self::$quality) : imagegif($thumb, $source_image_path, self::$quality);
+                self::$new_image != '' ? imagegif($thumb, $source_new_image_path, self::$quality) : imagegif($thumb, $source_image_path, self::$quality);
             } elseif($ext === 'bmp'){
-                self::$new_image !== '' ? imagewbmp($thumb, $source_new_image_path, self::$quality) : imagewbmp($thumb, $source_image_path, self::$quality);
+                self::$new_image != '' ? imagewbmp($thumb, $source_new_image_path, self::$quality) : imagewbmp($thumb, $source_image_path, self::$quality);
             }
 
         }

@@ -13,7 +13,7 @@
  * @return null|string
  */
 function get_input($name, $xss_clean = false){
-    if(isset($_GET[$name]) && $name !== null){
+    if(isset($_GET[$name]) && $name != null){
         if($xss_clean){
             return Security::xssFilter($_GET[$name]);
         } else {
@@ -31,7 +31,7 @@ function get_input($name, $xss_clean = false){
  * @return null|string
  */
 function post_input($name, $xss_clean = false){
-    if(isset($_POST[$name]) && $name !== null){
+    if(isset($_POST[$name]) && $name != null){
         if($xss_clean) {
             return Security::xssFilter($_POST[$name]);
         } else {
