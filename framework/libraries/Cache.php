@@ -23,6 +23,11 @@ class Cache {
             self::$cache_driver = new CacheFile();
             self::$cache_driver->cache_active = self::$cache_active;
             self::$cache_driver->cache_encrypt = self::$cache_encrypt;
+        } else if($config['cache']['driver'] === 'apc'){
+            require 'CacheDriver/CacheAPC.php';
+            self::$cache_driver = new CacheAPC();
+            self::$cache_driver->cache_active = self::$cache_active;
+            self::$cache_driver->cache_encrypt = self::$cache_encrypt;
         }
     }
 

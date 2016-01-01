@@ -23,7 +23,7 @@ class Testing extends Base {
 
         if($member_list == null){
             echo 'NO CACHE';
-            $sql = "SELECT * FROM gxa_members LIMIT 200";
+            $sql = "SELECT *, (SELECT SUM(member_id) FROM gxa_members) AS total FROM gxa_members LIMIT 500";
             $member_list = Database::getAllQuery($sql);
             Cache::store('member_list_cache', $member_list);
         }
