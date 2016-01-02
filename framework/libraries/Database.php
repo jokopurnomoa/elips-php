@@ -25,6 +25,10 @@ class Database {
             require 'DBDriver/MySQLi.php';
             self::$db_driver = new MySQLiDriver($config['db']['main']);
             self::$db_driver->connect();
+        } elseif($config['db']['main']['driver'] === 'sqlite'){
+            require 'DBDriver/SQLite.php';
+            self::$db_driver = new SQLiteDriver($config['db']['main']);
+            self::$db_driver->connect();
         } elseif(APP_ENV === 'development') {
             error_dump('Database Driver \'' . $config['db']['main']['driver'] . '\' not avaiable.');die();
         }
@@ -256,5 +260,25 @@ class Database {
      */
     public static function affectedRows(){
         return self::$db_driver->affectedRows();
+    }
+
+    /**
+     * Create Table
+     *
+     * @param $structure
+     * @return mixed
+     */
+    public static function createTable($table, $fields){
+        return self::$db_driver->createTable($table, $fields);
+    }
+
+    /**
+     * Drop Table
+     *
+     * @param $table
+     * @return mixed
+     */
+    public static function dropTable($table){
+        return self::$db_driver->dropTable($table);
     }
 }

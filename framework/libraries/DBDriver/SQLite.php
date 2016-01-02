@@ -1,14 +1,14 @@
 <?php
 /**
- * MySQLiDriver
+ * SQLite Driver
  *
- * Basic CRUD database functions with MySQLi
+ * Basic CRUD database functions with SQLite
  *
  */
 
-class MySQLiDriver {
+class SQLiteDriver extends SQLite3 {
 
-    private $link;
+    private $db;
     private $config;
     private $transaction_status;
 
@@ -41,14 +41,18 @@ class MySQLiDriver {
      * Connnect
      */
     public function connect(){
-        $this->link = mysqli_connect($this->config['host'], $this->config['user'], $this->config['pass'], $this->config['db']);
+        if(!file_exists('storage/sqlite/' . $this->config['db'] . '.db')){
+            $handle = fopen('storage/sqlite/' . $this->config['db'] . '.db', 'w');
+            fclose($handle);
+        }
+        $this->db = new SQLite3('storage/sqlite/' . $this->config['db'] . '.db', SQLITE3_OPEN_READWRITE, $this->config['pass']);
     }
 
     /**
      * Disconnect
      */
     public function disconnect(){
-        mysqli_close($this->link);
+        $this->db->close();
     }
 
     /**
@@ -56,7 +60,7 @@ class MySQLiDriver {
      * @return string
      */
     public function escape($string){
-        return mysqli_real_escape_string($this->link, $string);
+        return $this->db->escapeString($string);
     }
 
     /**
@@ -75,9 +79,11 @@ class MySQLiDriver {
             }
         }
 
-        $query = mysqli_query($this->link, $sql);
-        if($query) {
-            return mysqli_num_rows($query);
+        $sql = 'SELECT count(*) AS num_rows FROM (' . $sql . ') as tmp';
+        $query = $this->db->query($sql);
+        $data = (object)$query->fetchArray(SQLITE3_ASSOC);
+        if($data != null){
+            return $data->num_rows;
         }
         return 0;
     }
@@ -128,11 +134,13 @@ class MySQLiDriver {
             }
         }
 
-        $query = mysqli_query($this->link, $sql);
+        $num_rows = $this->getCountQuery($sql);
+        $query = $this->db->query($sql);
+
         if($query){
-            if(mysqli_num_rows($query) > 0){
+            if($num_rows > 0){
                 $result = null;
-                while($data = mysqli_fetch_assoc($query)){
+                while($data = $query->fetchArray(SQLITE3_ASSOC)) {
                     $result[] = (object)$data;
                 }
                 return $result;
@@ -264,10 +272,15 @@ class MySQLiDriver {
             }
         }
 
-        $query = mysqli_query($this->link, $sql);
-        if($query) {
-            if(mysqli_num_rows($query) > 0) {
-                return (object)mysqli_fetch_assoc($query);
+        $num_rows = $this->getCountQuery($sql);
+        $query = $this->db->query($sql);
+
+        if($query){
+            if($num_rows > 0){
+                $data = $query->fetchArray(SQLITE3_ASSOC);
+                if($data != null){
+                    return (object)$data;
+                }
             }
         }
         return null;
@@ -396,8 +409,8 @@ class MySQLiDriver {
             }
         }
 
-        mysqli_query($this->link, $sql);
-        return mysqli_affected_rows($this->link) > 0 ? true : false;
+        $this->db->query($sql);
+        return ($this->db->changes() > 0 ? true : false);
     }
 
     /**
@@ -449,8 +462,8 @@ class MySQLiDriver {
             }
         }
 
-        mysqli_query($this->link, $sql);
-        return mysqli_affected_rows($this->link) > 0 ? true : false;
+        $this->db->query($sql);
+        return ($this->db->changes() > 0 ? true : false);
     }
 
     /**
@@ -497,8 +510,8 @@ class MySQLiDriver {
             }
         }
 
-        mysqli_query($this->link, $sql);
-        return mysqli_affected_rows($this->link) > 0 ? true : false;
+        $this->db->query($sql);
+        return ($this->db->changes() > 0 ? true : false);
     }
 
     /**
@@ -523,8 +536,7 @@ class MySQLiDriver {
      */
     public function beginTransaction(){
         $this->transaction_status = false;
-        mysqli_autocommit($this->link, FALSE);
-        return mysqli_query($this->link, "START TRANSACTION");
+        return $this->db->query("BEGIN TRANSACTION");
     }
 
     /**
@@ -533,9 +545,10 @@ class MySQLiDriver {
      * @return bool
      */
     public function commit(){
-        $this->transaction_status = mysqli_commit($this->link);
-        mysqli_autocommit($this->link, TRUE);
-        return $this->transaction_status;
+        $query = $this->db->query("COMMIT");
+        if($query){
+            $this->transaction_status = true;
+        }
     }
 
     /**
@@ -544,7 +557,7 @@ class MySQLiDriver {
      * @return bool
      */
     public function rollback(){
-        return mysqli_rollback($this->link);
+        return $this->db->query("ROLLBACK");
     }
 
     /**
@@ -560,7 +573,7 @@ class MySQLiDriver {
      * @return int|string
      */
     public function insertId(){
-        return mysqli_insert_id($this->link);
+        return $this->db->lastInsertRowID();
     }
 
     /**
@@ -569,7 +582,7 @@ class MySQLiDriver {
      * @return int
      */
     public function affectedRows(){
-        return mysqli_affected_rows($this->link);
+        return $this->db->changes();
     }
 
     /**
@@ -595,7 +608,7 @@ class MySQLiDriver {
             }
             $sql .= ')';
 
-            if(mysqli_query($this->link, $sql)){
+            if($this->db->query($sql)){
                 return true;
             } else {
                 return false;
@@ -612,10 +625,11 @@ class MySQLiDriver {
      */
     public function dropTable($table){
         $sql = 'DROP TABLE IF EXISTS ' . $table;
-        if(mysqli_query($this->link, $sql)){
+        if($this->db->query($sql)){
             return true;
         } else {
             return false;
         }
     }
+
 }

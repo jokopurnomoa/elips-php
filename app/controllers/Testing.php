@@ -23,7 +23,7 @@ class Testing extends Base {
 
         if($member_list == null){
             echo 'NO CACHE';
-            $sql = "SELECT *, (SELECT SUM(member_id) FROM gxa_members) AS total FROM gxa_members LIMIT 500";
+            $sql = "SELECT *, (SELECT SUM(member_id) FROM member) AS total FROM member LIMIT 500";
             $member_list = Database::getAllQuery($sql);
             Cache::store('member_list_cache', $member_list);
         }
@@ -47,11 +47,38 @@ class Testing extends Base {
     public function database2(){
         Loader::loadLibrary('Database');
 
-        $sql = "SELECT * FROM gxa_members WHERE email = ? AND name LIKE ?";
+        $sql = "SELECT * FROM member WHERE email = ? AND name LIKE ?";
         $data = Database::getAllQuery($sql, array('jokopurnomoa@gmail.com', '%Elips%'));
         echo '<pre>';
         print_r($data);
         echo '</pre>';
+    }
+
+    public function sqlite(){
+        Loader::loadLibrary('Database');
+
+        Database::createTable('member', array(
+            array('member_id', 'VARCHAR(40)', 'PRIMARY KEY'),
+            array('name', 'VARCHAR(100)'),
+            array('birthdate', 'DATE'),
+            array('gender', 'CHARACTER(1)'),
+            array('address', 'VARCHAR(255)'),
+            array('district_id', 'INT(11)'),
+            array('postcode', 'VARCHAR(10)'),
+            array('phone', 'VARCHAR(20)'),
+            array('email', 'VARCHAR(100)'),
+            array('image', 'VARCHAR(255)'),
+            array('username', 'VARCHAR(100)'),
+            array('password', 'VARCHAR(255)'),
+            array('resgisterdate', 'DATETIME'),
+            array('expired_date', 'DATETIME'),
+            array('catm_id', 'INT(4)')
+        ));
+
+        //Database::insert('member', array('member_id' => 'M00001', 'name' => 'Joko Purnomo A'));
+        Database::getCountQuery('SELECT * FROM member');
+        $data = Database::getFirstField('member', array('member_id', 'name'));
+        print_r($data);
     }
 
     public function email(){
