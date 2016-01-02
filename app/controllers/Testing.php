@@ -28,6 +28,7 @@ class Testing extends Base {
             Cache::store('member_list_cache', $member_list);
         }
 
+        //Cache::delete('member_list_cache');
         echo '<pre>';
         print_r($member_list);
         echo '</pre>';

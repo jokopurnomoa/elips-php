@@ -65,4 +65,15 @@ class CacheFile {
         return null;
     }
 
+    /**
+     * Delete Cache
+     *
+     * @param $flag
+     */
+    public function delete($flag){
+        if(file_exists(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')))){
+            unlink(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')));
+        }
+    }
+
 }

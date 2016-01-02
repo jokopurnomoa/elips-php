@@ -65,4 +65,14 @@ class Cache {
         return self::$cache_driver->get($flag);
     }
 
+    /**
+     * Delete Cache
+     *
+     * @param $flag
+     * @return mixed
+     */
+    public static function delete($flag){
+        return self::$cache_driver->delete($flag);
+    }
+
 }

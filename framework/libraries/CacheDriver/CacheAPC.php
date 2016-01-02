@@ -66,4 +66,14 @@ class CacheAPC {
         return null;
     }
 
+    /**
+     * Delete Cache
+     *
+     * @param $flag
+     * @return bool|string[]
+     */
+    public function delete($flag){
+        return apc_delete(sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')));
+    }
+
 }
