@@ -41,11 +41,7 @@ class SQLiteDriver extends SQLite3 {
      * Connnect
      */
     public function connect(){
-        if(!file_exists('storage/sqlite/' . $this->config['db'] . '.db')){
-            $handle = fopen('storage/sqlite/' . $this->config['db'] . '.db', 'w');
-            fclose($handle);
-        }
-        $this->db = new SQLite3('storage/sqlite/' . $this->config['db'] . '.db', SQLITE3_OPEN_READWRITE, $this->config['pass']);
+        $this->db = new SQLite3('storage/sqlite/' . $this->config['db'] . '.db');
     }
 
     /**
@@ -56,6 +52,8 @@ class SQLiteDriver extends SQLite3 {
     }
 
     /**
+     * Escape String
+     *
      * @param $string
      * @return string
      */
