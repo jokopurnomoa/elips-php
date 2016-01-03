@@ -16,7 +16,7 @@
         }
     </style>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body>
     @include('slices.header')
 
     <div class="content">

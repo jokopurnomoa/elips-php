@@ -22,7 +22,7 @@
     }
     </style>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body>
     <div class="wrapper">
         <div class="title">
             404

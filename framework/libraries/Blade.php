@@ -72,6 +72,61 @@ class Blade {
 
     private static function parse($__buffer){
         if($__buffer !== ''){
+            $parent_view = null;
+
+            $max_extend = substr_count($__buffer, '@extends');
+            for($__i = 0; $__i < $max_extend; $__i++) {
+                // extend template
+                if(strpos($__buffer, '@extends') !== false){
+                    $__start_pos = strpos($__buffer, '@extends');
+                    $__end_pos = strpos($__buffer, ')', $__start_pos);
+                    $__view = str_replace('.', '/', str_replace('\'', '', substr($__buffer, $__start_pos + 9, $__end_pos - $__start_pos  - 9)));
+                    $__extend = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 2);
+                    $__buffer = str_replace($__extend, '', $__buffer);
+
+                    ob_start();
+                    require(APP_PATH . 'views/' . $__view . '.blade.php');
+                    $__view_buffer = ob_get_contents();
+                    @ob_end_clean();
+
+                    $parent_view = $__view_buffer;
+                }
+                else {
+                    break;
+                }
+                // end extend template
+            }
+
+            $sections = array();
+            $max_section = substr_count($__buffer, '@section');
+            for($__i = 0; $__i < $max_section; $__i++) {
+                // parse section
+                if(strpos($__buffer, '@section') !== false){
+                    $__start_pos = strpos($__buffer, '@section');
+                    $__end_pos_sec_name = strpos($__buffer, ')', $__start_pos);
+                    $__end_pos = strpos($__buffer, '@stop', $__start_pos);
+                    $__section_name = substr($__buffer, $__start_pos, $__end_pos_sec_name - $__start_pos + 1);
+
+                    $__section = substr($__buffer, $__start_pos + strlen($__section_name), $__end_pos - $__start_pos  - strlen($__section_name));
+                    $__buffer = str_replace($__section_name . $__section . '@stop', '', $__buffer);
+                    $__section_name = trim(rtrim(ltrim(trim(substr($__section_name, 8, strlen($__section_name))), '('), ')'), '\'');
+
+                    $sections[$__section_name] = $__section;
+                }
+                else {
+                    break;
+                }
+                // end parse section
+            }
+
+            if($parent_view != null && $sections != null){
+                foreach($sections as $key => $val){
+                    $parent_view = str_replace('@yield(\'' . $key . '\')', $val, $parent_view);
+                }
+
+                $__buffer = $parent_view;
+            }
+
             $max_loop = strlen($__buffer);
             for($__i = 0; $__i < $max_loop; $__i++) {
                 // include template
@@ -100,7 +155,7 @@ class Blade {
                     $__start_pos = strpos($__buffer, '{{{');
                     $__end_pos = strpos($__buffer, '}}}');
                     $__var = substr($__buffer, $__start_pos + 3, $__end_pos - $__start_pos - 3);
-                    $__buffer = str_replace('{{{' . $__var . '}}}', '<?php echo ' . htmlspecialchars($__var) . ';?>', $__buffer);
+                    $__buffer = str_replace('{{{' . $__var . '}}}', '<?php echo ' . htmlspecialchars(trim($__var)) . ';?>', $__buffer);
 
                 }
                 else {
@@ -115,7 +170,7 @@ class Blade {
                     $__start_pos = strpos($__buffer, '{{--');
                     $__end_pos = strpos($__buffer, '--}}');
                     $__var = substr($__buffer, $__start_pos + 4, $__end_pos - $__start_pos - 4);
-                    $__buffer = str_replace('{{--' . $__var . '--}}', '<?php /* echo ' . $__var . '; */?>', $__buffer);
+                    $__buffer = str_replace('{{--' . $__var . '--}}', '<?php /* echo ' . trim($__var) . '; */?>', $__buffer);
 
                 }
                 else {
@@ -130,7 +185,7 @@ class Blade {
                     $__start_pos = strpos($__buffer, '{{');
                     $__end_pos = strpos($__buffer, '}}');
                     $__var = substr($__buffer, $__start_pos + 2, $__end_pos - $__start_pos - 2);
-                    $__buffer = str_replace('{{' . $__var . '}}', '<?php echo ' . $__var . ';?>', $__buffer);
+                    $__buffer = str_replace('{{' . $__var . '}}', '<?php echo ' . trim($__var) . ';?>', $__buffer);
 
                 }
                 else {
@@ -141,61 +196,19 @@ class Blade {
 
             for($__i = 0; $__i < $max_loop; $__i++){
                 // if
-                if(strpos($__buffer, '@if((((') !== false){
-                    $__start_pos = strpos($__buffer, '@if((((');
-                    $__end_pos = strpos($__buffer, '))))', $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 4);
+                if(strpos($__buffer, '@if') !== false){
+                    $__start_pos = strpos($__buffer, '@if');
+                    $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
+                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
                     $__buffer = str_replace($__var, '<?php ' . $__var . ':?>', $__buffer);
-                    $__buffer = str_replace('@if((((', 'if((((', $__buffer);
+                    $__buffer = str_replace('@if', 'if', $__buffer);
                 }
-                if(strpos($__buffer, '@if(((') !== false){
-                    $__start_pos = strpos($__buffer, '@if(((');
-                    $__end_pos = strpos($__buffer, ')))', $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 3);
+                elseif(strpos($__buffer, '@elseif') !== false){
+                    $__start_pos = strpos($__buffer, '@elseif');
+                    $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
+                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
                     $__buffer = str_replace($__var, '<?php ' . $__var . ':?>', $__buffer);
-                    $__buffer = str_replace('@if(((', 'if(((', $__buffer);
-                }
-                elseif(strpos($__buffer, '@if((') !== false){
-                    $__start_pos = strpos($__buffer, '@if((');
-                    $__end_pos = strpos($__buffer, '))', $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 2);
-                    $__buffer = str_replace($__var, '<?php ' . $__var . ':?>', $__buffer);
-                    $__buffer = str_replace('@if((', 'if((', $__buffer);
-                }
-                elseif(strpos($__buffer, '@if(') !== false){
-                    $__start_pos = strpos($__buffer, '@if(');
-                    $__end_pos = strpos($__buffer, ')', $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 1);
-                    $__buffer = str_replace($__var, '<?php ' . $__var . ':?>', $__buffer);
-                    $__buffer = str_replace('@if(', 'if(', $__buffer);
-                }
-                elseif(strpos($__buffer, '@elseif((((') !== false){
-                    $__start_pos = strpos($__buffer, '@elseif((((');
-                    $__end_pos = strpos($__buffer, '))))', $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 4);
-                    $__buffer = str_replace($__var, '<?php ' . $__var . ':?>', $__buffer);
-                    $__buffer = str_replace('@elseif((((', 'elseif((((', $__buffer);
-                }
-                elseif(strpos($__buffer, '@elseif(((') !== false){
-                    $__start_pos = strpos($__buffer, '@elseif(((');
-                    $__end_pos = strpos($__buffer, ')))', $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 3);
-                    $__buffer = str_replace($__var, '<?php ' . $__var . ':?>', $__buffer);
-                    $__buffer = str_replace('@elseif(((', 'elseif(((', $__buffer);
-                }
-                elseif(strpos($__buffer, '@elseif((') !== false){
-                    $__start_pos = strpos($__buffer, '@elseif((');
-                    $__end_pos = strpos($__buffer, '))', $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 2);
-                    $__buffer = str_replace($__var, '<?php ' . $__var . ':?>', $__buffer);
-                    $__buffer = str_replace('@elseif((', 'elseif((', $__buffer);
-                }
-                elseif(strpos($__buffer, '@elseif(') !== false){
-                    $__start_pos = strpos($__buffer, '@elseif(');
-                    $__end_pos = strpos($__buffer, ')', $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 1);
-                    $__buffer = str_replace($__var, '<?php ' . $__var . ':?>', $__buffer);
-                    $__buffer = str_replace('@elseif(', 'elseif(', $__buffer);
+                    $__buffer = str_replace('@elseif', 'elseif', $__buffer);
                 }
                 elseif(strpos($__buffer, '@else') !== false){
                     $__buffer = str_replace('@else', '<?php else: ?>', $__buffer);
@@ -231,12 +244,12 @@ class Blade {
 
             for($__i = 0; $__i < $max_loop; $__i++){
                 // for
-                if(strpos($__buffer, '@for(') !== false){
-                    $__start_pos = strpos($__buffer, '@for(');
-                    $__end_pos = strpos($__buffer, ')', $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 1);
+                if(strpos($__buffer, '@for') !== false){
+                    $__start_pos = strpos($__buffer, '@for');
+                    $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
+                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
                     $__buffer = str_replace($__var, '<?php ' . $__var . ':?>', $__buffer);
-                    $__buffer = str_replace('@for(', 'for(', $__buffer);
+                    $__buffer = str_replace('@for', 'for', $__buffer);
                 }
                 elseif(strpos($__buffer, '@endfor') !== false){
                     $__buffer = str_replace('@endfor', '<?php endfor; ?>', $__buffer);
@@ -250,33 +263,12 @@ class Blade {
 
             for($__i = 0; $__i < $max_loop; $__i++){
                 // while
-                if(strpos($__buffer, '@while((((') !== false){
-                    $__start_pos = strpos($__buffer, '@while((((');
-                    $__end_pos = strpos($__buffer, '))))', $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 4);
+                if(strpos($__buffer, '@while') !== false){
+                    $__start_pos = strpos($__buffer, '@while');
+                    $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
+                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
                     $__buffer = str_replace($__var, '<?php ' . $__var . ':?>', $__buffer);
-                    $__buffer = str_replace('@while((((', 'while((((', $__buffer);
-                }
-                elseif(strpos($__buffer, '@while(((') !== false){
-                    $__start_pos = strpos($__buffer, '@while(((');
-                    $__end_pos = strpos($__buffer, ')))', $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 3);
-                    $__buffer = str_replace($__var, '<?php ' . $__var . ':?>', $__buffer);
-                    $__buffer = str_replace('@while(((', 'while(((', $__buffer);
-                }
-                elseif(strpos($__buffer, '@while((') !== false){
-                    $__start_pos = strpos($__buffer, '@while((');
-                    $__end_pos = strpos($__buffer, '))', $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 2);
-                    $__buffer = str_replace($__var, '<?php ' . $__var . ':?>', $__buffer);
-                    $__buffer = str_replace('@while((', 'while((', $__buffer);
-                }
-                elseif(strpos($__buffer, '@while(') !== false){
-                    $__start_pos = strpos($__buffer, '@while(');
-                    $__end_pos = strpos($__buffer, ')', $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 1);
-                    $__buffer = str_replace($__var, '<?php ' . $__var . ':?>', $__buffer);
-                    $__buffer = str_replace('@while(', 'while(', $__buffer);
+                    $__buffer = str_replace('@while', 'while', $__buffer);
                 }
                 elseif(strpos($__buffer, '@endwhile') !== false){
                     $__buffer = str_replace('@endwhile', '<?php endwhile; ?>', $__buffer);
