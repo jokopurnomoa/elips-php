@@ -72,11 +72,11 @@ class Blade {
 
     private static function parse($__buffer){
         if($__buffer !== ''){
-            $parent_view = null;
 
+            // extend template
+            $parent_view = null;
             $max_extend = substr_count($__buffer, '@extends');
             for($__i = 0; $__i < $max_extend; $__i++) {
-                // extend template
                 if(strpos($__buffer, '@extends') !== false){
                     $__start_pos = strpos($__buffer, '@extends');
                     $__end_pos = strpos($__buffer, ')', $__start_pos);
@@ -94,42 +94,35 @@ class Blade {
                 else {
                     break;
                 }
-                // end extend template
             }
+            // end extend template
 
-            $sections = array();
-            $max_section = substr_count($__buffer, '@section');
-            for($__i = 0; $__i < $max_section; $__i++) {
-                // parse section
-                if(strpos($__buffer, '@section') !== false){
-                    $__start_pos = strpos($__buffer, '@section');
-                    $__end_pos_sec_name = strpos($__buffer, ')', $__start_pos);
-                    $__end_pos = strpos($__buffer, '@stop', $__start_pos);
-                    $__section_name = substr($__buffer, $__start_pos, $__end_pos_sec_name - $__start_pos + 1);
 
-                    $__section = substr($__buffer, $__start_pos + strlen($__section_name), $__end_pos - $__start_pos  - strlen($__section_name));
-                    $__buffer = str_replace($__section_name . $__section . '@stop', '', $__buffer);
-                    $__section_name = trim(rtrim(ltrim(trim(substr($__section_name, 8, strlen($__section_name))), '('), ')'), '\'');
-
-                    $sections[$__section_name] = $__section;
-                }
-                else {
-                    break;
-                }
-                // end parse section
-            }
+            // parse section
+            $parse_result = self::parseSection($__buffer);
+            $__buffer = $parse_result[0];
+            $sections = $parse_result[1];
 
             if($parent_view != null && $sections != null){
+                $parse_result = self::parseSection($parent_view);
+                $parent_sections = $parse_result[1];
+
                 foreach($sections as $key => $val){
-                    $parent_view = str_replace('@yield(\'' . $key . '\')', $val, $parent_view);
+                    if(isset($parent_sections[$key])){
+                        $val = str_replace('@parent', $parent_sections[$key], $val);
+                        $parent_view = str_replace('@section(\'' . $key . '\')' . $parent_sections[$key] . '@stop', $val, $parent_view);
+                    } else {
+                        $parent_view = str_replace('@yield(\'' . $key . '\')', $val, $parent_view);
+                    }
                 }
 
                 $__buffer = $parent_view;
             }
+            // end parse section
 
+            // include template
             $max_loop = strlen($__buffer);
             for($__i = 0; $__i < $max_loop; $__i++) {
-                // include template
                 if(strpos($__buffer, '@include(') !== false){
                     $__start_pos = strpos($__buffer, '@include(');
                     $__end_pos = strpos($__buffer, ')', $__start_pos);
@@ -146,11 +139,11 @@ class Blade {
                 else {
                     break;
                 }
-                // end include template
             }
+            // end include template
 
+            // echo escaped variable
             for($__i = 0; $__i < $max_loop; $__i++) {
-                // echo escaped variable
                 if (strpos($__buffer, '{{{') !== false && strpos($__buffer, '}}}') !== false) {
                     $__start_pos = strpos($__buffer, '{{{');
                     $__end_pos = strpos($__buffer, '}}}');
@@ -161,11 +154,11 @@ class Blade {
                 else {
                     break;
                 }
-                // end echo escaped variable
             }
+            // end echo escaped variable
 
+            // comment
             for($__i = 0; $__i < $max_loop; $__i++) {
-                // comment
                 if (strpos($__buffer, '{{--') !== false && strpos($__buffer, '--}}') !== false) {
                     $__start_pos = strpos($__buffer, '{{--');
                     $__end_pos = strpos($__buffer, '--}}');
@@ -176,11 +169,11 @@ class Blade {
                 else {
                     break;
                 }
-                // end comment
             }
+            // end comment
 
+            // echo variable
             for($__i = 0; $__i < $max_loop; $__i++) {
-                // echo variable
                 if (strpos($__buffer, '{{') !== false && strpos($__buffer, '}}') !== false) {
                     $__start_pos = strpos($__buffer, '{{');
                     $__end_pos = strpos($__buffer, '}}');
@@ -191,11 +184,11 @@ class Blade {
                 else {
                     break;
                 }
-                // end echo variable
             }
+            // end echo variable
 
+            // if
             for($__i = 0; $__i < $max_loop; $__i++){
-                // if
                 if(strpos($__buffer, '@if') !== false){
                     $__start_pos = strpos($__buffer, '@if');
                     $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
@@ -220,11 +213,11 @@ class Blade {
                 else {
                     break;
                 }
-                // endif
             }
+            // endif
 
+            // foreach
             for($__i = 0; $__i < $max_loop; $__i++){
-                // foreach
                 if(strpos($__buffer, '@foreach') !== false){
                     $__start_pos = strpos($__buffer, '@foreach');
                     $__end_pos = strpos($__buffer, ')', $__start_pos);
@@ -239,11 +232,11 @@ class Blade {
                 else {
                     break;
                 }
-                // endforeach
             }
+            // endforeach
 
+            // for
             for($__i = 0; $__i < $max_loop; $__i++){
-                // for
                 if(strpos($__buffer, '@for') !== false){
                     $__start_pos = strpos($__buffer, '@for');
                     $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
@@ -258,11 +251,11 @@ class Blade {
                 else {
                     break;
                 }
-                // endfor
             }
+            // endfor
 
+            // while
             for($__i = 0; $__i < $max_loop; $__i++){
-                // while
                 if(strpos($__buffer, '@while') !== false){
                     $__start_pos = strpos($__buffer, '@while');
                     $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
@@ -277,11 +270,34 @@ class Blade {
                 else {
                     break;
                 }
-                // endwhile
             }
+            // endwhile
         }
 
         return $__buffer;
+    }
+
+    private static function parseSection($__buffer){
+        $sections = array();
+        $max_section = substr_count($__buffer, '@section');
+        for($__i = 0; $__i < $max_section; $__i++) {
+            if(strpos($__buffer, '@section') !== false){
+                $__start_pos = strpos($__buffer, '@section');
+                $__end_pos_sec_name = strpos($__buffer, ')', $__start_pos);
+                $__end_pos = strpos($__buffer, '@stop', $__start_pos);
+                $__section_name = substr($__buffer, $__start_pos, $__end_pos_sec_name - $__start_pos + 1);
+
+                $__section = substr($__buffer, $__start_pos + strlen($__section_name), $__end_pos - $__start_pos  - strlen($__section_name));
+                $__buffer = str_replace($__section_name . $__section . '@stop', '', $__buffer);
+                $__section_name = trim(rtrim(ltrim(trim(substr($__section_name, 8, strlen($__section_name))), '('), ')'), '\'');
+
+                $sections[$__section_name] = $__section;
+            }
+            else {
+                break;
+            }
+        }
+        return array($__buffer, $sections);
     }
 
 }

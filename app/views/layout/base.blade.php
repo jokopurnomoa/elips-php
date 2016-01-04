@@ -9,5 +9,8 @@
 
     @yield('body')
 
+    @section('content')
+        Base Content
+    @stop
 </body>
 </html>

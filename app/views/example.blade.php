@@ -55,3 +55,9 @@
         {{ '<br>' }}
     @endwhile
 @stop
+
+@section('content')
+    @parent
+
+    Example Content
+@stop
