@@ -19,17 +19,16 @@ class Blade {
     public static function render($view, $data = null, $buffered = false){
         global $__module_path;
         $module_path = $__module_path;
+        $module_view = '';
         $paths = explode('/', $view);
 
         if(strpos($view, '/') !== false){
             $module_path = str_replace('//', '/', 'modules/' . $paths[0] . '/');
-            $view = trim(str_replace($paths[0] . '/', '', $view), '/');
+            $module_view = trim(str_replace($paths[0] . '/', '', $view), '/');
         }
 
         $view = str_replace('.', '/', $view);
-
-        if(file_exists(APP_PATH . 'views/' . $view . '.blade.php')){
-
+        if(file_exists(APP_PATH . 'views/' . $view . '.blade.php') && strpos($view, '/') === false){
             $__buffer = self::parse(read_file(APP_PATH . 'views/' . $view . '.blade.php'));
             $__buffer = self::run($__buffer, $data);
 
@@ -39,11 +38,9 @@ class Blade {
                 echo $__buffer;
             }
         }
-        elseif(file_exists(APP_PATH . $module_path . 'views/' . $view . '.blade.php')){
-
-            $__buffer = self::parse(read_file(APP_PATH . $module_path . 'views/' . $view . '.blade.php'));
+        elseif(file_exists(APP_PATH . $module_path . 'views/' . $module_view . '.blade.php')){
+            $__buffer = self::parse(read_file(APP_PATH . $module_path . 'views/' . $module_view . '.blade.php'));
             $__buffer = self::run($__buffer, $data);
-
             if($buffered){
                 return $__buffer;
             } else {
