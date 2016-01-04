@@ -117,7 +117,10 @@ class Route {
             if (file_exists(APP_PATH . 'controllers/' . $classname . '.php')) {
                 require_once APP_PATH . 'controllers/' . $classname . '.php';
                 $class = new $classname();
-                if(!method_exists($classname, $methodname)) {
+
+                if(method_exists($classname, $methodname)) {
+                    $class->$methodname();
+                } else {
                     $separator_found = substr_count($methodname, $method_separator);
                     if($separator_found > 0){
                         for($i=0;$i<$separator_found;$i++){
@@ -127,16 +130,27 @@ class Route {
                             }
                         }
                     }
-                    $class->$methodname();
-                } else {
-                    $class->$methodname();
+
+                    if(method_exists($classname, $methodname)) {
+                        $class->$methodname();
+                    } elseif (file_exists(APP_PATH . 'views/404.blade.php')) {
+                        require_once FW_PATH . 'base/' . $page_404 . '.php';
+                        $class = new $page_404();
+                        $class->index();
+                    } elseif (APP_ENV === 'development') {
+                        error_dump('404 Page Not Found!');
+                        die();
+                    }
                 }
             } elseif (file_exists(APP_PATH . $module_path . 'controllers/' . $classname . '.php')) {
                 require_once APP_PATH . $module_path . 'controllers/' . $classname . '.php';
                 $class = new $classname();
                 global $__module_path;
                 $__module_path = $module_path;
-                if(!method_exists($classname, $methodname)) {
+
+                if(method_exists($classname, $methodname)) {
+                    $class->$methodname();
+                } else {
                     $separator_found = substr_count($methodname, $method_separator);
                     if($separator_found > 0){
                         for($i=0;$i<$separator_found;$i++){
@@ -146,9 +160,16 @@ class Route {
                             }
                         }
                     }
-                    $class->$methodname();
-                } else {
-                    $class->$methodname();
+                    if(method_exists($classname, $methodname)) {
+                        $class->$methodname();
+                    } elseif (file_exists(APP_PATH . 'views/404.blade.php')) {
+                        require_once FW_PATH . 'base/' . $page_404 . '.php';
+                        $class = new $page_404();
+                        $class->index();
+                    } elseif (APP_ENV === 'development') {
+                        error_dump('404 Page Not Found!');
+                        die();
+                    }
                 }
             } elseif (file_exists(APP_PATH . 'views/404.blade.php')) {
                 require_once FW_PATH . 'base/' . $page_404 . '.php';
