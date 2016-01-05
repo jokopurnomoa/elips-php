@@ -28,7 +28,7 @@ class Blade {
         }
 
         $view = str_replace('.', '/', $view);
-        if(file_exists(APP_PATH . 'views/' . $view . '.blade.php') && strpos($view, '/') === false){
+        if(file_exists(APP_PATH . 'views/' . $view . '.blade.php') && $module_view === ''){
             $__buffer = self::parse(read_file(APP_PATH . 'views/' . $view . '.blade.php'));
             $__buffer = self::run($__buffer, $data);
 

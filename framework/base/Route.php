@@ -131,13 +131,15 @@ class Route {
                         }
                     }
 
-                    if(method_exists($classname, $methodname)) {
+                    if (APP_ENV === 'development') {
+                        $class->$methodname();
+                    } elseif(method_exists($classname, $methodname)) {
                         $class->$methodname();
                     } elseif (file_exists(APP_PATH . 'views/404.blade.php')) {
                         require_once FW_PATH . 'base/' . $page_404 . '.php';
                         $class = new $page_404();
                         $class->index();
-                    } elseif (APP_ENV === 'development') {
+                    } else {
                         error_dump('404 Page Not Found!');
                         die();
                     }
@@ -160,13 +162,16 @@ class Route {
                             }
                         }
                     }
-                    if(method_exists($classname, $methodname)) {
+
+                    if (APP_ENV === 'development') {
+                        $class->$methodname();
+                    } elseif(method_exists($classname, $methodname)) {
                         $class->$methodname();
                     } elseif (file_exists(APP_PATH . 'views/404.blade.php')) {
                         require_once FW_PATH . 'base/' . $page_404 . '.php';
                         $class = new $page_404();
                         $class->index();
-                    } elseif (APP_ENV === 'development') {
+                    } else {
                         error_dump('404 Page Not Found!');
                         die();
                     }
@@ -175,7 +180,7 @@ class Route {
                 require_once FW_PATH . 'base/' . $page_404 . '.php';
                 $class = new $page_404();
                 $class->index();
-            } elseif (APP_ENV === 'development') {
+            } else {
                 error_dump('404 Page Not Found!');
                 die();
             }
