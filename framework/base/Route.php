@@ -91,6 +91,11 @@ class Route {
                                             }
                                             break;
                                         }
+                                        elseif($arr_uri[1] === $arr_key[1] && count($arr_value) >= 2){
+                                            $classname = $arr_value[0];
+                                            $methodname = $arr_value[1];
+                                            $route_found = true;
+                                        }
                                     }
                                 }
                             }
