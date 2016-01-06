@@ -56,7 +56,7 @@ class SessionFile {
      */
     private function generateSession(){
         if(!isset($_COOKIE[$this->session_name])) {
-            $session_id = $_SERVER['REMOTE_ADDR'] . $this->seperator . $_SERVER['HTTP_USER_AGENT'] . $this->seperator . $_SERVER['REQUEST_TIME_FLOAT'] . $this->seperator . md5(rand(9, 999999999));
+            $session_id = $_SERVER['REMOTE_ADDR'] . $this->seperator . (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'UNDEFINED') . $this->seperator . $_SERVER['REQUEST_TIME_FLOAT'] . $this->seperator . md5(rand(9, 999999999));
             $this->session_id = Encryption::encode($session_id, $this->session_key);
             setcookie($this->session_name, $this->session_id, time() + $this->session_expire);
             return $this->session_id;
@@ -96,7 +96,7 @@ class SessionFile {
                 $ip_addr = $arr_session_id[0];
                 $user_agent = $arr_session_id[1];
                 if($this->session_match_ip){
-                    if($_SERVER['REMOTE_ADDR'] != $ip_addr || $_SERVER['HTTP_USER_AGENT'] != $user_agent){
+                    if($_SERVER['REMOTE_ADDR'] != $ip_addr || (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'UNDEFINED') != $user_agent){
                         $session_id = null;
                     }
                 } else {
