@@ -58,7 +58,7 @@ class SessionFile {
         if(!isset($_COOKIE[$this->session_name])) {
             $session_id = $_SERVER['REMOTE_ADDR'] . $this->seperator . (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'UNDEFINED') . $this->seperator . $_SERVER['REQUEST_TIME_FLOAT'] . $this->seperator . md5(rand(9, 999999999));
             $this->session_id = Encryption::encode($session_id, $this->session_key);
-            setcookie($this->session_name, $this->session_id, time() + $this->session_expire);
+            setcookie($this->session_name, $this->session_id, time() + $this->session_expire, '/');
             return $this->session_id;
         }
     }
