@@ -86,7 +86,11 @@ class Route {
                                             }
                                             elseif(count($arr_value) >= 2) {
                                                 $classname = $arr_value[0];
-                                                $methodname = $arr_value[1];
+                                                if($arr_value[1] === '(:any)' && isset($arr_uri[1])){
+                                                    $methodname = $arr_uri[1];
+                                                } else {
+                                                    $methodname = $arr_value[1];
+                                                }
                                                 $route_found = true;
                                             }
                                             break;
