@@ -50,7 +50,7 @@ class Encryption {
         $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
         $ciphertext = mcrypt_encrypt(self::$cipher, $key, $plaintext, self::$mode, $iv);
 
-        return base64_encode($iv . $ciphertext);
+        return trim(base64_encode($iv . $ciphertext));
     }
 
     /**
@@ -78,7 +78,7 @@ class Encryption {
         @ob_end_clean();
 
         if(strpos($result, '<b>Warning</b>:  mcrypt_decrypt():') === false){
-            return $result;
+            return trim($result);
         } elseif(APP_ENV === 'development'){
             error_dump($result);
             die();

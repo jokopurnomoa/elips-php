@@ -112,7 +112,7 @@ class SessionFile {
 
             $session_data = null;
             if($string != null){
-                $session_data = (array)json_decode(trim(Encryption::decode($string, $this->session_key)));
+                $session_data = (array)unserialize(trim(Encryption::decode($string, $this->session_key)));
             }
 
             if(isset($session_data[$key])){
@@ -136,25 +136,16 @@ class SessionFile {
             $session_id = sha1($session_id);
             $session_data = null;
 
-            $filesize = 0;
-            if(!file_exists('storage/sessions/' . $session_id)){
-                $session_data['DATE_CREATED'] = time();
-            } else {
-                $filesize = filesize('storage/sessions/' . $session_id);
-            }
-
-            $filesize = $filesize > $this->session_max_size ? $filesize : $this->session_max_size;
-            $handle = fopen('storage/sessions/' . $session_id, 'w+');
-            $string = fread($handle, $filesize);
+            $string = read_file('storage/sessions/' . $session_id);
 
             if($string != null) {
-                $session_data = (array)json_decode(trim(Encryption::decode($string, $this->session_key)));
+                $session_data = (array)unserialize(trim(Encryption::decode($string, $this->session_key)));
             }
+
             $session_data[$key] = $value;
             $session_data['LAST_ACTIVITY'] = time();
 
-            fwrite($handle, Encryption::encode(json_encode($session_data), $this->session_key));
-            return fclose($handle);
+            return write_file('storage/sessions/' . $session_id, Encryption::encode(serialize($session_data), $this->session_key), 'w');
         }
         return false;
     }
@@ -169,16 +160,14 @@ class SessionFile {
         $session_id = $this->getSessionID();
 
         if(file_exists('storage/sessions/' . $session_id) && $session_id != null) {
-            $handle = fopen('storage/sessions/' . $session_id, 'w+');
-            $string = fread($handle, $this->session_max_size);
+            $string = read_file('storage/sessions/' . $session_id);
             $session_data = null;
             if($string != null) {
-                $session_data = (array)json_decode(trim(Encryption::decode($string, $this->session_key)));
+                $session_data = (array)unserialize(trim(Encryption::decode($string, $this->session_key)));
             }
             unset($session_data[$key]);
 
-            fwrite($handle, Encryption::encode(json_encode($session_data), $this->session_key));
-            return fclose($handle);
+            return write_file('storage/sessions/' . $session_id, Encryption::encode(serialize($session_data), $this->session_key), 'w');
         }
         return false;
     }
