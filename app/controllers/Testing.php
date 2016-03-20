@@ -112,11 +112,13 @@ class Testing extends Base {
 
         Session::set('name', 'Joko');
         Session::set('email', 'jokopurnomoa@gmail.com');
+        Session::set('address', 'Jl Dipatiukur No. 5 Bandung');
 
         echo Session::get('name');
         echo PHP_EOL;
         echo Session::get('email');
-
+        echo PHP_EOL;
+        echo Session::get('address');
     }
 
     public function sessionDestroy(){

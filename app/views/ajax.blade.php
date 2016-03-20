@@ -16,7 +16,7 @@
     <script src="{{ base_url() }}assets/jquery/jquery-2.1.3.min.js"></script>
     <script>
         $(document).ready(function(){
-            $.post('{{ base_url() }}testing').done(function(data){
+            $.post('{{ base_url() }}testing/session').done(function(data){
                 alert(data);
             });
         });

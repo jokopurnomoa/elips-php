@@ -48,11 +48,8 @@ function write_file($file, $string, $mode = 'w'){
  * @return bool
  */
 function delete_file($file){
-    if(file_exists($file)){
-        $dirname = dirname($file);
-        if($dirname !== $file){
-            return unlink($file);
-        }
+    if(file_exists($file) && is_file($file)){
+        return unlink($file);
     }
     return false;
 }
