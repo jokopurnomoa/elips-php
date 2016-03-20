@@ -52,9 +52,9 @@ class CacheFile {
             $cache = read_file(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')));
             if($cache != null){
                 if($this->cache_encrypt) {
-                    $cache = (array)unserialize(trim(Encryption::decode($cache)));
+                    $cache = (array)@unserialize(trim(Encryption::decode($cache)));
                 } else {
-                    $cache = (array)unserialize($cache);
+                    $cache = (array)@unserialize($cache);
                 }
 
                 if(($cache['DATE_CREATED'] + $cache['MAX_AGE']) > time()){
