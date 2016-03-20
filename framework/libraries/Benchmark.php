@@ -49,6 +49,7 @@ class Benchmark {
     /**
      * Get Memory Usage
      *
+     * @param bool $real_usage
      * @return int
      */
     public static function memoryUsage($real_usage = false){

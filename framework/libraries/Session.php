@@ -14,13 +14,12 @@ class Session {
      * Initialize Session Library
      */
     public static function init(){
-        global $config;
-        if($config['session']['driver'] === 'file'){
+        if(get_app_config('session', 'driver') === 'file'){
             require 'SessionDriver/SessionFile.php';
             self::$session_driver = new SessionFile();
-            self::$session_driver->init($config);
+            self::$session_driver->init(get_app_config('session'));
         } elseif(APP_ENV === 'development') {
-            error_dump('Session Driver \'' . $config['session']['driver'] . '\' not avaiable.');die();
+            error_dump('Session Driver \'' . get_app_config('session', 'driver') . '\' not avaiable.');die();
         }
     }
 

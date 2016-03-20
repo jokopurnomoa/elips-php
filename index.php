@@ -58,6 +58,20 @@ if(file_exists(APP_PATH . 'config/app.php')){
     error_dump('File \'' . APP_PATH . 'config/app.php\' not found!');die();
 }
 
+// Get database config
+if(file_exists(APP_PATH . 'config/database.php')){
+    require APP_PATH . 'config/database.php';
+} elseif(APP_ENV === 'development') {
+    error_dump('File \'' . APP_PATH . 'config/database.php\' not found!');die();
+}
+
+// Get mimes config
+if(file_exists(APP_PATH . 'config/mimes.php')){
+    require APP_PATH . 'config/mimes.php';
+} elseif(APP_ENV === 'development') {
+    error_dump('File \'' . APP_PATH . 'config/mimes.php\' not found!');die();
+}
+
 // Get core class
 require FW_PATH . 'base/Core.php';
 

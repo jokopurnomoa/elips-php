@@ -19,6 +19,7 @@ class Core {
     public function run(){
         require FW_PATH . 'libraries/Benchmark.php';
         require FW_PATH . 'helpers/file.php';
+        require FW_PATH . 'helpers/config.php';
 
         Benchmark::startTime('execution_time');
 
@@ -29,6 +30,7 @@ class Core {
 
         Loader::loadLibrary('URI');
         Loader::loadLibrary('Encryption');
+        Loader::loadLibrary('Cookie');
         Loader::loadLibrary('Security');
         Loader::loadLibrary('Cache');
         Loader::loadLibrary('Blade');

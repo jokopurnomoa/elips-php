@@ -11,14 +11,13 @@
  * @param $file
  * @return null|string
  */
-function read_file($file){
+function read_file($file, $size = 1048576){
     if(file_exists($file)){
-        $string = null;
         $handle = fopen($file, 'r');
         flock($handle, LOCK_SH);
-        if(filesize($file) > 0){
-            $string = fread($handle, filesize($file));
-        }
+
+        $string = fread($handle, $size);
+
         flock($handle, LOCK_UN);
         fclose($handle);
         return $string;

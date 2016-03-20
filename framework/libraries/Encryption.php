@@ -13,7 +13,7 @@ class Encryption {
     /**
      * @var string
      */
-    private static $cipher = MCRYPT_RIJNDAEL_256;
+    private static $cipher = MCRYPT_RIJNDAEL_128;
 
     /**
      * @var string
@@ -24,13 +24,8 @@ class Encryption {
      * Initialize Library
      */
     public static function init(){
-        global $config;
-        if(isset($config['encryption_key'])){
-            if($config['encryption_key'] != ''){
-                self::$key_std = $config['encryption_key'];
-            } elseif(APP_ENV === 'development') {
-                error_dump('Encryption key not yet set in \'' . APP_PATH . 'config/app.php\'!');die();
-            }
+        if(get_app_config('encryption_key') != ''){
+            self::$key_std = get_app_config('encryption_key');
         } elseif(APP_ENV === 'development') {
             error_dump('Encryption key not yet set in \'' . APP_PATH . 'config/app.php\'!');die();
         }
@@ -47,7 +42,7 @@ class Encryption {
         $key = self::getKey($key);
 
         $iv_size = mcrypt_get_iv_size(self::$cipher, self::$mode);
-        $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+        $iv = mcrypt_create_iv($iv_size, MCRYPT_DEV_RANDOM);
         $ciphertext = mcrypt_encrypt(self::$cipher, $key, $plaintext, self::$mode, $iv);
 
         return trim(base64_encode($iv . $ciphertext));
@@ -97,7 +92,7 @@ class Encryption {
         if($key === ''){
             $key = self::$key_std;
         }
-        return md5(sha1($key));
+        return substr(base64_encode(sha1($key)), 0, 32);
     }
 
     /**

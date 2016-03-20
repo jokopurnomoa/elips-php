@@ -14,23 +14,16 @@ class Database {
      * Initialize Database
      */
     public static function init(){
-        $config = null;
-        if(file_exists(APP_PATH . 'config/database.php')){
-            require APP_PATH . 'config/database.php';
-        } elseif(APP_ENV === 'development') {
-            error_dump('File \'' . APP_PATH . 'config/database.php\' not found!');die();
-        }
-
-        if($config['db']['main']['driver'] === 'mysqli'){
+        if(get_app_config('db', 'main', 'driver') === 'mysqli'){
             require 'DBDriver/MySQLi.php';
-            self::$db_driver = new MySQLiDriver($config['db']['main']);
+            self::$db_driver = new MySQLiDriver(get_app_config('db', 'main'));
             self::$db_driver->connect();
-        } elseif($config['db']['main']['driver'] === 'sqlite'){
+        } elseif(get_app_config('db', 'main', 'driver') === 'sqlite'){
             require 'DBDriver/SQLite.php';
-            self::$db_driver = new SQLiteDriver($config['db']['main']);
+            self::$db_driver = new SQLiteDriver(get_app_config('db', 'main'));
             self::$db_driver->connect();
         } elseif(APP_ENV === 'development') {
-            error_dump('Database Driver \'' . $config['db']['main']['driver'] . '\' not avaiable.');die();
+            error_dump('Database Driver \'' . get_app_config('db', 'main', 'driver') . '\' not avaiable.');die();
         }
     }
 

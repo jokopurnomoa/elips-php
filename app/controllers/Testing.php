@@ -15,6 +15,10 @@ class Testing extends Base {
 
     }
 
+    public function ajax(){
+        Blade::render('ajax');
+    }
+
     public function cache(){
 
         Loader::loadLibrary('Database');
@@ -23,7 +27,7 @@ class Testing extends Base {
 
         if($member_list == null){
             echo 'NO CACHE';
-            $sql = "SELECT *, (SELECT SUM(member_id) FROM member) AS total FROM member LIMIT 500";
+            $sql = "SELECT *, (SELECT COUNT(member_id) FROM member) AS total FROM member LIMIT 500";
             $member_list = Database::getAllQuery($sql);
             Cache::store('member_list_cache', $member_list);
         }
@@ -107,7 +111,11 @@ class Testing extends Base {
         Loader::loadLibrary('Session');
 
         Session::set('name', 'Joko');
+        Session::set('email', 'jokopurnomoa@gmail.com');
+
         echo Session::get('name');
+        echo PHP_EOL;
+        echo Session::get('email');
     }
 
     public function methodGet(){
