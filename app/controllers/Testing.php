@@ -116,6 +116,13 @@ class Testing extends Base {
         echo Session::get('name');
         echo PHP_EOL;
         echo Session::get('email');
+
+    }
+
+    public function sessionDestroy(){
+        Loader::loadLibrary('Session');
+
+        Session::destroy();
     }
 
     public function methodGet(){

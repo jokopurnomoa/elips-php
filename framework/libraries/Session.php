@@ -24,20 +24,40 @@ class Session {
     }
 
     /**
+     * Check Session Data Exists
+     *
+     * @param string $key
+     * @return bool
+     */
+    public static function has($key){
+        return self::$session_driver->has($key);
+    }
+
+    /**
      * Get Session Data
      *
-     * @param $key
+     * @param string $key
+     * @param string $default
      * @return mixed
      */
-    public static function get($key){
-        return self::$session_driver->get($key);
+    public static function get($key, $default = null){
+        return self::$session_driver->get($key, $default);
+    }
+
+    /**
+     * Get All Session Data
+     *
+     * @return mixed
+     */
+    public static function all(){
+        return self::$session_driver->all();
     }
 
     /**
      * Set Session Data
      *
-     * @param $key
-     * @param $value
+     * @param string $key
+     * @param string $value
      */
     public static function set($key, $value){
         self::$session_driver->set($key, $value);
@@ -46,7 +66,7 @@ class Session {
     /**
      * Remove Session Data
      *
-     * @param $key
+     * @param string $key
      */
     public static function remove($key){
         self::$session_driver->remove($key);
@@ -57,6 +77,13 @@ class Session {
      */
     public static function destroy(){
         self::$session_driver->destroy();
+    }
+
+    /**
+     * Regenerate Session ID
+     */
+    public static function regenerate(){
+        self::$session_driver->regenerate();
     }
 
 }

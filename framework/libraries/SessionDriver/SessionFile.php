@@ -15,6 +15,7 @@ class SessionFile {
     var $session_match_ip = false;
     var $seperator = '#SESSION_SEPARATOR#';
     var $session_max_size = 1048576;
+    var $session_path = 'storage/sessions/';
 
     /**
      * Initialize Config
@@ -50,20 +51,16 @@ class SessionFile {
             $this->session_max_size = $config['max_size'];
         }
 
-        $this->generateSession();
+        $session_id = $this->generateSession();
 
-        if(isset($_SERVER['HTTP_USER_AGENT'])){
-            $_SESSION['HTTP_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
-        } else {
-            $_SESSION['HTTP_USER_AGENT'] = 'UNDEFINED';
-        }
-
-        if(isset($_SERVER['REMOTE_ADDR'])){
-            $_SESSION['REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
-        }
-
-        if(time() - $this->get('DATE_CREATED') > $this->session_expire){
-
+        if(time() - $this->get('SESS_CREATED') > $this->session_expire){
+            if(is_array($_SESSION)){
+                foreach($_SESSION as $k => $v){
+                    unset($_SESSION[$k]);
+                }
+            }
+            delete_file($this->session_path . $session_id);
+            Cookie::delete($this->session_name);
         }
     }
 
@@ -74,7 +71,24 @@ class SessionFile {
      */
     private function generateSession(){
         if(Cookie::get($this->session_name) == null){
-            Cookie::set($this->session_name, sha1(session_id()));
+            if(isset($_SERVER['HTTP_USER_AGENT'])){
+                $_SESSION['HTTP_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
+            } else {
+                $_SESSION['HTTP_USER_AGENT'] = 'UNDEFINED';
+            }
+
+            if(isset($_SERVER['REMOTE_ADDR'])){
+                $_SESSION['REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
+            }
+
+            $_SESSION['SESS_CREATED'] = time();
+            $_SESSION['SESS_EXPIRED'] = $this->session_expire;
+
+            $this->session_id = sha1(session_id());
+            Cookie::set($this->session_name, $this->session_id);
+            return $this->session_id;
+        } else {
+            return Cookie::get($this->session_name);
         }
     }
 
@@ -92,12 +106,11 @@ class SessionFile {
     }
 
     /**
-     * Get Session Data
+     * Self Get Session Data
      *
-     * @param $key
-     * @return null
+     * @return array|null
      */
-    public function get($key){
+    private function getSessionData(){
         $session_id = $this->getSessionID();
 
         $sess_user_agent = null;
@@ -132,26 +145,74 @@ class SessionFile {
         }
 
         if($session_id != null){
-            $string = read_file('storage/sessions/' . $session_id);
+            $string = read_file($this->session_path . $session_id, get_app_config('session', 'max_size'));
             $session_data = null;
             if($string != null){
-                $session_data = (array)@unserialize(trim(Encryption::decode($string, $this->session_key)));
-            }
-
-            if(isset($session_data[$key])){
-                return $session_data[$key];
-            } elseif(isset($_SESSION[$key])){
-                return $_SESSION[$key];
+                return (array)@unserialize(trim(Encryption::decode($string, $this->session_key)));
             }
         }
+
         return null;
+    }
+
+    /**
+     * Check Session Data Exists
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function has($key){
+        $session_data = $this->getSessionData();
+
+        if($session_data != null){
+            if(isset($session_data[$key])){
+                return true;
+            }
+        }
+
+        if(isset($_SESSION[$key])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get Session Data
+     *
+     * @param string $key
+     * @return null | mixed
+     */
+    public function get($key, $default = null){
+        $session_data = $this->getSessionData();
+
+        if($session_data != null){
+            if(isset($session_data[$key])){
+                return $session_data[$key];
+            }
+        }
+
+        if(isset($_SESSION[$key])){
+            return $_SESSION[$key];
+        }
+
+        return $default == null ? $default : null;
+    }
+
+    /**
+     * Get All Session Data
+     *
+     * @return array|null
+     */
+    public function all(){
+        return $this->getSessionData();
     }
 
     /**
      * Set Session Data
      *
-     * @param $key
-     * @param $value
+     * @param string $key
+     * @param string $value
      * @return bool
      */
     public function set($key, $value){
@@ -160,10 +221,10 @@ class SessionFile {
         if($session_id != null){
             $session_data = null;
 
-            if(file_exists('storage/sessions/' . $session_id) && $session_id != null) {
+            if(file_exists($this->session_path . $session_id) && $session_id != null) {
                 $session_data = null;
 
-                $string = read_file('storage/sessions/' . $session_id);
+                $string = read_file($this->session_path . $session_id, get_app_config('session', 'max_size'));
 
                 if($string != null){
                     $session_data = (array)@unserialize(trim(Encryption::decode($string, $this->session_key)));
@@ -181,7 +242,7 @@ class SessionFile {
             }
             $_SESSION[$key] = $value;
 
-            return write_file('storage/sessions/' . $session_id, Encryption::encode(serialize($_SESSION), $this->session_key), 'w');
+            return write_file($this->session_path . $session_id, Encryption::encode(serialize($_SESSION), $this->session_key), 'w');
         }
         return false;
     }
@@ -197,8 +258,8 @@ class SessionFile {
 
         unset($_SESSION[$key]);
 
-        if(file_exists('storage/sessions/' . $session_id) && $session_id != null) {
-            return write_file('storage/sessions/' . $session_id, Encryption::encode(serialize($_SESSION), $this->session_key), 'w');
+        if(file_exists($this->session_path . $session_id) && $session_id != null) {
+            return write_file($this->session_path . $session_id, Encryption::encode(serialize($_SESSION), $this->session_key), 'w');
         }
         return false;
     }
@@ -211,10 +272,27 @@ class SessionFile {
     public function destroy(){
         $session_id = $this->getSessionID();
         session_destroy();
-        if(file_exists('storage/sessions/' . $session_id) && $session_id != null) {
-            return unlink('storage/sessions/' . $session_id);
+        if($session_id != null) {
+            delete_file($this->session_path . $session_id);
         }
         return false;
+    }
+
+    /**
+     * Regenerate Session ID
+     */
+    public function regenerate(){
+        $this->session_id = $this->getSessionID();
+        session_regenerate_id();
+
+        if($this->session_id != null) {
+            delete_file($this->session_path . $this->session_id);
+        }
+
+        $this->session_id = sha1(session_id());
+        Cookie::set($this->session_name, $this->session_id);
+
+        write_file($this->session_path . $this->session_id, Encryption::encode(serialize($_SESSION), $this->session_key), 'w');
     }
 
 }
