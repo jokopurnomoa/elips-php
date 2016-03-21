@@ -30,18 +30,17 @@ class CacheAPC {
     /**
      * Store Cache
      *
-     * @param $flag
-     * @param $data
-     * @param int $max_age
+     * @param string $flag
+     * @param mixed  $data
+     * @param int    $max_age
      * @return bool
      */
     public function store($flag, $data, $max_age = 60){
         if($this->cache_active){
             if($this->cache_encrypt){
-                return apc_store(sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')), Encryption::encode($data), $max_age);
-            } else {
-                return apc_store(sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')), $data, $max_age);
+                $data = Encryption::encode($data);
             }
+            return write_file(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')), $data);
         }
         return false;
     }
@@ -49,8 +48,8 @@ class CacheAPC {
     /**
      * Get Cache
      *
-     * @param $flag
-     * @return null
+     * @param string $flag
+     * @return null|mixed
      */
     public function get($flag){
         if($this->cache_active){
@@ -69,8 +68,8 @@ class CacheAPC {
     /**
      * Delete Cache
      *
-     * @param $flag
-     * @return bool|string[]
+     * @param string $flag
+     * @return bool
      */
     public function delete($flag){
         return apc_delete(sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')));

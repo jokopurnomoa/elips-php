@@ -20,9 +20,9 @@ class CacheFile {
     /**
      * Store Cache
      *
-     * @param $flag
-     * @param $data
-     * @param int $max_age
+     * @param string $flag
+     * @param mixed  $data
+     * @param int    $max_age
      * @return bool
      */
     public function store($flag, $data, $max_age = 60){
@@ -32,11 +32,13 @@ class CacheFile {
                 'MAX_AGE' => $max_age,
                 'DATA' => $data
             );
+
             if($this->cache_encrypt){
-                return write_file(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')), Encryption::encode(serialize($cache)));
+                $cache = Encryption::encode(serialize($cache));
             } else {
-                return write_file(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')), serialize($cache));
+                $cache = serialize($cache);
             }
+            return write_file(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')), $cache);
         }
         return false;
     }
@@ -44,8 +46,8 @@ class CacheFile {
     /**
      * Get Cache
      *
-     * @param $flag
-     * @return null
+     * @param string $flag
+     * @return null|mixed
      */
     public function get($flag){
         if($this->cache_active){
@@ -68,12 +70,13 @@ class CacheFile {
     /**
      * Delete Cache
      *
-     * @param $flag
+     * @param string $flag
      */
     public function delete($flag){
         if(file_exists(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')))){
-            unlink(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')));
+            return unlink(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')));
         }
+        return false;
     }
 
 }

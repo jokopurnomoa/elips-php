@@ -33,10 +33,10 @@ class Cache {
     /**
      * Store Cache
      *
-     * @param $flag
-     * @param $data
-     * @param int $max_age
-     * @return mixed
+     * @param string $flag
+     * @param mixed  $data
+     * @param int    $max_age
+     * @return bool
      */
     public static function store($flag, $data, $max_age = 60){
         return self::$cache_driver->store($flag, $data, $max_age);
@@ -45,10 +45,10 @@ class Cache {
     /**
      * Save Cache (alias)
      *
-     * @param $flag
-     * @param $data
-     * @param int $max_age
-     * @return mixed
+     * @param string $flag
+     * @param mixed  $data
+     * @param int    $max_age
+     * @return bool
      */
     public static function save($flag, $data, $max_age = 60){
         return self::$cache_driver->store($flag, $data, $max_age);
@@ -57,7 +57,7 @@ class Cache {
     /**
      * Get Cache
      *
-     * @param $flag
+     * @param string $flag
      * @return mixed
      */
     public static function get($flag){
@@ -67,8 +67,8 @@ class Cache {
     /**
      * Delete Cache
      *
-     * @param $flag
-     * @return mixed
+     * @param string $flag
+     * @return bool
      */
     public static function delete($flag){
         return self::$cache_driver->delete($flag);
