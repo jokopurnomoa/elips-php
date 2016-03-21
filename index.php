@@ -1,23 +1,26 @@
 <?php
 /**
- * Application Environtment
+ * Set application environtment
  *
  *      development
  *      testing
  *      production
- *
  */
-
-// Set application environtment
 define('APP_ENV', 'development');
 
-// Path to the project / current path
+/**
+ * Path to the project / current path
+ */
 define('MAIN_PATH', __DIR__ . '/');
 
-// Path to the system folder
+/**
+ * Path to the system folder
+ */
 define('FW_PATH', __DIR__ . '/framework/');
 
-// Path to the application folder
+/**
+ * Path to the application folder
+ */
 define('APP_PATH', __DIR__ . '/app/');
 
 /**
@@ -48,50 +51,83 @@ if(APP_ENV === 'development'){
     echo 'Application Environtment not set correctly...';die();
 }
 
-// Get error helper
+/**
+ * Require Benchmark library
+ */
+require FW_PATH . 'libraries/Benchmark.php';
+
+/**
+ * Starting benchmark
+ */
+Benchmark::startTime('execution_time');
+
+/**
+ * Require error helper
+ */
 require FW_PATH . 'helpers/error.php';
 
-// Get app config
+/**
+ * Require config helper
+ */
+require FW_PATH . 'helpers/config.php';
+
+/**
+ * Require app config
+ */
 if(file_exists(APP_PATH . 'config/app.php')){
     require APP_PATH . 'config/app.php';
 } elseif(APP_ENV === 'development') {
     error_dump('File \'' . APP_PATH . 'config/app.php\' not found!');die();
 }
 
-// Get database config
+/**
+ * Require database config
+ */
 if(file_exists(APP_PATH . 'config/database.php')){
     require APP_PATH . 'config/database.php';
 } elseif(APP_ENV === 'development') {
     error_dump('File \'' . APP_PATH . 'config/database.php\' not found!');die();
 }
 
-// Get mimes config
+/**
+ * Require mimes config
+ */
 if(file_exists(APP_PATH . 'config/mimes.php')){
     require APP_PATH . 'config/mimes.php';
 } elseif(APP_ENV === 'development') {
     error_dump('File \'' . APP_PATH . 'config/mimes.php\' not found!');die();
 }
 
-// Get core class
+/**
+ * Require core class
+ */
 require FW_PATH . 'base/Core.php';
 
-// Instantiate core class
+/**
+ * Instantiate core class
+ */
 $instance = new Core();
 $instance->run();
 
-// Get core class instance
+/**
+ * Get core class instance
+ *
+ * @return Core|null
+ */
 function get_instance(){
     global $instance;
     return $instance;
 }
 
-// Get application base url
+/**
+ * Get application base url
+ *
+ * @return string
+ */
 function base_url(){
-    global $config;
-    if(isset($config['base_url'])){
-        if($config['base_url'] !== ''){
-            return trim($config['base_url'], '/') . '/';
-        }
+    $base_url = get_app_config('base_url');
+    if($base_url !== ''){
+        return trim($base_url, '/') . '/';
     }
 
     $base_dir = explode('/', strrev(trim(__DIR__, '/')));

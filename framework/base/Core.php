@@ -17,12 +17,7 @@ class Core {
      * Run Core
      */
     public function run(){
-        require FW_PATH . 'libraries/Benchmark.php';
         require FW_PATH . 'helpers/file.php';
-        require FW_PATH . 'helpers/config.php';
-
-        Benchmark::startTime('execution_time');
-
         require FW_PATH . 'base/Loader.php';
         require FW_PATH . 'base/Route.php';
         require FW_PATH . 'base/Model.php';
