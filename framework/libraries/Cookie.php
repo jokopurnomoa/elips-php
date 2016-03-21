@@ -1,8 +1,6 @@
 <?php
 /**
- * Cookie
- *
- * Cookie library
+ * Cookie Library
  *
  */
 
@@ -11,28 +9,31 @@ class Cookie {
     /**
      * Set Cookie
      *
-     * @param $cookie_name
-     * @param $cookie_value
-     * @param null $expire
+     * @param string    $name
+     * @param string    $value
+     * @param int       $expire
+     * @param string    $path
+     * @param string    $domain
+     * @param bool      $secure
+     * @param bool      $httpOnly
      * @return bool
      */
-    public static function set($cookie_name, $cookie_value, $expire = null){
-        if($expire != null){
-            return setcookie($cookie_name, $cookie_value, time() + $expire, '/');
-        } else {
-            return setcookie($cookie_name, $cookie_value, time() + 7200, '/');
+    public static function set($name, $value, $expire = 0, $path = '/', $domain = '', $secure = false, $httpOnly = false){
+        if($expire > 0){
+            $expire = time() + (int)$expire;
         }
+        return setcookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
     }
 
     /**
      * Get Cookie
      *
-     * @param $cookie_name
-     * @return null
+     * @param string        $name
+     * @return null|string
      */
-    public static function get($cookie_name){
-        if(isset($_COOKIE[$cookie_name])){
-            return $_COOKIE[$cookie_name];
+    public static function get($name){
+        if(isset($_COOKIE[$name])){
+            return $_COOKIE[$name];
         }
         return null;
     }
@@ -40,11 +41,11 @@ class Cookie {
     /**
      * Delete Cookie
      *
-     * @param $cookie_name
+     * @param string $name
      * @return bool
      */
-    public static function delete($cookie_name){
-        return setcookie($cookie_name, null, -1, '/');
+    public static function delete($name){
+        return setcookie($name, null, -1, '/');
     }
 
 }
