@@ -54,6 +54,13 @@ class Blade {
         return null;
     }
 
+    /**
+     * Running blade
+     *
+     * @param string  $__buffer
+     * @param array   $data
+     * @return string
+     */
     private static function run($__buffer, $data){
         ob_start();
         if($data !== null){
@@ -68,6 +75,14 @@ class Blade {
         return $__buffer;
     }
 
+    /**
+     * Replace first occurence of string
+     *
+     * @param string  $search
+     * @param string  $replace
+     * @param string  $subject
+     * @return string
+     */
     private static function str_replace_first($search, $replace, $subject) {
         $pos = strpos($subject, $search);
         if ($pos !== false) {
@@ -76,6 +91,12 @@ class Blade {
         return $subject;
     }
 
+    /**
+     * Parsing template
+     *
+     * @param string $__buffer
+     * @return null|string
+     */
     private static function parse($__buffer){
         if($__buffer !== ''){
 
@@ -178,20 +199,36 @@ class Blade {
             }
             // end comment
 
-            // echo variable
+            // echo variable without htmlentities
             for($__i = 0; $__i < $max_loop; $__i++) {
-                if (strpos($__buffer, '{{') !== false && strpos($__buffer, '}}') !== false) {
-                    $__start_pos = strpos($__buffer, '{{');
-                    $__end_pos = strpos($__buffer, '}}');
-                    $__var = substr($__buffer, $__start_pos + 2, $__end_pos - $__start_pos - 2);
-                    $__buffer = self::str_replace_first('{{' . $__var . '}}', '<?php echo ' . trim($__var) . ';?>', $__buffer);
+                if (strpos($__buffer, '{!!') !== false && strpos($__buffer, '!!}') !== false) {
+                    $__start_pos = strpos($__buffer, '{!!');
+                    $__end_pos = strpos($__buffer, '!!}');
+                    $__var = substr($__buffer, $__start_pos + 3, $__end_pos - $__start_pos - 3);
+                    $__buffer = self::str_replace_first('{!!' . $__var . '!!}', '<?php echo ' . trim($__var) . ';?>', $__buffer);
 
                 }
                 else {
                     break;
                 }
             }
-            // end echo variable
+            // end echo variable without htmlentities
+
+            // echo variable using htmlentities
+            for($__i = 0; $__i < $max_loop; $__i++) {
+                if (strpos($__buffer, '{{') !== false && strpos($__buffer, '}}') !== false) {
+                    $__start_pos = strpos($__buffer, '{{');
+                    $__end_pos = strpos($__buffer, '}}');
+                    $__var = substr($__buffer, $__start_pos + 2, $__end_pos - $__start_pos - 2);
+                    $__buffer = self::str_replace_first('{{' . $__var . '}}', '<?php echo ' . htmlentities(trim($__var), ENT_QUOTES) . ';?>', $__buffer);
+
+                }
+                else {
+                    break;
+                }
+            }
+            // end echo variable using htmlentities
+
             // if
             for($__i = 0; $__i < $max_loop; $__i++){
                 if(strpos($__buffer, '@if') !== false){
@@ -283,6 +320,12 @@ class Blade {
         return $__buffer;
     }
 
+    /**
+     * Parsing template section
+     *
+     * @param string $__buffer
+     * @return array
+     */
     private static function parseSection($__buffer){
         $sections = array();
         $max_section = substr_count($__buffer, '@section');
@@ -320,9 +363,9 @@ class View {
     /**
      * Render View (Loader::loadView alias)
      *
-     * @param $view
-     * @param null $data
-     * @param bool $buffered
+     * @param string        $view
+     * @param null|array    $data
+     * @param bool          $buffered
      * @return null|string
      */
     public static function render($view, $data = null, $buffered = false){
