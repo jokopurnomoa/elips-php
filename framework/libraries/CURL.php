@@ -51,8 +51,6 @@ class CURL {
             } else {
                 $_post_field = $post_field;
             }
-        } else {
-            return null;
         }
 
         $curlHandle = curl_init();
