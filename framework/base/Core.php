@@ -18,19 +18,19 @@ class Core {
      */
     public function run(){
         require FW_PATH . 'helpers/file.php';
-        require FW_PATH . 'base/Loader.php';
+        require FW_PATH . 'base/Load.php';
         require FW_PATH . 'base/Route.php';
         require FW_PATH . 'base/Model.php';
         require FW_PATH . 'base/Controller.php';
 
-        Loader::loadLibrary('URI');
-        Loader::loadLibrary('Encryption');
-        Loader::loadLibrary('Cookie');
-        Loader::loadLibrary('Security');
-        Loader::loadLibrary('Cache');
-        Loader::loadLibrary('Blade');
-        Loader::loadLibrary('Input');
-        Loader::loadHelper('input');
+        Load::library('URI');
+        Load::library('Encryption');
+        Load::library('Cookie');
+        Load::library('Security');
+        Load::library('Cache');
+        Load::library('Blade');
+        Load::library('Input');
+        Load::helper('input');
 
         $this->handleAutoload();
         Route::run();
@@ -63,7 +63,7 @@ class Core {
         if(isset($autoload['languages'])){
             if($autoload['languages'] != null){
                 foreach($autoload['languages'] as $language){
-                    Loader::loadLanguage($language);
+                    Load::language($language);
                 }
             }
         }
@@ -78,7 +78,7 @@ class Core {
         if(isset($autoload['libraries'])){
             if($autoload['libraries'] != null){
                 foreach($autoload['libraries'] as $library){
-                    Loader::loadLibrary($library);
+                    Load::library($library);
                 }
             }
         }
@@ -93,7 +93,7 @@ class Core {
         if(isset($autoload['models'])){
             if($autoload['models'] != null){
                 foreach($autoload['models'] as $model){
-                    Loader::loadModel($model);
+                    Load::model($model);
                 }
             }
         }
@@ -108,7 +108,7 @@ class Core {
         if(isset($autoload['helpers'])){
             if($autoload['helpers'] != null){
                 foreach($autoload['helpers'] as $helper){
-                    Loader::loadHelper($helper);
+                    Load::helper($helper);
                 }
             }
         }

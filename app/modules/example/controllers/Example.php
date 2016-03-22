@@ -10,8 +10,8 @@ class Example extends Base {
 
     public function index(){
 
-        Loader::loadLibrary('Database');
-        Loader::loadModel('ExampleModel');
+        Load::library('Database');
+        Load::model('ExampleModel');
 
         $this->data['member_list'] = ExampleModel::getAll(null, null, 10);
         $this->data['var'] = array('<?php echo "AAA";?>');

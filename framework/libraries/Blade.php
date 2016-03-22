@@ -100,32 +100,12 @@ class Blade {
     private static function parse($__buffer){
         if($__buffer !== ''){
 
-            // extend template
-            $parent_view = null;
-            $max_extend = substr_count($__buffer, '@extends');
-            for($__i = 0; $__i < $max_extend; $__i++) {
-                if(strpos($__buffer, '@extends') !== false){
-                    $__start_pos = strpos($__buffer, '@extends');
-                    $__end_pos = strpos($__buffer, ')', $__start_pos);
-                    $__view = str_replace('.', '/', str_replace('\'', '', substr($__buffer, $__start_pos + 9, $__end_pos - $__start_pos  - 9)));
-                    $__extend = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 2);
-                    $__buffer = self::str_replace_first($__extend, '', $__buffer);
+            /**
+             * Parse extends
+             */
+            $parent_view = self::parseExtends($__buffer);
 
-                    ob_start();
-                    require(APP_PATH . 'views/' . $__view . '.blade.php');
-                    $__view_buffer = ob_get_contents();
-                    @ob_end_clean();
-
-                    $parent_view = $__view_buffer;
-                }
-                else {
-                    break;
-                }
-            }
-            // end extend template
-
-
-            // parse section
+            /* Parse section */
             $parse_result = self::parseSection($__buffer);
             $__buffer = $parse_result[0];
             $sections = $parse_result[1];
@@ -145,176 +125,335 @@ class Blade {
 
                 $__buffer = $parent_view;
             }
-            // end parse section
+            /* End parse section */
 
-            // include template
-            $max_loop = strlen($__buffer);
-            for($__i = 0; $__i < $max_loop; $__i++) {
-                if(strpos($__buffer, '@include(') !== false){
-                    $__start_pos = strpos($__buffer, '@include(');
-                    $__end_pos = strpos($__buffer, ')', $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 1);
-                    $__view = str_replace('.', '/', str_replace('\'', '', substr($__buffer, $__start_pos + 9, $__end_pos - $__start_pos  - 9)));
+            /**
+             * Parse include
+             */
+            $__buffer = self::parseInclude($__buffer);
 
-                    ob_start();
-                    require(APP_PATH . 'views/' . $__view . '.blade.php');
-                    $__view_buffer = ob_get_contents();
-                    @ob_end_clean();
+            /**
+             * Parse echo with escaped variable
+             */
+            $__buffer = self::parseEchoWithEscapedVariable($__buffer);
 
-                    $__buffer = self::str_replace_first($__var, $__view_buffer, $__buffer);
-                }
-                else {
-                    break;
-                }
+            /**
+             * Parse comment
+             */
+            $__buffer = self::parseComment($__buffer);
+
+            /**
+             * Parse echo variable without htmlentities
+             */
+            $__buffer = self::parseEchoWithoutHtmlEntities($__buffer);
+
+            /**
+             * Parse echo variable with htmlentities
+             */
+            $__buffer = self::parseEchoWithHtmlEntities($__buffer);
+
+            /**
+             * Parse if
+             */
+            $__buffer = self::parseIf($__buffer);
+
+            /**
+             * Parse foreach
+             */
+            $__buffer = self::parseForeach($__buffer);
+
+            /**
+             * Parse for
+             */
+            $__buffer = self::parseFor($__buffer);
+
+            /**
+             * Parse while
+             */
+            $__buffer = self::parseWhile($__buffer);
+
+        }
+
+        return $__buffer;
+    }
+
+    /**
+     * Parse extends
+     *
+     * @param string $__buffer
+     * @return null|string
+     */
+    private static function parseExtends($__buffer){
+        $parent_view = null;
+        $max_extend = substr_count($__buffer, '@extends');
+        for($__i = 0; $__i < $max_extend; $__i++) {
+            if(strpos($__buffer, '@extends') !== false){
+                $__start_pos = strpos($__buffer, '@extends');
+                $__end_pos = strpos($__buffer, ')', $__start_pos);
+                $__view = str_replace('.', '/', str_replace('\'', '', substr($__buffer, $__start_pos + 9, $__end_pos - $__start_pos  - 9)));
+                $__extend = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 2);
+                $__buffer = self::str_replace_first($__extend, '', $__buffer);
+
+                ob_start();
+                require(APP_PATH . 'views/' . $__view . '.blade.php');
+                $__view_buffer = ob_get_contents();
+                @ob_end_clean();
+
+                $parent_view = $__view_buffer;
             }
-            // end include template
-
-            // echo escaped variable
-            for($__i = 0; $__i < $max_loop; $__i++) {
-                if (strpos($__buffer, '{{{') !== false && strpos($__buffer, '}}}') !== false) {
-                    $__start_pos = strpos($__buffer, '{{{');
-                    $__end_pos = strpos($__buffer, '}}}');
-                    $__var = substr($__buffer, $__start_pos + 3, $__end_pos - $__start_pos - 3);
-                    $__buffer = self::str_replace_first('{{{' . $__var . '}}}', '<?php echo ' . htmlspecialchars(trim($__var)) . ';?>', $__buffer);
-
-                }
-                else {
-                    break;
-                }
+            else {
+                break;
             }
-            // end echo escaped variable
+        }
+        return $parent_view;
+    }
 
-            // comment
-            for($__i = 0; $__i < $max_loop; $__i++) {
-                if (strpos($__buffer, '{{--') !== false && strpos($__buffer, '--}}') !== false) {
-                    $__start_pos = strpos($__buffer, '{{--');
-                    $__end_pos = strpos($__buffer, '--}}');
-                    $__var = substr($__buffer, $__start_pos + 4, $__end_pos - $__start_pos - 4);
-                    $__buffer = self::str_replace_first('{{--' . $__var . '--}}', '<?php /* echo ' . trim($__var) . '; */?>', $__buffer);
+    /**
+     * Parse include
+     *
+     * @param string $__buffer
+     * @return string
+     */
+    private static function parseInclude($__buffer){
+        $max_loop = strlen($__buffer);
+        for($__i = 0; $__i < $max_loop; $__i++) {
+            if(strpos($__buffer, '@include(') !== false){
+                $__start_pos = strpos($__buffer, '@include(');
+                $__end_pos = strpos($__buffer, ')', $__start_pos);
+                $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 1);
+                $__view = str_replace('.', '/', str_replace('\'', '', substr($__buffer, $__start_pos + 9, $__end_pos - $__start_pos  - 9)));
 
-                }
-                else {
-                    break;
-                }
+                ob_start();
+                require(APP_PATH . 'views/' . $__view . '.blade.php');
+                $__view_buffer = ob_get_contents();
+                @ob_end_clean();
+
+                $__buffer = self::str_replace_first($__var, $__view_buffer, $__buffer);
             }
-            // end comment
-
-            // echo variable without htmlentities
-            for($__i = 0; $__i < $max_loop; $__i++) {
-                if (strpos($__buffer, '{!!') !== false && strpos($__buffer, '!!}') !== false) {
-                    $__start_pos = strpos($__buffer, '{!!');
-                    $__end_pos = strpos($__buffer, '!!}');
-                    $__var = substr($__buffer, $__start_pos + 3, $__end_pos - $__start_pos - 3);
-                    $__buffer = self::str_replace_first('{!!' . $__var . '!!}', '<?php echo ' . trim($__var) . ';?>', $__buffer);
-
-                }
-                else {
-                    break;
-                }
+            else {
+                break;
             }
-            // end echo variable without htmlentities
+        }
 
-            // echo variable using htmlentities
-            for($__i = 0; $__i < $max_loop; $__i++) {
-                if (strpos($__buffer, '{{') !== false && strpos($__buffer, '}}') !== false) {
-                    $__start_pos = strpos($__buffer, '{{');
-                    $__end_pos = strpos($__buffer, '}}');
-                    $__var = substr($__buffer, $__start_pos + 2, $__end_pos - $__start_pos - 2);
-                    $__buffer = self::str_replace_first('{{' . $__var . '}}', '<?php echo ' . htmlentities(trim($__var), ENT_QUOTES) . ';?>', $__buffer);
+        return $__buffer;
+    }
 
-                }
-                else {
-                    break;
-                }
+    /**
+     * Parse echo with escaped variable
+     *
+     * @param string $__buffer
+     * @return string
+     */
+    private static function parseEchoWithEscapedVariable($__buffer){
+        $max_loop = strlen($__buffer);
+        for($__i = 0; $__i < $max_loop; $__i++) {
+            if (strpos($__buffer, '{{{') !== false && strpos($__buffer, '}}}') !== false) {
+                $__start_pos = strpos($__buffer, '{{{');
+                $__end_pos = strpos($__buffer, '}}}');
+                $__var = substr($__buffer, $__start_pos + 3, $__end_pos - $__start_pos - 3);
+                $__buffer = self::str_replace_first('{{{' . $__var . '}}}', '<?php echo ' . htmlspecialchars(trim($__var)) . ';?>', $__buffer);
             }
-            // end echo variable using htmlentities
-
-            // if
-            for($__i = 0; $__i < $max_loop; $__i++){
-                if(strpos($__buffer, '@if') !== false){
-                    $__start_pos = strpos($__buffer, '@if');
-                    $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
-
-                    $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
-                    $__buffer = self::str_replace_first('@if', 'if', $__buffer);
-                }
-                elseif(strpos($__buffer, '@elseif') !== false){
-                    $__start_pos = strpos($__buffer, '@elseif');
-                    $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
-                    $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
-                    $__buffer = self::str_replace_first('@elseif', 'elseif', $__buffer);
-                }
-                elseif(strpos($__buffer, '@else') !== false){
-                    $__buffer = self::str_replace_first('@else', '<?php else: ?>', $__buffer);
-                }
-                elseif(strpos($__buffer, '@endif') !== false){
-                    $__buffer = self::str_replace_first('@endif', '<?php endif; ?>', $__buffer);
-
-                }
-                else {
-                    break;
-                }
+            else {
+                break;
             }
-            // endif
+        }
 
-            // foreach
-            for($__i = 0; $__i < $max_loop; $__i++){
-                if(strpos($__buffer, '@foreach') !== false){
-                    $__start_pos = strpos($__buffer, '@foreach');
-                    $__end_pos = strpos($__buffer, ')', $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 1);
-                    $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
-                    $__buffer = self::str_replace_first('@foreach', 'foreach', $__buffer);
-                }
-                if(strpos($__buffer, '@endforeach') !== false){
-                    $__buffer = self::str_replace_first('@endforeach', '<?php endforeach; ?>', $__buffer);
+        return $__buffer;
+    }
 
-                }
-                else {
-                    break;
-                }
+    /**
+     * Parse comment
+     *
+     * @param string $__buffer
+     * @return string
+     */
+    private static function parseComment($__buffer){
+        $max_loop = strlen($__buffer);
+        for($__i = 0; $__i < $max_loop; $__i++) {
+            if (strpos($__buffer, '{{--') !== false && strpos($__buffer, '--}}') !== false) {
+                $__start_pos = strpos($__buffer, '{{--');
+                $__end_pos = strpos($__buffer, '--}}');
+                $__var = substr($__buffer, $__start_pos + 4, $__end_pos - $__start_pos - 4);
+                $__buffer = self::str_replace_first('{{--' . $__var . '--}}', '<?php /* echo ' . trim($__var) . '; */?>', $__buffer);
+
             }
-            // endforeach
-
-            // for
-            for($__i = 0; $__i < $max_loop; $__i++){
-                if(strpos($__buffer, '@for') !== false){
-                    $__start_pos = strpos($__buffer, '@for');
-                    $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
-                    $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
-                    $__buffer = self::str_replace_first('@for', 'for', $__buffer);
-                }
-                elseif(strpos($__buffer, '@endfor') !== false){
-                    $__buffer = self::str_replace_first('@endfor', '<?php endfor; ?>', $__buffer);
-
-                }
-                else {
-                    break;
-                }
+            else {
+                break;
             }
-            // endfor
+        }
 
-            // while
-            for($__i = 0; $__i < $max_loop; $__i++){
-                if(strpos($__buffer, '@while') !== false){
-                    $__start_pos = strpos($__buffer, '@while');
-                    $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
-                    $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
-                    $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
-                    $__buffer = self::str_replace_first('@while', 'while', $__buffer);
-                }
-                elseif(strpos($__buffer, '@endwhile') !== false){
-                    $__buffer = self::str_replace_first('@endwhile', '<?php endwhile; ?>', $__buffer);
+        return $__buffer;
+    }
 
-                }
-                else {
-                    break;
-                }
+    /**
+     * Parse echo without htmlentities
+     *
+     * @param string $__buffer
+     * @return string
+     */
+    private static function parseEchoWithoutHtmlEntities($__buffer){
+        $max_loop = strlen($__buffer);
+        for($__i = 0; $__i < $max_loop; $__i++) {
+            if (strpos($__buffer, '{!!') !== false && strpos($__buffer, '!!}') !== false) {
+                $__start_pos = strpos($__buffer, '{!!');
+                $__end_pos = strpos($__buffer, '!!}');
+                $__var = substr($__buffer, $__start_pos + 3, $__end_pos - $__start_pos - 3);
+                $__buffer = self::str_replace_first('{!!' . $__var . '!!}', '<?php echo ' . trim($__var) . ';?>', $__buffer);
+
             }
-            // endwhile
+            else {
+                break;
+            }
+        }
+
+        return $__buffer;
+    }
+
+    /**
+     * Parse echo with htmlentities
+     *
+     * @param string $__buffer
+     * @return string
+     */
+    private static function parseEchoWithHtmlEntities($__buffer){
+        $max_loop = strlen($__buffer);
+        for($__i = 0; $__i < $max_loop; $__i++) {
+            if (strpos($__buffer, '{{') !== false && strpos($__buffer, '}}') !== false) {
+                $__start_pos = strpos($__buffer, '{{');
+                $__end_pos = strpos($__buffer, '}}');
+                $__var = substr($__buffer, $__start_pos + 2, $__end_pos - $__start_pos - 2);
+                $__buffer = self::str_replace_first('{{' . $__var . '}}', '<?php echo ' . htmlentities(trim($__var), ENT_QUOTES) . ';?>', $__buffer);
+
+            }
+            else {
+                break;
+            }
+        }
+
+        return $__buffer;
+    }
+
+    /**
+     * Parse if
+     *
+     * @param string $__buffer
+     * @return string
+     */
+    private static function parseIf($__buffer){
+        $max_loop = strlen($__buffer);
+
+        for($__i = 0; $__i < $max_loop; $__i++){
+            if(strpos($__buffer, '@if') !== false){
+                $__start_pos = strpos($__buffer, '@if');
+                $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
+                $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
+
+                $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
+                $__buffer = self::str_replace_first('@if', 'if', $__buffer);
+            }
+            elseif(strpos($__buffer, '@elseif') !== false){
+                $__start_pos = strpos($__buffer, '@elseif');
+                $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
+                $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
+                $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
+                $__buffer = self::str_replace_first('@elseif', 'elseif', $__buffer);
+            }
+            elseif(strpos($__buffer, '@else') !== false){
+                $__buffer = self::str_replace_first('@else', '<?php else: ?>', $__buffer);
+            }
+            elseif(strpos($__buffer, '@endif') !== false){
+                $__buffer = self::str_replace_first('@endif', '<?php endif; ?>', $__buffer);
+
+            }
+            else {
+                break;
+            }
+        }
+
+        return $__buffer;
+    }
+
+    /**
+     * Parse foreach
+     *
+     * @param string $__buffer
+     * @return string
+     */
+    private static function parseForeach($__buffer){
+        $max_loop = strlen($__buffer);
+
+        for($__i = 0; $__i < $max_loop; $__i++){
+            if(strpos($__buffer, '@foreach') !== false){
+                $__start_pos = strpos($__buffer, '@foreach');
+                $__end_pos = strpos($__buffer, ')', $__start_pos);
+                $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 1);
+                $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
+                $__buffer = self::str_replace_first('@foreach', 'foreach', $__buffer);
+            }
+            if(strpos($__buffer, '@endforeach') !== false){
+                $__buffer = self::str_replace_first('@endforeach', '<?php endforeach; ?>', $__buffer);
+
+            }
+            else {
+                break;
+            }
+        }
+
+        return $__buffer;
+    }
+
+    /**
+     * Parse for
+     *
+     * @param string $__buffer
+     * @return string
+     */
+    private static function parseFor($__buffer){
+        $max_loop = strlen($__buffer);
+
+        for($__i = 0; $__i < $max_loop; $__i++){
+            if(strpos($__buffer, '@for') !== false){
+                $__start_pos = strpos($__buffer, '@for');
+                $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
+                $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
+                $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
+                $__buffer = self::str_replace_first('@for', 'for', $__buffer);
+            }
+            elseif(strpos($__buffer, '@endfor') !== false){
+                $__buffer = self::str_replace_first('@endfor', '<?php endfor; ?>', $__buffer);
+
+            }
+            else {
+                break;
+            }
+        }
+
+        return $__buffer;
+    }
+
+    /**
+     * Parse while
+     *
+     * @param string $__buffer
+     * @return string
+     */
+    private static function parseWhile($__buffer){
+        $max_loop = strlen($__buffer);
+        for($__i = 0; $__i < $max_loop; $__i++){
+            if(strpos($__buffer, '@while') !== false){
+                $__start_pos = strpos($__buffer, '@while');
+                $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
+                $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
+                $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
+                $__buffer = self::str_replace_first('@while', 'while', $__buffer);
+            }
+            elseif(strpos($__buffer, '@endwhile') !== false){
+                $__buffer = self::str_replace_first('@endwhile', '<?php endwhile; ?>', $__buffer);
+
+            }
+            else {
+                break;
+            }
         }
 
         return $__buffer;
@@ -347,29 +486,6 @@ class Blade {
             }
         }
         return array($__buffer, $sections);
-    }
-
-}
-
-/**
- * View Library
- *
- * Basic load view
- *
- */
-
-class View {
-
-    /**
-     * Render View (Loader::loadView alias)
-     *
-     * @param string        $view
-     * @param null|array    $data
-     * @param bool          $buffered
-     * @return null|string
-     */
-    public static function render($view, $data = null, $buffered = false){
-        Loader::loadView($view, $data, $buffered);
     }
 
 }

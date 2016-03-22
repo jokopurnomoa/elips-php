@@ -6,14 +6,14 @@
  *
  */
 
-class Loader {
+class Load {
 
     /**
      * Loading Library
      *
      * @param $library
      */
-    public static function loadLibrary($library){
+    public static function library($library){
         global $__module_path;
         $module_path = $__module_path;
         $paths = explode('/', $library);
@@ -52,7 +52,7 @@ class Loader {
      *
      * @param $model
      */
-    public static function loadModel($model){
+    public static function model($model){
         global $__module_path;
         $module_path = $__module_path;
         $paths = explode('/', $model);
@@ -87,7 +87,7 @@ class Loader {
      * @param null $data
      * @param bool $buffered
      */
-    public static function loadView($view, $data = null, $buffered = false){
+    public static function view($view, $data = null, $buffered = false){
         global $__module_path;
         $module_path = $__module_path;
         $paths = explode('/', $view);
@@ -144,7 +144,7 @@ class Loader {
      *
      * @param $helper
      */
-    public static function loadHelper($helper){
+    public static function helper($helper){
         global $__module_path;
         $module_path = $__module_path;
         $paths = explode('/', $helper);
@@ -174,7 +174,7 @@ class Loader {
      *
      * @param $language
      */
-    public static function loadLanguage($language, $name = null){
+    public static function language($language, $name = null){
         global $__module_path;
         $module_path = $__module_path;
         $paths = explode('/', $language);

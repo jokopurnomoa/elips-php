@@ -10,8 +10,8 @@ class Example2 extends Base {
 
     public function index(){
 
-        Loader::loadLibrary('Database');
-        Loader::loadModel('example/ExampleModel');
+        Load::library('Database');
+        Load::model('example/ExampleModel');
 
         $this->data['member_list'] = ExampleModel::getAll(null, null, 10);
         Blade::render('example/example', $this->data);

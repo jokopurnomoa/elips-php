@@ -21,7 +21,7 @@ class Testing extends Base {
 
     public function cache(){
 
-        Loader::loadLibrary('Database');
+        Load::library('Database');
 
         $member_list = Cache::get('member_list_cache');
 
@@ -39,7 +39,7 @@ class Testing extends Base {
     }
 
     public function database(){
-        Loader::loadLibrary('Database');
+        Load::library('Database');
 
         Database::beginTransaction();
         Database::insert('test', array('val1' => 'A', 'val2' => 'B'));
@@ -50,7 +50,7 @@ class Testing extends Base {
     }
 
     public function database2(){
-        Loader::loadLibrary('Database');
+        Load::library('Database');
 
         $sql = "SELECT * FROM member WHERE email = ? AND name LIKE ?";
         $data = Database::getAllQuery($sql, array('jokopurnomoa@gmail.com', '%Elips%'));
@@ -60,7 +60,7 @@ class Testing extends Base {
     }
 
     public function sqlite(){
-        Loader::loadLibrary('Database');
+        Load::library('Database');
 
         Database::createTable('member', array(
             array('member_id', 'VARCHAR(40)', 'PRIMARY KEY'),
@@ -87,7 +87,7 @@ class Testing extends Base {
     }
 
     public function email(){
-        Loader::loadLibrary('Email');
+        Load::library('Email');
 
         Email::smtp(true);
         Email::host('smtp.gmail.com');
@@ -108,7 +108,7 @@ class Testing extends Base {
     }
 
     public function session(){
-        Loader::loadLibrary('Session');
+        Load::library('Session');
 
         Session::set('name', 'Joko');
         Session::set('email', 'jokopurnomoa@gmail.com');
@@ -122,7 +122,7 @@ class Testing extends Base {
     }
 
     public function sessionDestroy(){
-        Loader::loadLibrary('Session');
+        Load::library('Session');
 
         Session::destroy();
     }
@@ -136,8 +136,8 @@ class Testing extends Base {
     }
 
     public function sanitize(){
-        Loader::loadLibrary('Sanitize');
-        Loader::loadLibrary('Validate');
+        Load::library('Sanitize');
+        Load::library('Validate');
 
         $email = Sanitize::email('jokopurnomoa@gmail.com');
         if(Validate::email($email)){
@@ -151,7 +151,7 @@ class Testing extends Base {
     }
 
     public function cookie(){
-        Loader::loadLibrary('Cookie');
+        Load::library('Cookie');
 
         Cookie::set('test', 'AAA');
         Cookie::delete('test');
@@ -164,7 +164,7 @@ class Testing extends Base {
     }
 
     public function resizeImage(){
-        Loader::loadLibrary('ImageLib');
+        Load::library('ImageLib');
 
         ImageLib::setConfig(array(
             'source_image' => './storage/the-lorax.jpg',
@@ -179,7 +179,7 @@ class Testing extends Base {
     }
 
     public function security(){
-        Loader::loadLibrary('Session');
+        Load::library('Session');
         Security::generateCSRFToken('test');
         echo Security::getCSRFToken('test');
         echo '<br>';
@@ -203,7 +203,7 @@ class Testing extends Base {
     }
 
     public function curl(){
-        Loader::loadLibrary('CURL');
+        Load::library('CURL');
 
         echo 'CURL get<br>';
         echo CURL::get(URI::baseUrl() . 'testing/curl_get?id=100&name=Joko Purnomo A');
@@ -225,7 +225,7 @@ class Testing extends Base {
     }
 
     public function captcha(){
-        Loader::loadLibrary('Session');
+        Load::library('Session');
 
         require MAIN_PATH . 'vendor/Gregwar/Captcha/autoload.php';
 
