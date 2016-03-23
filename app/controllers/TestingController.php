@@ -9,7 +9,7 @@
 use JasonGrimes\Paginator;
 use Gregwar\Captcha\CaptchaBuilder;
 
-class Testing extends Base {
+class TestingController extends BaseController {
 
     public function index(){
 

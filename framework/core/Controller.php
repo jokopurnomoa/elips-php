@@ -7,8 +7,8 @@
 
 class Controller {
 
-    var $data;
-    var $instance;
+    protected $data;
+    protected $instance;
 
     /**
      * Controller Constructor

@@ -6,15 +6,16 @@
  * Time: 12:02 PM
  */
 
-class Example2 extends Base {
+class Example extends BaseController {
 
     public function index(){
 
         Load::library('Database');
-        Load::model('example/ExampleModel');
+        Load::model('ExampleModel');
 
         $this->data['member_list'] = ExampleModel::getAll(null, null, 10);
-        Blade::render('example/example', $this->data);
+        $this->data['var'] = array('<?php echo "AAA";?>');
+        Blade::render('example', $this->data);
 
     }
 

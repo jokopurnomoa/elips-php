@@ -115,12 +115,12 @@ class Route {
         }
 
         if(!$route_found){
-            $classname = isset($arr_uri[0]) ? $arr_uri[0] : '';
+            $classname = (isset($arr_uri[0]) ? $arr_uri[0] : '') . 'Controller';
             $methodname = isset($arr_uri[1]) ? $arr_uri[1] : 'index';
         }
 
         if($classname != '' && $methodname != '' && strtolower($classname) != strtolower($root_controller)) {
-            $module_path = trim('modules/' . trim(strtolower($classname)), '/') . '/';
+            $module_path = trim('modules/' . trim(strtolower(str_replace('Controller', '', $classname))), '/') . '/';
             $classname = ucfirst($classname);
 
             if (file_exists(APP_PATH . 'controllers/' . $classname . '.php')) {
