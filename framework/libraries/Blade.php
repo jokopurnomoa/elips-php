@@ -9,6 +9,15 @@
 class Blade {
 
     /**
+     * Experimental
+     *
+     * @var array
+     */
+    protected static $parseData = array();
+    const HTML_SPECIALCHARS = 'SPECIALCHARS';
+    const HTML_ENTITIES = 'ENTITIES';
+
+    /**
      * Render View
      *
      * @param $view
@@ -71,6 +80,7 @@ class Blade {
         eval('?>' . $__buffer);
         $__buffer = ob_get_contents();
         @ob_end_clean();
+
         return $__buffer;
     }
 
@@ -321,7 +331,7 @@ class Blade {
                 $__start_pos = strpos($__buffer, '{{');
                 $__end_pos = strpos($__buffer, '}}');
                 $__var = substr($__buffer, $__start_pos + 2, $__end_pos - $__start_pos - 2);
-                $__buffer = self::str_replace_first('{{' . $__var . '}}', '<?php echo ' . htmlentities(trim($__var), ENT_QUOTES) . ';?>', $__buffer);
+                $__buffer = self::str_replace_first('{{' . $__var . '}}', '<?php echo ' . trim($__var) . ';?>', $__buffer);
 
             }
             else {
