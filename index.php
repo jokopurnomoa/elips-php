@@ -101,7 +101,7 @@ if(file_exists(APP_PATH . 'config/mimes.php')){
 /**
  * Require core class
  */
-require FW_PATH . 'base/Core.php';
+require FW_PATH . 'core/Core.php';
 
 /**
  * Instantiate core class

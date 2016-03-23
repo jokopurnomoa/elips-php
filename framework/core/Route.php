@@ -145,7 +145,7 @@ class Route {
                     } elseif(method_exists($classname, $methodname)) {
                         $class->$methodname();
                     } elseif (file_exists(APP_PATH . 'views/404.blade.php')) {
-                        require_once FW_PATH . 'base/' . $page_404 . '.php';
+                        require_once FW_PATH . 'core/' . $page_404 . '.php';
                         $class = new $page_404();
                         $class->index();
                     } else {
@@ -176,7 +176,7 @@ class Route {
                     } elseif(method_exists($classname, $methodname)) {
                         $class->$methodname();
                     } elseif (file_exists(APP_PATH . 'views/404.blade.php')) {
-                        require_once FW_PATH . 'base/' . $page_404 . '.php';
+                        require_once FW_PATH . 'core/' . $page_404 . '.php';
                         $class = new $page_404();
                         $class->index();
                     } else {
@@ -185,7 +185,7 @@ class Route {
                     }
                 }
             } elseif (file_exists(APP_PATH . 'views/404.blade.php')) {
-                require_once FW_PATH . 'base/' . $page_404 . '.php';
+                require_once FW_PATH . 'core/' . $page_404 . '.php';
                 $class = new $page_404();
                 $class->index();
             } else {

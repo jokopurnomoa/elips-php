@@ -18,10 +18,10 @@ class Core {
      */
     public function run(){
         require FW_PATH . 'helpers/file.php';
-        require FW_PATH . 'base/Load.php';
-        require FW_PATH . 'base/Route.php';
-        require FW_PATH . 'base/Model.php';
-        require FW_PATH . 'base/Controller.php';
+        require FW_PATH . 'core/Load.php';
+        require FW_PATH . 'core/Route.php';
+        require FW_PATH . 'core/Model.php';
+        require FW_PATH . 'core/Controller.php';
 
         Load::library('URI');
         Load::library('Encryption');
