@@ -14,8 +14,7 @@ class Load {
      * @param $library
      */
     public static function library($library){
-        global $__module_path;
-        $module_path = $__module_path;
+        $module_path = MODULE_PATH;
         $paths = explode('/', $library);
 
         if(strpos($library, '/') !== false){
@@ -53,8 +52,7 @@ class Load {
      * @param $model
      */
     public static function model($model){
-        global $__module_path;
-        $module_path = $__module_path;
+        $module_path = MODULE_PATH;
         $paths = explode('/', $model);
 
         if(strpos($model, '/') !== false){
@@ -88,8 +86,7 @@ class Load {
      * @param bool $buffered
      */
     public static function view($view, $data = null, $buffered = false){
-        global $__module_path;
-        $module_path = $__module_path;
+        $module_path = MODULE_PATH;
         $paths = explode('/', $view);
 
         if(strpos($view, '/') !== false){
@@ -145,8 +142,7 @@ class Load {
      * @param $helper
      */
     public static function helper($helper){
-        global $__module_path;
-        $module_path = $__module_path;
+        $module_path = MODULE_PATH;
         $paths = explode('/', $helper);
 
         if(strpos($helper, '/') !== false){
@@ -175,8 +171,7 @@ class Load {
      * @param $language
      */
     public static function language($language, $name = null){
-        global $__module_path;
-        $module_path = $__module_path;
+        $module_path = MODULE_PATH;
         $paths = explode('/', $language);
 
         if(strpos($language, '/') !== false){

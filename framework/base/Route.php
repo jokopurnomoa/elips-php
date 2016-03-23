@@ -156,8 +156,7 @@ class Route {
             } elseif (file_exists(APP_PATH . $module_path . 'controllers/' . $classname . '.php')) {
                 require_once APP_PATH . $module_path . 'controllers/' . $classname . '.php';
                 $class = new $classname();
-                global $__module_path;
-                $__module_path = $module_path;
+                $module_path = MODULE_PATH;
 
                 if(method_exists($classname, $methodname)) {
                     $class->$methodname();

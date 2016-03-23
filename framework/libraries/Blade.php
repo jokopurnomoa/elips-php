@@ -17,8 +17,7 @@ class Blade {
      * @return mixed|null|string
      */
     public static function render($view, $data = null, $buffered = false){
-        global $__module_path;
-        $module_path = $__module_path;
+        $module_path = MODULE_PATH;
         $module_view = '';
         $paths = explode('/', $view);
 
