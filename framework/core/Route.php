@@ -109,7 +109,7 @@ class Route {
                         }
                     }
                 } elseif(isset($route['default_controller'])){
-                    $classname = $route['default_controller'];
+                    $classname = $route['default_controller'] . 'Controller';
                     $route_found = true;
                 }
             }
@@ -124,7 +124,7 @@ class Route {
             $module_path = trim('modules/' . trim(strtolower(str_replace('Controller', '', $classname))), '/') . '/';
             $classname = ucfirst($classname);
 
-            if (file_exists(APP_PATH . 'controllers/' . $classname . '.php')) {
+            if(file_exists(APP_PATH . 'controllers/' . $classname . '.php')) {
                 require_once APP_PATH . 'controllers/' . $classname . '.php';
                 $class = new $classname();
 

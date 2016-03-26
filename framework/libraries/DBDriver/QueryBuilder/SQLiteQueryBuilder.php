@@ -8,11 +8,11 @@ class SQLiteQueryBuilder {
 
     private $db = null;
     private $table = '';
-    private $joins = [];
-    private $columns = ['*'];
-    private $wheres = [];
-    private $havings = [];
-    private $orders = [];
+    private $joins = array();
+    private $columns = array('*');
+    private $wheres = array();
+    private $havings = array();
+    private $orders = array();
     private $limit = '';
 
     public function __construct($db = ''){
@@ -306,11 +306,11 @@ class SQLiteQueryBuilder {
         }
 
         $this->table = '';
-        $this->joins = [];
-        $this->columns = ['*'];
-        $this->wheres = [];
-        $this->havings = [];
-        $this->orders = [];
+        $this->joins = array();
+        $this->columns = array('*');
+        $this->wheres = array();
+        $this->havings = array();
+        $this->orders = array();
         $this->limit = '';
 
         return $sql;
@@ -369,10 +369,10 @@ class SQLiteQueryBuilder {
         $sql .= $having;
 
         $this->table = '';
-        $this->joins = [];
-        $this->columns = ['*'];
-        $this->wheres = [];
-        $this->havings = [];
+        $this->joins = array();
+        $this->columns = array('*');
+        $this->wheres = array();
+        $this->havings = array();
 
         return $sql;
     }
@@ -460,7 +460,7 @@ class SQLiteQueryBuilder {
             }
 
             $this->table = '';
-            $this->wheres = [];
+            $this->wheres = array();
             $this->limit = '';
 
             return $sql;
@@ -502,7 +502,7 @@ class SQLiteQueryBuilder {
             }
 
             $this->table = '';
-            $this->wheres = [];
+            $this->wheres = array();
             $this->limit = '';
 
             return $sql;

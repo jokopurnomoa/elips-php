@@ -86,7 +86,7 @@ class TestingController extends BaseController {
 
         $data = DB::table('member')
             ->join('member_category', 'catm_id')
-            ->select(['*'])
+            ->select(array('*'))
             ->select('YEAR(CURRENT_TIMESTAMP) - YEAR(birthdate) - (RIGHT(CURRENT_TIMESTAMP, 5) < RIGHT(birthdate, 5)) as age')
             ->where('active', 1)
             ->where('name', 'LIKE', '%\'Joko%')
