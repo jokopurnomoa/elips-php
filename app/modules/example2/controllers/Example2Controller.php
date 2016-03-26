@@ -10,10 +10,10 @@ class Example2Controller extends BaseController {
 
     public function index(){
 
-        Load::library('Database');
-        Load::model('example/ExampleModel');
+        Load::library('DB');
+        Load::model('example/Example');
 
-        $this->data['member_list'] = ExampleModel::getAll(null, null, 10);
+        $this->data['member_list'] = Example::all('*', 10);
         Blade::render('example/example', $this->data);
 
     }

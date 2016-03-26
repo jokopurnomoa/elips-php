@@ -17,7 +17,32 @@ class Blade {
     const HTML_SPECIALCHARS = 'SPECIALCHARS';
     const HTML_ENTITIES = 'ENTITIES';
 
-    /**
+    private static $extendsTag = '@extends';
+    private static $includeTag = '@include';
+    private static $parentTag = '@parent';
+    private static $sectionTag = '@section';
+    private static $stopTag = '@stop';
+    private static $yieldTag = '@yield';
+    private static $echoEscapedStartTag = '{{{';
+    private static $echoEscapedEndTag = '}}}';
+    private static $commentStartTag = '{{--';
+    private static $commentEndTag = '--}}';
+    private static $echoStartTag = '{{';
+    private static $echoEndTag = '}}';
+    private static $echoWithoutHtmlEntitiesStartTag = '{!!';
+    private static $echoWithoutHtmlEntitiesEndTag = '!!}';
+    private static $ifTag = '@if';
+    private static $elseifTag = '@elseif';
+    private static $elseTag = '@else';
+    private static $endifTag = '@endif';
+    private static $foreachTag = '@foreach';
+    private static $endForeachTag = '@endforeach';
+    private static $forTag = '@for';
+    private static $endForTag = '@endfor';
+    private static $whileTag = '@while';
+    private static $endWhileTag = '@endwhile';
+
+        /**
      * Render View
      *
      * @param $view
@@ -125,10 +150,10 @@ class Blade {
 
                 foreach($sections as $key => $val){
                     if(isset($parent_sections[$key])){
-                        $val = self::str_replace_first('@parent', $parent_sections[$key], $val);
-                        $parent_view = self::str_replace_first('@section(\'' . $key . '\')' . $parent_sections[$key] . '@stop', $val, $parent_view);
+                        $val = self::str_replace_first(self::$parentTag, $parent_sections[$key], $val);
+                        $parent_view = self::str_replace_first(self::$sectionTag . '(\'' . $key . '\')' . $parent_sections[$key] . self::$stopTag, $val, $parent_view);
                     } else {
-                        $parent_view = self::str_replace_first('@yield(\'' . $key . '\')', $val, $parent_view);
+                        $parent_view = self::str_replace_first(self::$yieldTag . '(\'' . $key . '\')', $val, $parent_view);
                     }
                 }
 
@@ -194,12 +219,12 @@ class Blade {
      */
     private static function parseExtends($__buffer){
         $parent_view = null;
-        $max_extend = substr_count($__buffer, '@extends');
+        $max_extend = substr_count($__buffer, self::$extendsTag);
         for($__i = 0; $__i < $max_extend; $__i++) {
-            if(strpos($__buffer, '@extends') !== false){
-                $__start_pos = strpos($__buffer, '@extends');
+            if(strpos($__buffer, self::$extendsTag) !== false){
+                $__start_pos = strpos($__buffer, self::$extendsTag);
                 $__end_pos = strpos($__buffer, ')', $__start_pos);
-                $__view = str_replace('.', '/', str_replace('\'', '', substr($__buffer, $__start_pos + 9, $__end_pos - $__start_pos  - 9)));
+                $__view = str_replace('.', '/', str_replace('\'', '', substr($__buffer, $__start_pos + strlen(self::$extendsTag) + 1, $__end_pos - $__start_pos  - (strlen(self::$extendsTag) + 1))));
                 $__extend = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 2);
                 $__buffer = self::str_replace_first($__extend, '', $__buffer);
 
@@ -226,11 +251,11 @@ class Blade {
     private static function parseInclude($__buffer){
         $max_loop = strlen($__buffer);
         for($__i = 0; $__i < $max_loop; $__i++) {
-            if(strpos($__buffer, '@include(') !== false){
-                $__start_pos = strpos($__buffer, '@include(');
+            if(strpos($__buffer, self::$includeTag . '(') !== false){
+                $__start_pos = strpos($__buffer, self::$includeTag . '(');
                 $__end_pos = strpos($__buffer, ')', $__start_pos);
                 $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 1);
-                $__view = str_replace('.', '/', str_replace('\'', '', substr($__buffer, $__start_pos + 9, $__end_pos - $__start_pos  - 9)));
+                $__view = str_replace('.', '/', str_replace('\'', '', substr($__buffer, $__start_pos + strlen(self::$includeTag) + 1, $__end_pos - $__start_pos  - (strlen(self::$includeTag) + 1))));
 
                 ob_start();
                 require(APP_PATH . 'views/' . $__view . '.blade.php');
@@ -256,11 +281,11 @@ class Blade {
     private static function parseEchoWithEscapedVariable($__buffer){
         $max_loop = strlen($__buffer);
         for($__i = 0; $__i < $max_loop; $__i++) {
-            if (strpos($__buffer, '{{{') !== false && strpos($__buffer, '}}}') !== false) {
-                $__start_pos = strpos($__buffer, '{{{');
-                $__end_pos = strpos($__buffer, '}}}');
-                $__var = substr($__buffer, $__start_pos + 3, $__end_pos - $__start_pos - 3);
-                $__buffer = self::str_replace_first('{{{' . $__var . '}}}', '<?php echo ' . htmlspecialchars(trim($__var)) . ';?>', $__buffer);
+            if (strpos($__buffer, self::$echoEscapedStartTag) !== false && strpos($__buffer, self::$echoEscapedEndTag) !== false) {
+                $__start_pos = strpos($__buffer, self::$echoEscapedStartTag);
+                $__end_pos = strpos($__buffer, self::$echoEscapedEndTag);
+                $__var = substr($__buffer, $__start_pos + strlen(self::$echoEscapedStartTag), $__end_pos - $__start_pos - strlen(self::$echoEscapedEndTag));
+                $__buffer = self::str_replace_first(self::$echoEscapedStartTag . $__var . self::$echoEscapedEndTag, '<?php echo ' . htmlspecialchars(trim($__var)) . ';?>', $__buffer);
             }
             else {
                 break;
@@ -279,11 +304,11 @@ class Blade {
     private static function parseComment($__buffer){
         $max_loop = strlen($__buffer);
         for($__i = 0; $__i < $max_loop; $__i++) {
-            if (strpos($__buffer, '{{--') !== false && strpos($__buffer, '--}}') !== false) {
-                $__start_pos = strpos($__buffer, '{{--');
-                $__end_pos = strpos($__buffer, '--}}');
-                $__var = substr($__buffer, $__start_pos + 4, $__end_pos - $__start_pos - 4);
-                $__buffer = self::str_replace_first('{{--' . $__var . '--}}', '<?php /* echo ' . trim($__var) . '; */?>', $__buffer);
+            if (strpos($__buffer, self::$commentStartTag) !== false && strpos($__buffer, self::$commentEndTag) !== false) {
+                $__start_pos = strpos($__buffer, self::$commentStartTag);
+                $__end_pos = strpos($__buffer, self::$commentEndTag);
+                $__var = substr($__buffer, $__start_pos + strlen(self::$commentStartTag), $__end_pos - $__start_pos - strlen(self::$commentEndTag));
+                $__buffer = self::str_replace_first(self::$commentStartTag . $__var . self::$commentEndTag, '<?php /* echo ' . trim($__var) . '; */?>', $__buffer);
 
             }
             else {
@@ -303,11 +328,11 @@ class Blade {
     private static function parseEchoWithoutHtmlEntities($__buffer){
         $max_loop = strlen($__buffer);
         for($__i = 0; $__i < $max_loop; $__i++) {
-            if (strpos($__buffer, '{!!') !== false && strpos($__buffer, '!!}') !== false) {
-                $__start_pos = strpos($__buffer, '{!!');
-                $__end_pos = strpos($__buffer, '!!}');
-                $__var = substr($__buffer, $__start_pos + 3, $__end_pos - $__start_pos - 3);
-                $__buffer = self::str_replace_first('{!!' . $__var . '!!}', '<?php echo ' . trim($__var) . ';?>', $__buffer);
+            if (strpos($__buffer, self::$echoWithoutHtmlEntitiesStartTag) !== false && strpos($__buffer, self::$echoWithoutHtmlEntitiesEndTag) !== false) {
+                $__start_pos = strpos($__buffer, self::$echoWithoutHtmlEntitiesStartTag);
+                $__end_pos = strpos($__buffer, self::$echoWithoutHtmlEntitiesEndTag);
+                $__var = substr($__buffer, $__start_pos + strlen(self::$echoWithoutHtmlEntitiesStartTag), $__end_pos - $__start_pos - strlen(self::$echoWithoutHtmlEntitiesEndTag));
+                $__buffer = self::str_replace_first(self::$echoWithoutHtmlEntitiesStartTag . $__var . self::$echoWithoutHtmlEntitiesEndTag, '<?php echo ' . trim($__var) . ';?>', $__buffer);
 
             }
             else {
@@ -327,11 +352,11 @@ class Blade {
     private static function parseEchoWithHtmlEntities($__buffer){
         $max_loop = strlen($__buffer);
         for($__i = 0; $__i < $max_loop; $__i++) {
-            if (strpos($__buffer, '{{') !== false && strpos($__buffer, '}}') !== false) {
-                $__start_pos = strpos($__buffer, '{{');
-                $__end_pos = strpos($__buffer, '}}');
-                $__var = substr($__buffer, $__start_pos + 2, $__end_pos - $__start_pos - 2);
-                $__buffer = self::str_replace_first('{{' . $__var . '}}', '<?php echo ' . trim($__var) . ';?>', $__buffer);
+            if (strpos($__buffer, self::$echoStartTag) !== false && strpos($__buffer, self::$echoEndTag) !== false) {
+                $__start_pos = strpos($__buffer, self::$echoStartTag);
+                $__end_pos = strpos($__buffer, self::$echoEndTag);
+                $__var = substr($__buffer, $__start_pos + strlen(self::$echoStartTag), $__end_pos - $__start_pos - strlen(self::$echoEndTag));
+                $__buffer = self::str_replace_first(self::$echoStartTag . $__var . self::$echoEndTag, '<?php echo ' . trim($__var) . ';?>', $__buffer);
 
             }
             else {
@@ -352,26 +377,26 @@ class Blade {
         $max_loop = strlen($__buffer);
 
         for($__i = 0; $__i < $max_loop; $__i++){
-            if(strpos($__buffer, '@if') !== false){
-                $__start_pos = strpos($__buffer, '@if');
+            if(strpos($__buffer, self::$ifTag) !== false){
+                $__start_pos = strpos($__buffer, self::$ifTag);
                 $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
                 $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
 
                 $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
-                $__buffer = self::str_replace_first('@if', 'if', $__buffer);
+                $__buffer = self::str_replace_first(self::$ifTag, 'if', $__buffer);
             }
-            elseif(strpos($__buffer, '@elseif') !== false){
-                $__start_pos = strpos($__buffer, '@elseif');
+            elseif(strpos($__buffer, self::$elseifTag) !== false){
+                $__start_pos = strpos($__buffer, self::$elseifTag);
                 $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
                 $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
                 $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
-                $__buffer = self::str_replace_first('@elseif', 'elseif', $__buffer);
+                $__buffer = self::str_replace_first(self::$elseifTag, 'elseif', $__buffer);
             }
-            elseif(strpos($__buffer, '@else') !== false){
-                $__buffer = self::str_replace_first('@else', '<?php else: ?>', $__buffer);
+            elseif(strpos($__buffer, self::$elseTag) !== false){
+                $__buffer = self::str_replace_first(self::$elseTag, '<?php else: ?>', $__buffer);
             }
-            elseif(strpos($__buffer, '@endif') !== false){
-                $__buffer = self::str_replace_first('@endif', '<?php endif; ?>', $__buffer);
+            elseif(strpos($__buffer, self::$endifTag) !== false){
+                $__buffer = self::str_replace_first(self::$endifTag, '<?php endif; ?>', $__buffer);
 
             }
             else {
@@ -392,15 +417,15 @@ class Blade {
         $max_loop = strlen($__buffer);
 
         for($__i = 0; $__i < $max_loop; $__i++){
-            if(strpos($__buffer, '@foreach') !== false){
-                $__start_pos = strpos($__buffer, '@foreach');
+            if(strpos($__buffer, self::$foreachTag) !== false){
+                $__start_pos = strpos($__buffer, self::$foreachTag);
                 $__end_pos = strpos($__buffer, ')', $__start_pos);
                 $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 1);
                 $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
-                $__buffer = self::str_replace_first('@foreach', 'foreach', $__buffer);
+                $__buffer = self::str_replace_first(self::$foreachTag, 'foreach', $__buffer);
             }
-            if(strpos($__buffer, '@endforeach') !== false){
-                $__buffer = self::str_replace_first('@endforeach', '<?php endforeach; ?>', $__buffer);
+            if(strpos($__buffer, self::$endForeachTag) !== false){
+                $__buffer = self::str_replace_first(self::$endForeachTag, '<?php endforeach; ?>', $__buffer);
 
             }
             else {
@@ -421,15 +446,15 @@ class Blade {
         $max_loop = strlen($__buffer);
 
         for($__i = 0; $__i < $max_loop; $__i++){
-            if(strpos($__buffer, '@for') !== false){
-                $__start_pos = strpos($__buffer, '@for');
+            if(strpos($__buffer, self::$forTag) !== false){
+                $__start_pos = strpos($__buffer, self::$forTag);
                 $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
                 $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
                 $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
-                $__buffer = self::str_replace_first('@for', 'for', $__buffer);
+                $__buffer = self::str_replace_first(self::$forTag, 'for', $__buffer);
             }
-            elseif(strpos($__buffer, '@endfor') !== false){
-                $__buffer = self::str_replace_first('@endfor', '<?php endfor; ?>', $__buffer);
+            elseif(strpos($__buffer, self::$endForTag) !== false){
+                $__buffer = self::str_replace_first(self::$endForTag, '<?php endfor; ?>', $__buffer);
 
             }
             else {
@@ -449,15 +474,15 @@ class Blade {
     private static function parseWhile($__buffer){
         $max_loop = strlen($__buffer);
         for($__i = 0; $__i < $max_loop; $__i++){
-            if(strpos($__buffer, '@while') !== false){
-                $__start_pos = strpos($__buffer, '@while');
+            if(strpos($__buffer, self::$whileTag) !== false){
+                $__start_pos = strpos($__buffer, self::$whileTag);
                 $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
                 $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
                 $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
-                $__buffer = self::str_replace_first('@while', 'while', $__buffer);
+                $__buffer = self::str_replace_first(self::$whileTag, 'while', $__buffer);
             }
-            elseif(strpos($__buffer, '@endwhile') !== false){
-                $__buffer = self::str_replace_first('@endwhile', '<?php endwhile; ?>', $__buffer);
+            elseif(strpos($__buffer, self::$endWhileTag) !== false){
+                $__buffer = self::str_replace_first(self::$endWhileTag, '<?php endwhile; ?>', $__buffer);
 
             }
             else {
@@ -476,17 +501,17 @@ class Blade {
      */
     private static function parseSection($__buffer){
         $sections = array();
-        $max_section = substr_count($__buffer, '@section');
+        $max_section = substr_count($__buffer, self::$sectionTag);
         for($__i = 0; $__i < $max_section; $__i++) {
-            if(strpos($__buffer, '@section') !== false){
-                $__start_pos = strpos($__buffer, '@section');
+            if(strpos($__buffer, self::$sectionTag) !== false){
+                $__start_pos = strpos($__buffer, self::$sectionTag);
                 $__end_pos_sec_name = strpos($__buffer, ')', $__start_pos);
-                $__end_pos = strpos($__buffer, '@stop', $__start_pos);
+                $__end_pos = strpos($__buffer, self::$stopTag, $__start_pos);
                 $__section_name = substr($__buffer, $__start_pos, $__end_pos_sec_name - $__start_pos + 1);
 
                 $__section = substr($__buffer, $__start_pos + strlen($__section_name), $__end_pos - $__start_pos  - strlen($__section_name));
-                $__buffer = self::str_replace_first($__section_name . $__section . '@stop', '', $__buffer);
-                $__section_name = trim(rtrim(ltrim(trim(substr($__section_name, 8, strlen($__section_name))), '('), ')'), '\'');
+                $__buffer = self::str_replace_first($__section_name . $__section . self::$stopTag, '', $__buffer);
+                $__section_name = trim(rtrim(ltrim(trim(substr($__section_name, strlen(self::$sectionTag), strlen($__section_name))), '('), ')'), '\'');
 
                 $sections[$__section_name] = $__section;
             }
