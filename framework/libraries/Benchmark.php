@@ -28,6 +28,15 @@ class Benchmark {
      *
      * @param string $flagname
      */
+    public static function start($flagname = 'std'){
+        self::$time[$flagname] = self::microtime_float();
+    }
+
+    /**
+     * Start Benchmark Time
+     *
+     * @param string $flagname
+     */
     public static function startTime($flagname = 'std'){
         self::$time[$flagname] = self::microtime_float();
     }
