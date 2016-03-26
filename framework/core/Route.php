@@ -46,6 +46,7 @@ class Route {
                 /* Load root controller */
                 if(isset($route['root_controller'])){
                     if($route['root_controller'] != ''){
+                        $route['root_controller'] .= 'Controller';
                         $root_controller = $route['root_controller'];
                         if(file_exists(APP_PATH . 'controllers/' . $route['root_controller'] . '.php')){
                             require_once APP_PATH . 'controllers/' . $route['root_controller'] . '.php';

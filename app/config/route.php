@@ -15,7 +15,7 @@
  * $route['method_separator'] = '-';            // method separator to call method in url ('_' | '-' | default is '_')
  */
 
-$route['default_controller'] = 'WelcomeController';
-$route['root_controller'] = 'BaseController';
+$route['default_controller'] = 'Welcome';
+$route['root_controller'] = 'Base';
 $route['404'] = '';
 $route['method_separator'] = '';
