@@ -12,7 +12,22 @@ use Gregwar\Captcha\CaptchaBuilder;
 class TestingController extends BaseController {
 
     public function index(){
+        Load::library('DB');
+        Load::model('Member');
 
+        //$members = Member::all('*', 10);
+        //$members = Member::where('email', 'LIKE', '%joko%')->get();
+        //$members = Member::first();
+        $members = Member::byId('M1411190001');
+
+        echo '<pre>';
+        print_r($members);
+        echo '</pre>';
+
+        Member::where('member_id', 'M1411190001')
+            ->update(array(
+                'postcode' => '41234'
+            ));
     }
 
     public function ajax(){
@@ -21,16 +36,23 @@ class TestingController extends BaseController {
 
     public function cache(){
 
-        Load::library('Database');
+        Load::library('DB');
+
+        Benchmark::startTime('get_data');
 
         $member_list = Cache::get('member_list_cache');
 
         if($member_list == null){
             echo 'NO CACHE';
-            $sql = "SELECT *, (SELECT COUNT(member_id) FROM member) AS total FROM member LIMIT 500";
-            $member_list = Database::getAllQuery($sql);
+            $member_list = DB::table('member')
+                ->limit(100)
+                ->get();
+
             Cache::store('member_list_cache', $member_list);
         }
+
+        echo nl2br(PHP_EOL);
+        echo 'Get data time : ' . Benchmark::getTime('get_data', 5) . ' s';
 
         //Cache::delete('member_list_cache');
         echo '<pre>';
@@ -39,30 +61,88 @@ class TestingController extends BaseController {
     }
 
     public function database(){
-        Load::library('Database');
+        Load::library('DB');
 
-        Database::beginTransaction();
-        Database::insert('test', array('val1' => 'A', 'val2' => 'B'));
-        $insert_id = Database::insertId();
-        Database::update('test', 'test_id', $insert_id - 1, array('val1' => 'A2', 'val2' => 'B2'));
-        Database::delete('test', 'test_id', $insert_id - 3);
-        Database::commit();
+        DB::beginTransaction();
+        DB::insert('test', array('val1' => 'A', 'val2' => 'B'));
+        $insert_id = DB::insertId();
+        DB::update('test', 'test_id', $insert_id - 1, array('val1' => 'A2', 'val2' => 'B2'));
+        DB::delete('test', 'test_id', $insert_id - 3);
+        DB::commit();
     }
 
     public function database2(){
-        Load::library('Database');
+        Load::library('DB');
 
         $sql = "SELECT * FROM member WHERE email = ? AND name LIKE ?";
-        $data = Database::getAllQuery($sql, array('jokopurnomoa@gmail.com', '%Elips%'));
+        $data = DB::getAllQuery($sql, array('jokopurnomoa@gmail.com', '%Elips%'));
         echo '<pre>';
         print_r($data);
         echo '</pre>';
     }
 
-    public function sqlite(){
-        Load::library('Database');
+    public function database3(){
+        Load::library('DB');
 
-        Database::createTable('member', array(
+        $data = DB::table('member')
+            ->join('member_category', 'catm_id')
+            ->select(['*'])
+            ->select('YEAR(CURRENT_TIMESTAMP) - YEAR(birthdate) - (RIGHT(CURRENT_TIMESTAMP, 5) < RIGHT(birthdate, 5)) as age')
+            ->where('active', 1)
+            ->where('name', 'LIKE', '%\'Joko%')
+            ->orWhere('name', 'LIKE', '%Purnomo%')
+            ->having('age', '>', 20)
+            ->orderBy('name', 'DESC')
+            ->orderBy('age', 'ASC')
+            ->limit(10)
+            ->get();
+
+        echo '<pre>';
+        print_r($data);
+        echo '</pre>';
+
+        DB::table('member_category')
+            ->insert(array(
+                'catm_id' => '6',
+                'category' => 'AAA'
+            ));
+
+        DB::table('member_category')
+            ->where('catm_id', '6')
+            ->update(array(
+                'category' => 'ZZZ'
+            ));
+
+        DB::table('member_category')
+            ->where('catm_id', '6')
+            ->delete();
+    }
+
+    public function database4(){
+        Load::library('DB');
+
+        $db2 = DB::getInstance(get_app_config('db', 'optional'));
+        $db2->createTable('member', array(
+            array('member_id', 'string(20) PRIMARY KEY'),
+            array('name', 'string(50)')
+        ));
+
+        $db2->table('member')
+            ->insert(array(
+                'member_id' => 'M00001',
+                'name' => 'Joko Purnomo A'
+            ));
+
+        $members = $db2->table('member')->get();
+        echo '<pre>';
+        print_r($members);
+        echo '</pre>';
+    }
+
+    public function sqlite(){
+        Load::library('DB');
+
+        DB::createTable('member', array(
             array('member_id', 'VARCHAR(40)', 'PRIMARY KEY'),
             array('name', 'VARCHAR(100)'),
             array('birthdate', 'DATE'),
@@ -81,8 +161,8 @@ class TestingController extends BaseController {
         ));
 
         //Database::insert('member', array('member_id' => 'M00001', 'name' => 'Joko Purnomo A'));
-        Database::getCountQuery('SELECT * FROM member');
-        $data = Database::getFirstField('member', array('member_id', 'name'));
+        DB::getCountQuery('SELECT * FROM member');
+        $data = DB::getFirstField('member', array('member_id', 'name'));
         print_r($data);
     }
 

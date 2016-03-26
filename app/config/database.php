@@ -10,8 +10,20 @@
  *
  */
 
-$config['db']['main']['host']       = 'localhost';
-$config['db']['main']['user']       = 'root';
-$config['db']['main']['pass']       = 'root157';
-$config['db']['main']['db']         = 'elips';
-$config['db']['main']['driver']     = 'mysqli';
+$config['db'] = array(
+    'main' => array(
+        'host'      => 'localhost',
+        'user'      => 'root',
+        'pass'      => 'root157',
+        'db'        => 'elips',
+        'driver'    => 'mysqli'
+    ),
+
+    'optional' => array(
+        'host'      => 'mysqli',
+        'user'      => 'root',
+        'pass'      => '',
+        'db'        => 'elips',
+        'driver'    => 'sqlite'
+    )
+);

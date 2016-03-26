@@ -6,19 +6,23 @@
  *
  */
 
+require_once 'QueryBuilder/MySQLQueryBuilder.php';
+
 class MySQLiDriver {
 
     private $link;
     private $config;
     private $transaction_status;
+    private $queryBuilder;
 
     /**
      * Constructor
      *
-     * @param null $config
+     * @param null|string $config
      */
     public function __construct($config = null){
         $this->config = $config;
+        $this->queryBuilder = new MySQLQueryBuilder();
     }
 
     /**
@@ -31,7 +35,7 @@ class MySQLiDriver {
     /**
      * Initialize Driver
      *
-     * @param null $config
+     * @param null|string $config
      */
     public function init($config = null){
         $this->config = $config;
@@ -42,6 +46,7 @@ class MySQLiDriver {
      */
     public function connect(){
         $this->link = mysqli_connect($this->config['host'], $this->config['user'], $this->config['pass'], $this->config['db']);
+        $this->queryBuilder->setConnection($this->link);
     }
 
     /**
@@ -52,7 +57,7 @@ class MySQLiDriver {
     }
 
     /**
-     * @param $string
+     * @param string $string
      * @return string
      */
     public function escape($string){
@@ -62,7 +67,7 @@ class MySQLiDriver {
     /**
      * Get Count Data Using Query
      *
-     * @param $sql
+     * @param string $sql
      * @return int
      */
     public function getCountQuery($sql, $params = null){
@@ -85,9 +90,9 @@ class MySQLiDriver {
     /**
      * Get Count Data
      *
-     * @param $table
-     * @param null $where
-     * @param null $limit
+     * @param string $table
+     * @param null|array  $where
+     * @param null|int|string $limit
      * @return int
      */
     public function getCount($table, $where = null, $limit = null){
@@ -115,7 +120,7 @@ class MySQLiDriver {
     /**
      * Get All Data Using Query
      *
-     * @param $sql
+     * @param string $sql
      * @return array|null
      */
     public function getAllQuery($sql, $params = null){
@@ -144,10 +149,10 @@ class MySQLiDriver {
     /**
      * Get All Data
      *
-     * @param $table
-     * @param null $where
-     * @param null $order
-     * @param null $limit
+     * @param string $table
+     * @param null|array $where
+     * @param null|array $order
+     * @param null|int|string $limit
      * @return array|null
      */
     public function getAll($table, $where = null, $order = null, $limit = null){
@@ -190,11 +195,11 @@ class MySQLiDriver {
     /**
      * Get All Data By Field
      *
-     * @param $table
-     * @param null $field
-     * @param null $where
-     * @param null $order
-     * @param null $limit
+     * @param string $table
+     * @param null|array $field
+     * @param null|array $where
+     * @param null|array $order
+     * @param null|int|string $limit
      * @return array|null
      */
     public function getAllField($table, $field = null, $where = null, $order = null, $limit = null){
@@ -251,7 +256,7 @@ class MySQLiDriver {
     /**
      * Get First Data Using Query
      *
-     * @param $sql
+     * @param string $sql
      * @return null|object
      */
     public function getFirstQuery($sql, $params = null){
@@ -276,10 +281,10 @@ class MySQLiDriver {
     /**
      * Get First Data
      *
-     * @param $table
-     * @param null $where
-     * @param null $order
-     * @param null $limit
+     * @param string $table
+     * @param null|array $where
+     * @param null|array $order
+     * @param null|int|string $limit
      * @return null|object
      */
     public function getFirst($table, $where = null, $order = null, $limit = null){
@@ -322,11 +327,11 @@ class MySQLiDriver {
     /**
      * Get First Data By Field
      *
-     * @param $table
-     * @param null $field
-     * @param null $where
-     * @param null $order
-     * @param null $limit
+     * @param string $table
+     * @param null|array $field
+     * @param null|array $where
+     * @param null|array $order
+     * @param null|int|string $limit
      * @return null|object
      */
     public function getFirstField($table, $field = null, $where = null, $order = null, $limit = null){
@@ -383,7 +388,7 @@ class MySQLiDriver {
     /**
      * Insert Data Using Query
      *
-     * @param $sql
+     * @param string $sql
      * @return bool
      */
     public function insertQuery($sql, $params = null){
@@ -403,40 +408,27 @@ class MySQLiDriver {
     /**
      * Insert Data
      *
-     * @param $table
-     * @param $data
+     * @param string $table
+     * @param null|array $data
      * @return bool
      */
-    public function insert($table, $data){
-        $_this = $this;
+    public function insert($tableOrData, $data = null){
+        $sql = null;
         if($data != null){
-            $sql = "INSERT INTO $table ";
-            $_i = 0;
-            $_fields = "(";
-            $_values = "(";
-            foreach($data as $key => $val){
-                if($_i === 0){
-                    $_fields .= $key;
-                    $_values .= "'" . $_this->escape($val) . "'";
-                } else {
-                    $_fields .= ',' . $key;
-                    $_values .= ",'" . $_this->escape($val) . "'";
-                }
-
-                $_i++;
-            }
-            $_fields .= ")";
-            $_values .= ")";
-            $sql .= $_fields . " VALUES " . $_values;
-            return $this->insertQuery($sql);
+            $this->queryBuilder->table($tableOrData);
+            $sql = $this->queryBuilder->insert($data);
+        } else {
+            $sql = $this->queryBuilder->insert($tableOrData);
         }
-        return false;
+
+        return $sql !== null ? $this->insertQuery($sql) : false;
     }
 
     /**
      * Update Data Using Query
      *
-     * @param $sql
+     * @param string $sql
+     * @param null|array $params
      * @return bool
      */
     public function updateQuery($sql, $params = null){
@@ -456,35 +448,30 @@ class MySQLiDriver {
     /**
      * Update Data
      *
-     * @param $table
-     * @param $field
-     * @param $id
-     * @param $data
+     * @param string $table
+     * @param null|string $field
+     * @param null|string $id
+     * @param null|array $data
      * @return bool
      */
-    public function update($table, $field, $id, $data){
-        if($data != null && $field != '' && $id != ''){
-            $sql = "UPDATE $table SET ";
-            $_i = 0;
-            foreach($data as $key => $val){
-                if($_i === 0){
-                    $sql .= "$key = '" . $this->escape($val) . "' ";
-                } else {
-                    $sql .= ",$key = '" . $this->escape($val) . "' ";
-                }
-
-                $_i++;
-            }
-            $sql .= " WHERE $field = '" . $this->escape($id) . "' ";
-            return $this->updateQuery($sql);
+    public function update($tableOrData, $field = null, $id = null, $data = null, $limit = 1){
+        $sql = null;
+        if($field != null && $id != null && $data != null){
+            $sql = $this->queryBuilder->table($tableOrData)
+                ->where($field, $id)
+                ->limit($limit)
+                ->update($data);
+        } else {
+            $sql = $this->queryBuilder->update($tableOrData);
         }
-        return false;
+
+        return $sql !== null ? $this->updateQuery($sql) : false;
     }
 
     /**
      * Delete Data Using Query
      *
-     * @param $sql
+     * @param string $sql
      * @return bool
      */
     public function deleteQuery($sql, $params = null){
@@ -504,16 +491,24 @@ class MySQLiDriver {
     /**
      * Delete Data
      *
-     * @param $table
-     * @param $field
-     * @param $id
+     * @param null|string $table
+     * @param null|string $field
+     * @param null|string $id
      * @param int $limit
      * @return bool
      */
-    public function delete($table, $field, $id, $limit = 1){
-        $limit = (int)$limit;
-        $sql = "DELETE FROM $table WHERE $field = '" . $this->escape($id) . "' LIMIT $limit";
-        return $this->deleteQuery($sql);
+    public function delete($table = null, $field = null, $id = null, $limit = 1){
+        $sql = null;
+        if($table != null && $field != null && $id != null){
+            $sql = $this->queryBuilder->table($table)
+                ->where($field, $id)
+                ->limit($limit)
+                ->delete();
+        } else {
+            $sql = $this->queryBuilder->delete();
+        }
+
+        return $sql !== null ? $this->deleteQuery($sql) : false;
     }
 
     /**
@@ -575,8 +570,8 @@ class MySQLiDriver {
     /**
      * Create Table
      *
-     * @param $table
-     * @param $fields
+     * @param string $table
+     * @param array $fields
      * @return bool
      */
     public function createTable($table, $fields){
@@ -607,7 +602,7 @@ class MySQLiDriver {
     /**
      * Drop Table
      *
-     * @param $table
+     * @param string $table
      * @return bool
      */
     public function dropTable($table){
@@ -617,5 +612,184 @@ class MySQLiDriver {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Set table
+     *
+     * @param string $table
+     * @return $this
+     */
+    public function table($table){
+        $this->queryBuilder->table($table);
+        return $this;
+    }
+
+    /**
+     * Select table fields
+     *
+     * @param array $columns
+     * @return $this
+     */
+    public function select($columns = null){
+        $this->queryBuilder->select($columns);
+        return $this;
+    }
+
+    /**
+     * Join with other table
+     *
+     * @param string $table
+     * @param string $key1
+     * @param null|string $condition
+     * @param null|string $key2
+     * @return $this
+     */
+    public function join($table, $key1, $condition = null, $key2 = null){
+        $this->queryBuilder->join($table, $key1, $condition, $key2);
+        return $this;
+    }
+
+    /**
+     * Inner Join with other table
+     *
+     * @param string $table
+     * @param string $key1
+     * @param null|string $condition
+     * @param null|string $key2
+     * @return $this
+     */
+    public function innerJoin($table, $key1, $condition = null, $key2 = null){
+        $this->queryBuilder->innerJoin($table, $key1, $condition, $key2);
+        return $this;
+    }
+
+    /**
+     * Outer Join with other table
+     *
+     * @param string $table
+     * @param string $key1
+     * @param null|string $condition
+     * @param null|string $key2
+     * @return $this
+     */
+    public function outerJoin($table, $key1, $condition = null, $key2 = null){
+        $this->queryBuilder->outerJoin($table, $key1, $condition, $key2);
+        return $this;
+    }
+
+    /**
+     * Where condition
+     *
+     * @param $field
+     * @param $valueOrCondition
+     * @param null $value
+     * @return $this
+     */
+    public function where($field, $valueOrCondition, $value = null){
+        $this->queryBuilder->where($field, $valueOrCondition, $value);
+        return $this;
+    }
+
+    /**
+     * Or Where condition
+     *
+     * @param string $field
+     * @param string $valueOrCondition
+     * @param null|string $value
+     * @return $this
+     */
+    public function orWhere($field, $valueOrCondition, $value = null){
+        $this->queryBuilder->orWhere($field, $valueOrCondition, $value);
+        return $this;
+    }
+
+    /**
+     * Having condition
+     *
+     * @param string $field
+     * @param string $valueOrCondition
+     * @param null|string $value
+     * @return $this
+     */
+    public function having($field, $valueOrCondition, $value = null){
+        $this->queryBuilder->having($field, $valueOrCondition, $value);
+        return $this;
+    }
+
+    /**
+     * Or Having condition
+     *
+     * @param string $field
+     * @param string $valueOrCondition
+     * @param null|string $value
+     * @return $this
+     */
+    public function orHaving($field, $valueOrCondition, $value = null){
+        $this->queryBuilder->orHaving($field, $valueOrCondition, $value);
+        return $this;
+    }
+
+    /**
+     * Order result
+     *
+     * @param string $field
+     * @param string $order
+     * @return $this
+     */
+    public function orderBy($field, $order = 'ASC'){
+        $this->queryBuilder->orderBy($field, $order);
+        return $this;
+    }
+
+    /**
+     * Limit result
+     *
+     * @param int $start
+     * @param null|int $length
+     * @return $this
+     */
+    public function limit($start, $length = null){
+        $this->queryBuilder->limit($start, $length);
+        return $this;
+    }
+
+    /**
+     * Get all data
+     *
+     * @return array|null
+     */
+    public function get(){
+        $sql = $this->queryBuilder->get();
+        return $sql != null ? $this->getAllQuery($sql) : null;
+    }
+
+    /**
+     * Get generated SQL
+     *
+     * @return string
+     */
+    public function getSQL(){
+        return $this->queryBuilder->get();
+    }
+
+    /**
+     * Get first data
+     *
+     * @return null|object
+     */
+    public function first(){
+        $sql = $this->queryBuilder->get();
+        return $sql != null ? $this->getFirstQuery($sql) : null;
+    }
+
+    /**
+     * Get data count
+     *
+     * @return int
+     */
+    public function count(){
+        $sql = $this->queryBuilder->count();
+        return $sql != 0 ? $this->getCountQuery($sql) : 0;
     }
 }

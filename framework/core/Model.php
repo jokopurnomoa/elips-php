@@ -7,95 +7,89 @@
 
 class Model {
 
-    private static $table;
-    private static $field_id;
+    protected static $instance;
+    protected $table;
+    protected $primary;
 
-    /**
-     * Set Default Table
-     *
-     * @param $table
-     */
-    public static function setTable($table){
-        self::$table = $table;
+    private function __construct(){
+    }
+
+    private function __clone(){
+    }
+
+    private function __wakeup(){
     }
 
     /**
-     * Set Default Field Id
+     * Get model instance
      *
-     * @param $fieldname
-     */
-    public static function setFieldId($fieldname){
-        self::$field_id = $fieldname;
-    }
-
-    /**
-     * Get All Data
-     *
-     * @param null $limit
      * @return mixed
      */
-    public static function getAll($limit = null){
-        return Database::getAll(self::$table, null, null, $limit);
+    public static function getInstance(){
+        if(null === static::$instance){
+            static::$instance = new static();
+        }
+        return static::$instance;
     }
 
     /**
-     * Get Data By Id
+     * Get all data from table
+     *
+     * @param null|string $columns
+     * @param null|int $limit
+     * @return mixed
+     */
+    public static function all($columns = null, $limit = null){
+        $instance = static::getInstance();
+
+        if($limit != null){
+            return DB::table($instance->table)
+                ->select($columns)
+                ->limit($limit)
+                ->get();
+        }
+        return DB::table($instance->table)
+            ->select($columns)
+            ->get();
+    }
+
+    /**
+     * Get database instance
+     *
+     * @param string $field
+     * @param string $valueOrCondition
+     * @param null|string $value
+     * @return mixed
+     */
+    public static function where($field, $valueOrCondition, $value = null){
+        $instance = static::getInstance();
+        return DB::table($instance->table)->where($field, $valueOrCondition, $value);
+    }
+
+    /**
+     * Get first data from table
+     *
+     * @param null $columns
+     * @return mixed
+     */
+    public static function first($columns = null){
+        $instance = static::getInstance();
+        return DB::table($instance->table)
+            ->select($columns)
+            ->first();
+    }
+
+    /**
+     * Get first data from table by id
      *
      * @param $id
      * @return mixed
      */
-    public static function getById($id){
-        return Database::getFirst(self::$table, array(self::$field_id => $id));
-    }
-
-    /**
-     * Get Count Data
-     *
-     * @return mixed
-     */
-    public static function getCount(){
-        return Database::getCount(self::$table);
-    }
-
-    /**
-     * Insert Data
-     *
-     * @param $data
-     * @return mixed
-     */
-    public static function insert($data){
-        return Database::insert(self::$table, $data);
-    }
-
-    /**
-     * Update Data By Id
-     *
-     * @param $id
-     * @param $data
-     * @return mixed
-     */
-    public static function updateById($id, $data){
-        return Database::update(self::$table, self::$field_id, $id, $data);
-    }
-
-    /**
-     * Delete Data By Id
-     *
-     * @param $id
-     * @return mixed
-     */
-    public static function deleteById($id){
-        return Database::delete(self::$table, self::$field_id, $id);
-    }
-
-    /**
-     * Eascaping String
-     *
-     * @param $string
-     * @return mixed
-     */
-    public static function escape($string){
-        return Database::escape($string);
+    public static function byId($id){
+        $instance = static::getInstance();
+        return DB::table($instance->table)
+            ->where($instance->primary, $id)
+            ->first();
     }
 
 }

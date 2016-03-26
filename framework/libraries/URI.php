@@ -5,6 +5,7 @@
  * Get uri segment
  *
  */
+
 class URI {
 
     /**
