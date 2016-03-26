@@ -17,7 +17,7 @@
 @stop
 
 @section('body')
-    {{ 'Hello' }}
+    @{{ hello() }}
 
     {{{ 'Hello' }}}
 

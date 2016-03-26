@@ -13,9 +13,7 @@ class Blade {
      *
      * @var array
      */
-    protected static $parseData = array();
-    const HTML_SPECIALCHARS = 'SPECIALCHARS';
-    const HTML_ENTITIES = 'ENTITIES';
+    private static $rawData = array();
 
     private static $extendsTag = '@extends';
     private static $includeTag = '@include';
@@ -29,6 +27,8 @@ class Blade {
     private static $commentEndTag = '--}}';
     private static $echoStartTag = '{{';
     private static $echoEndTag = '}}';
+    private static $rawTextStartTag = '@{{';
+    private static $rawTextEndTag = '}}';
     private static $echoWithoutHtmlEntitiesStartTag = '{!!';
     private static $echoWithoutHtmlEntitiesEndTag = '!!}';
     private static $ifTag = '@if';
@@ -106,6 +106,13 @@ class Blade {
         $__buffer = ob_get_contents();
         @ob_end_clean();
 
+        /* Display raw text */
+        if(self::$rawData != null){
+            foreach(self::$rawData as $key => $val){
+                $__buffer = str_replace($key, $val, $__buffer);
+            }
+        }
+
         return $__buffer;
     }
 
@@ -133,6 +140,11 @@ class Blade {
      */
     private static function parse($__buffer){
         if($__buffer !== ''){
+
+            /**
+             * Parse echo raw text
+             */
+            $__buffer = self::parseEchoRawText($__buffer);
 
             /**
              * Parse extends
@@ -205,7 +217,6 @@ class Blade {
              * Parse while
              */
             $__buffer = self::parseWhile($__buffer);
-
         }
 
         return $__buffer;
@@ -334,6 +345,31 @@ class Blade {
                 $__var = substr($__buffer, $__start_pos + strlen(self::$echoWithoutHtmlEntitiesStartTag), $__end_pos - $__start_pos - strlen(self::$echoWithoutHtmlEntitiesEndTag));
                 $__buffer = self::str_replace_first(self::$echoWithoutHtmlEntitiesStartTag . $__var . self::$echoWithoutHtmlEntitiesEndTag, '<?php echo ' . trim($__var) . ';?>', $__buffer);
 
+            }
+            else {
+                break;
+            }
+        }
+
+        return $__buffer;
+    }
+
+    /**
+     * Parse raw text
+     *
+     * @param string $__buffer
+     * @return string
+     */
+    private static function parseEchoRawText($__buffer){
+        $max_loop = strlen($__buffer);
+        for($__i = 0; $__i < $max_loop; $__i++) {
+            if (strpos($__buffer, self::$rawTextStartTag) !== false && strpos($__buffer, self::$rawTextEndTag) !== false) {
+                $__start_pos = strpos($__buffer, ' ' . self::$rawTextStartTag);
+                $__end_pos = strpos($__buffer, ' ' . self::$rawTextEndTag);
+                $__var = substr($__buffer, $__start_pos + strlen(self::$rawTextStartTag) + 1, $__end_pos - $__start_pos - strlen(self::$rawTextEndTag) - 1);
+                $raw = 'RAW__' . sha1($__var);
+                self::$rawData[$raw] = trim($__var);
+                $__buffer = self::str_replace_first(self::$rawTextStartTag . $__var . self::$rawTextEndTag, '<?php echo \'' . $raw . '\';?>', $__buffer);
             }
             else {
                 break;
