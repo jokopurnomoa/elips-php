@@ -38,12 +38,13 @@
     ?>
 
     @foreach ($data as $row)
-        {{ $row }} {{ '<br>' }}
+        {{ $row }}
+        {!! '<br>' !!}
     @endforeach
 
     @for ($i = 0; $i < 10; $i++)
         {{ $i }}
-        {{ '<br>' }}
+        {!! '<br>' !!}
     @endfor
 
     <?php
@@ -51,8 +52,11 @@
     $max = 10;
     ?>
     @while ($i < $max || ($i < 10 && $i > 0))
-        {{ $i; $i++ }}
-        {{ '<br>' }}
+        {{ $i }}
+        {!! '<br>' !!}
+        <?php
+        $i++;
+        ?>
     @endwhile
 @stop
 

@@ -13,7 +13,7 @@ class Example extends BaseController {
         Load::library('Database');
         Load::model('ExampleModel');
 
-        $this->data['member_list'] = ExampleModel::getAll(null, null, 10);
+        $this->data['member_list'] = Example::all('*', 10);
         $this->data['var'] = array('<?php echo "AAA";?>');
         Blade::render('example', $this->data);
 

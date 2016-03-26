@@ -285,7 +285,7 @@ class Blade {
                 $__start_pos = strpos($__buffer, self::$echoEscapedStartTag);
                 $__end_pos = strpos($__buffer, self::$echoEscapedEndTag);
                 $__var = substr($__buffer, $__start_pos + strlen(self::$echoEscapedStartTag), $__end_pos - $__start_pos - strlen(self::$echoEscapedEndTag));
-                $__buffer = self::str_replace_first(self::$echoEscapedStartTag . $__var . self::$echoEscapedEndTag, '<?php echo ' . htmlspecialchars(trim($__var)) . ';?>', $__buffer);
+                $__buffer = self::str_replace_first(self::$echoEscapedStartTag . $__var . self::$echoEscapedEndTag, '<?php echo htmlspecialchars(' . trim($__var) . ');?>', $__buffer);
             }
             else {
                 break;
@@ -356,8 +356,7 @@ class Blade {
                 $__start_pos = strpos($__buffer, self::$echoStartTag);
                 $__end_pos = strpos($__buffer, self::$echoEndTag);
                 $__var = substr($__buffer, $__start_pos + strlen(self::$echoStartTag), $__end_pos - $__start_pos - strlen(self::$echoEndTag));
-                $__buffer = self::str_replace_first(self::$echoStartTag . $__var . self::$echoEndTag, '<?php echo ' . trim($__var) . ';?>', $__buffer);
-
+                $__buffer = self::str_replace_first(self::$echoStartTag . $__var . self::$echoEndTag, '<?php echo htmlentities(' . trim($__var) . ', ENT_QUOTES);?>', $__buffer);
             }
             else {
                 break;
@@ -520,6 +519,78 @@ class Blade {
             }
         }
         return array($__buffer, $sections);
+    }
+
+    /**
+     * Set echo start tag
+     *
+     * @param string $tag
+     */
+    public static function setEchoStartTag($tag){
+        self::$echoStartTag = $tag;
+    }
+
+    /**
+     * Set echo end tag
+     *
+     * @param string $tag
+     */
+    public static function setEchoEndTag($tag){
+        self::$echoEndTag = $tag;
+    }
+
+    /**
+     * Set echo escaped start tag
+     *
+     * @param string $tag
+     */
+    public static function setEchoEscapedStartTag($tag){
+        self::$echoEscapedStartTag = $tag;
+    }
+
+    /**
+     * Set echo escaped end tag
+     *
+     * @param string $tag
+     */
+    public static function setEchoEscapedEndTag($tag){
+        self::$echoEscapedEndTag = $tag;
+    }
+
+    /**
+     * Set echo without html entities start tag
+     *
+     * @param string $tag
+     */
+    public static function setEchoWithoutHtmlEntitiesStartTag($tag){
+        self::$echoWithoutHtmlEntitiesStartTag = $tag;
+    }
+
+    /**
+     * Set echo without html entities end tag
+     *
+     * @param string $tag
+     */
+    public static function setEchoWithoutHtmlEntitiesEndTag($tag){
+        self::$echoWithoutHtmlEntitiesEndTag = $tag;
+    }
+
+    /**
+     * Set comment start tag
+     *
+     * @param string $tag
+     */
+    public static function setCommentStartTag($tag){
+        self::$commentStartTag = $tag;
+    }
+
+    /**
+     * Set comment end tag
+     *
+     * @param string $tag
+     */
+    public static function setCommentEndTag($tag){
+        self::$commentEndTag = $tag;
     }
 
 }
