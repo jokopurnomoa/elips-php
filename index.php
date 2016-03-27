@@ -67,6 +67,11 @@ Benchmark::startTime('execution_time');
 require FW_PATH . 'helpers/error.php';
 
 /**
+ * Require url helper
+ */
+require FW_PATH . 'helpers/url.php';
+
+/**
  * Require config helper
  */
 require FW_PATH . 'helpers/config.php';
@@ -117,19 +122,4 @@ $instance->run();
 function get_instance(){
     global $instance;
     return $instance;
-}
-
-/**
- * Get application base url
- *
- * @return string
- */
-function base_url(){
-    $base_url = get_app_config('base_url');
-    if($base_url !== ''){
-        return trim($base_url, '/') . '/';
-    }
-
-    $base_dir = explode('/', strrev(trim(__DIR__, '/')));
-    return 'http' . (isset($_SERVER["HTTPS"]) == 'on' ? $_SERVER["HTTPS"] == 'on' ? 's' : '' : '') . '://' . $_SERVER['HTTP_HOST'] . '/' . trim(strrev($base_dir[0])) . '/';
 }
