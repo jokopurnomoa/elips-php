@@ -9,11 +9,6 @@
 class Blade
 {
 
-    /**
-     * Experimental
-     *
-     * @var array
-     */
     private static $rawData = array();
 
     private static $extendsTag = '@extends';
