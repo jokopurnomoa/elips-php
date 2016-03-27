@@ -5,7 +5,8 @@
  *
  */
 
-class Input {
+class Input
+{
 
     /**
      * Get Method Input
@@ -14,7 +15,8 @@ class Input {
      * @param bool $xss_clean
      * @return null|string
      */
-    public static function get($name, $xss_clean = false){
+    public static function get($name, $xss_clean = false)
+    {
         return get_input($name, $xss_clean);
     }
 
@@ -25,7 +27,8 @@ class Input {
      * @param bool $xss_clean
      * @return null|string
      */
-    public static function post($name, $xss_clean = false){
+    public static function post($name, $xss_clean = false)
+    {
         return post_input($name, $xss_clean);
     }
 
@@ -36,7 +39,8 @@ class Input {
      * @param bool $xss_clean
      * @return null
      */
-    public static function postGet($name, $xss_clean = false){
+    public static function postGet($name, $xss_clean = false)
+    {
         return post_get_input($name, $xss_clean);
     }
 

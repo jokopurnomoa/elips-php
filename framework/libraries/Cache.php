@@ -5,7 +5,8 @@
  *
  */
 
-class Cache {
+class Cache
+{
 
     private static $cache_active = false;
     private static $cache_encrypt = false;
@@ -14,15 +15,16 @@ class Cache {
     /**
      * Init Cache
      */
-    public static function init(){
+    public static function init()
+    {
         self::$cache_active = get_app_config('cache', 'active');
         self::$cache_encrypt = get_app_config('cache', 'encrypt');
-        if(get_app_config('cache', 'driver') === 'file'){
+        if (get_app_config('cache', 'driver') === 'file') {
             require 'CacheDriver/CacheFile.php';
             self::$cache_driver = new CacheFile();
             self::$cache_driver->cache_active = self::$cache_active;
             self::$cache_driver->cache_encrypt = self::$cache_encrypt;
-        } else if(get_app_config('cache', 'driver') === 'apc'){
+        } elseif(get_app_config('cache', 'driver') === 'apc') {
             require 'CacheDriver/CacheAPC.php';
             self::$cache_driver = new CacheAPC();
             self::$cache_driver->cache_active = self::$cache_active;
@@ -38,7 +40,8 @@ class Cache {
      * @param int    $max_age
      * @return bool
      */
-    public static function store($flag, $data, $max_age = 60){
+    public static function store($flag, $data, $max_age = 60)
+    {
         return self::$cache_driver->store($flag, $data, $max_age);
     }
 
@@ -50,7 +53,8 @@ class Cache {
      * @param int    $max_age
      * @return bool
      */
-    public static function save($flag, $data, $max_age = 60){
+    public static function save($flag, $data, $max_age = 60)
+    {
         return self::$cache_driver->store($flag, $data, $max_age);
     }
 
@@ -60,7 +64,8 @@ class Cache {
      * @param string $flag
      * @return mixed
      */
-    public static function get($flag){
+    public static function get($flag)
+    {
         return self::$cache_driver->get($flag);
     }
 
@@ -70,7 +75,8 @@ class Cache {
      * @param string $flag
      * @return bool
      */
-    public static function delete($flag){
+    public static function delete($flag)
+    {
         return self::$cache_driver->delete($flag);
     }
 

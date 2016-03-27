@@ -5,7 +5,8 @@
  *
  */
 
-class Controller {
+class Controller
+{
 
     protected $data;
     protected $instance;
@@ -13,7 +14,8 @@ class Controller {
     /**
      * Controller Constructor
      */
-    public function __construct(){
+    public function __construct()
+    {
         $this->instance = get_instance();
         $this->data = $this->instance->data;
     }

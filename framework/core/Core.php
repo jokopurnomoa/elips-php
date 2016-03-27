@@ -6,7 +6,8 @@
  *
  */
 
-class Core {
+class Core
+{
 
     /**
      * @var
@@ -16,7 +17,8 @@ class Core {
     /**
      * Run Core
      */
-    public function run(){
+    public function run()
+    {
         require FW_PATH . 'helpers/file.php';
         require FW_PATH . 'core/Load.php';
         require FW_PATH . 'core/Route.php';
@@ -39,11 +41,12 @@ class Core {
     /**
      * Handle Autoload
      */
-    private function handleAutoload(){
+    private function handleAutoload()
+    {
         $autoload = null;
-        if(file_exists(APP_PATH . 'config/autoload.php')){
+        if (file_exists(APP_PATH . 'config/autoload.php')) {
             require(APP_PATH . 'config/autoload.php');
-        } elseif(APP_ENV === 'development') {
+        } elseif (APP_ENV === 'development') {
             error_dump('File \'' . APP_PATH . 'config/autoload.php\' not found!');
             die();
         }
@@ -59,10 +62,11 @@ class Core {
      *
      * @param $autoload
      */
-    private function autoloadLanguage($autoload){
-        if(isset($autoload['languages'])){
-            if($autoload['languages'] != null){
-                foreach($autoload['languages'] as $language){
+    private function autoloadLanguage($autoload)
+    {
+        if (isset($autoload['languages'])) {
+            if ($autoload['languages'] != null) {
+                foreach ($autoload['languages'] as $language) {
                     Load::language($language);
                 }
             }
@@ -74,10 +78,11 @@ class Core {
      *
      * @param $autoload
      */
-    private function autoloadLibraries($autoload){
-        if(isset($autoload['libraries'])){
-            if($autoload['libraries'] != null){
-                foreach($autoload['libraries'] as $library){
+    private function autoloadLibraries($autoload)
+    {
+        if (isset($autoload['libraries'])) {
+            if ($autoload['libraries'] != null) {
+                foreach ($autoload['libraries'] as $library) {
                     Load::library($library);
                 }
             }
@@ -89,10 +94,11 @@ class Core {
      *
      * @param $autoload
      */
-    private function autoloadModels($autoload){
-        if(isset($autoload['models'])){
-            if($autoload['models'] != null){
-                foreach($autoload['models'] as $model){
+    private function autoloadModels($autoload)
+    {
+        if (isset($autoload['models'])) {
+            if ($autoload['models'] != null) {
+                foreach ($autoload['models'] as $model) {
                     Load::model($model);
                 }
             }
@@ -104,10 +110,11 @@ class Core {
      *
      * @param $autoload
      */
-    private function autoloadHelpers($autoload){
-        if(isset($autoload['helpers'])){
-            if($autoload['helpers'] != null){
-                foreach($autoload['helpers'] as $helper){
+    private function autoloadHelpers($autoload)
+    {
+        if (isset($autoload['helpers'])) {
+            if ($autoload['helpers'] != null) {
+                foreach ($autoload['helpers'] as $helper) {
                     Load::helper($helper);
                 }
             }

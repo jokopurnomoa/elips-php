@@ -8,7 +8,8 @@
 
 require_once 'QueryBuilder/MySQLQueryBuilder.php';
 
-class MySQLiDriver {
+class MySQLiDriver
+{
 
     private $link;
     private $config;
@@ -20,7 +21,8 @@ class MySQLiDriver {
      *
      * @param null|string $config
      */
-    public function __construct($config = null){
+    public function __construct($config = null)
+    {
         $this->config = $config;
         $this->queryBuilder = new MySQLQueryBuilder();
     }
@@ -28,7 +30,8 @@ class MySQLiDriver {
     /**
      * Destructor
      */
-    public function __destruct(){
+    public function __destruct()
+    {
         $this->disconnect();
     }
 
@@ -37,14 +40,16 @@ class MySQLiDriver {
      *
      * @param null|string $config
      */
-    public function init($config = null){
+    public function init($config = null)
+    {
         $this->config = $config;
     }
 
     /**
      * Connnect
      */
-    public function connect(){
+    public function connect()
+    {
         $this->link = mysqli_connect($this->config['host'], $this->config['user'], $this->config['pass'], $this->config['db']);
         $this->queryBuilder->setConnection($this->link);
     }
@@ -52,7 +57,8 @@ class MySQLiDriver {
     /**
      * Disconnect
      */
-    public function disconnect(){
+    public function disconnect()
+    {
         mysqli_close($this->link);
     }
 
@@ -60,7 +66,8 @@ class MySQLiDriver {
      * @param string $string
      * @return string
      */
-    public function escape($string){
+    public function escape($string)
+    {
         return mysqli_real_escape_string($this->link, $string);
     }
 
@@ -70,18 +77,19 @@ class MySQLiDriver {
      * @param string $sql
      * @return int
      */
-    public function getCountQuery($sql, $params = null){
-        if($params != null){
-            foreach($params as $param){
+    public function getCountQuery($sql, $params = null)
+    {
+        if ($params != null) {
+            foreach ($params as $param) {
                 $param_pos = strpos($sql, '?');
-                if($param_pos !== false) {
+                if ($param_pos !== false) {
                     $sql = substr_replace($sql, '\'' . $this->escape($param) . '\'', $param_pos, 1);
                 }
             }
         }
 
         $query = mysqli_query($this->link, $sql);
-        if($query) {
+        if ($query) {
             return mysqli_num_rows($query);
         }
         return 0;
@@ -95,13 +103,14 @@ class MySQLiDriver {
      * @param null|int|string $limit
      * @return int
      */
-    public function getCount($table, $where = null, $limit = null){
+    public function getCount($table, $where = null, $limit = null)
+    {
         $sql = "SELECT * FROM $table ";
-        if($where != null){
+        if ($where != null) {
             $sql .= " WHERE ";
             $_i = 0;
-            foreach($where as $key => $val){
-                if($_i === 0){
+            foreach ($where as $key => $val) {
+                if ($_i === 0) {
                     $sql .= " $key = '" . $this->escape($val) . "' ";
                 } else {
                     $sql .= " AND $key = '" . $this->escape($val) . "' ";
@@ -111,7 +120,7 @@ class MySQLiDriver {
             }
         }
 
-        if($limit != null){
+        if ($limit != null) {
             $sql .= " LIMIT $limit";
         }
         return $this->getCountQuery($sql);
@@ -123,21 +132,22 @@ class MySQLiDriver {
      * @param string $sql
      * @return array|null
      */
-    public function getAllQuery($sql, $params = null){
-        if($params != null){
-            foreach($params as $param){
+    public function getAllQuery($sql, $params = null)
+    {
+        if ($params != null) {
+            foreach ($params as $param) {
                 $param_pos = strpos($sql, '?');
-                if($param_pos !== false) {
+                if ($param_pos !== false) {
                     $sql = substr_replace($sql, '\'' . $this->escape($param) . '\'', $param_pos, 1);
                 }
             }
         }
 
         $query = mysqli_query($this->link, $sql);
-        if($query){
-            if(mysqli_num_rows($query) > 0){
+        if ($query){
+            if (mysqli_num_rows($query) > 0) {
                 $result = null;
-                while($data = mysqli_fetch_assoc($query)){
+                while ($data = mysqli_fetch_assoc($query)) {
                     $result[] = (object)$data;
                 }
                 return $result;
@@ -155,13 +165,14 @@ class MySQLiDriver {
      * @param null|int|string $limit
      * @return array|null
      */
-    public function getAll($table, $where = null, $order = null, $limit = null){
+    public function getAll($table, $where = null, $order = null, $limit = null)
+    {
         $sql = "SELECT * FROM $table ";
-        if($where != null){
+        if ($where != null) {
             $sql .= " WHERE ";
             $_i = 0;
-            foreach($where as $key => $val){
-                if($_i === 0){
+            foreach ($where as $key => $val) {
+                if ($_i === 0) {
                     $sql .= " $key = '" . $this->escape($val) . "' ";
                 } else {
                     $sql .= " AND $key = '" . $this->escape($val) . "' ";
@@ -171,11 +182,11 @@ class MySQLiDriver {
             }
         }
 
-        if($order != null){
+        if ($order != null) {
             $sql .= " ORDER BY ";
             $_i = 0;
-            foreach($order as $key => $val){
-                if($_i === 0){
+            foreach ($order as $key => $val) {
+                if ($_i === 0) {
                     $sql .= " $key $val ";
                 } else {
                     $sql .= " ,$key $val ";
@@ -185,7 +196,7 @@ class MySQLiDriver {
             }
         }
 
-        if($limit != null){
+        if ($limit != null) {
             $sql .= " LIMIT $limit";
         }
 
@@ -202,12 +213,13 @@ class MySQLiDriver {
      * @param null|int|string $limit
      * @return array|null
      */
-    public function getAllField($table, $field = null, $where = null, $order = null, $limit = null){
+    public function getAllField($table, $field = null, $where = null, $order = null, $limit = null)
+    {
         $sql = "SELECT ";
-        if($field != null){
+        if ($field != null) {
             $_i = 0;
-            foreach($field as $val){
-                if($_i === 0){
+            foreach ($field as $val) {
+                if ($_i === 0) {
                     $sql .= "$val ";
                 } else {
                     $sql .= ",$val ";
@@ -219,11 +231,11 @@ class MySQLiDriver {
 
         $sql .= " FROM $table ";
 
-        if($where != null){
+        if ($where != null) {
             $sql .= " WHERE ";
             $_i = 0;
-            foreach($where as $key => $val){
-                if($_i === 0){
+            foreach ($where as $key => $val) {
+                if ($_i === 0) {
                     $sql .= " $key = '" . $this->escape($val) . "' ";
                 } else {
                     $sql .= " AND $key = '" . $this->escape($val) . "' ";
@@ -233,11 +245,11 @@ class MySQLiDriver {
             }
         }
 
-        if($order != null){
+        if ($order != null) {
             $sql .= " ORDER BY ";
             $_i = 0;
-            foreach($order as $key => $val){
-                if($_i === 0){
+            foreach ($order as $key => $val) {
+                if ($_i === 0) {
                     $sql .= " $key $val ";
                 } else {
                     $sql .= " ,$key $val ";
@@ -247,7 +259,7 @@ class MySQLiDriver {
             }
         }
 
-        if($limit != null){
+        if ($limit != null) {
             $sql .= " LIMIT $limit";
         }
         return $this->getAllQuery($sql);
@@ -259,19 +271,20 @@ class MySQLiDriver {
      * @param string $sql
      * @return null|object
      */
-    public function getFirstQuery($sql, $params = null){
-        if($params != null){
-            foreach($params as $param){
+    public function getFirstQuery($sql, $params = null)
+    {
+        if ($params != null) {
+            foreach ($params as $param) {
                 $param_pos = strpos($sql, '?');
-                if($param_pos !== false) {
+                if ($param_pos !== false) {
                     $sql = substr_replace($sql, '\'' . $this->escape($param) . '\'', $param_pos, 1);
                 }
             }
         }
 
         $query = mysqli_query($this->link, $sql);
-        if($query) {
-            if(mysqli_num_rows($query) > 0) {
+        if ($query) {
+            if (mysqli_num_rows($query) > 0) {
                 return (object)mysqli_fetch_assoc($query);
             }
         }
@@ -287,13 +300,14 @@ class MySQLiDriver {
      * @param null|int|string $limit
      * @return null|object
      */
-    public function getFirst($table, $where = null, $order = null, $limit = null){
+    public function getFirst($table, $where = null, $order = null, $limit = null)
+    {
         $sql = "SELECT * FROM $table ";
-        if($where != null){
+        if ($where != null) {
             $sql .= " WHERE ";
             $_i = 0;
-            foreach($where as $key => $val){
-                if($_i === 0){
+            foreach ($where as $key => $val) {
+                if ($_i === 0) {
                     $sql .= " $key = '" . $this->escape($val) . "' ";
                 } else {
                     $sql .= " AND $key = '" . $this->escape($val) . "' ";
@@ -303,11 +317,11 @@ class MySQLiDriver {
             }
         }
 
-        if($order != null){
+        if ($order != null) {
             $sql .= " ORDER BY ";
             $_i = 0;
-            foreach($order as $key => $val){
-                if($_i === 0){
+            foreach ($order as $key => $val) {
+                if ($_i === 0) {
                     $sql .= " $key $val ";
                 } else {
                     $sql .= " ,$key $val ";
@@ -317,7 +331,7 @@ class MySQLiDriver {
             }
         }
 
-        if($limit != null){
+        if ($limit != null) {
             $sql .= " LIMIT $limit";
         }
 
@@ -334,12 +348,13 @@ class MySQLiDriver {
      * @param null|int|string $limit
      * @return null|object
      */
-    public function getFirstField($table, $field = null, $where = null, $order = null, $limit = null){
+    public function getFirstField($table, $field = null, $where = null, $order = null, $limit = null)
+    {
         $sql = "SELECT ";
-        if($field != null){
+        if ($field != null) {
             $_i = 0;
-            foreach($field as $val){
-                if($_i === 0){
+            foreach ($field as $val) {
+                if ($_i === 0) {
                     $sql .= "$val ";
                 } else {
                     $sql .= ",$val ";
@@ -351,11 +366,11 @@ class MySQLiDriver {
 
         $sql .= " FROM $table ";
 
-        if($where != null){
+        if ($where != null) {
             $sql .= " WHERE ";
             $_i = 0;
-            foreach($where as $key => $val){
-                if($_i === 0){
+            foreach ($where as $key => $val) {
+                if ($_i === 0) {
                     $sql .= " $key = '" . $this->escape($val) . "' ";
                 } else {
                     $sql .= " AND $key = '" . $this->escape($val) . "' ";
@@ -365,11 +380,11 @@ class MySQLiDriver {
             }
         }
 
-        if($order != null){
+        if ($order != null) {
             $sql .= " ORDER BY ";
             $_i = 0;
-            foreach($order as $key => $val){
-                if($_i === 0){
+            foreach ($order as $key => $val) {
+                if ($_i === 0) {
                     $sql .= " $key $val ";
                 } else {
                     $sql .= " ,$key $val ";
@@ -379,7 +394,7 @@ class MySQLiDriver {
             }
         }
 
-        if($limit != null){
+        if ($limit != null) {
             $sql .= " LIMIT $limit";
         }
         return $this->getFirstQuery($sql);
@@ -391,11 +406,12 @@ class MySQLiDriver {
      * @param string $sql
      * @return bool
      */
-    public function insertQuery($sql, $params = null){
-        if($params != null){
-            foreach($params as $param){
+    public function insertQuery($sql, $params = null)
+    {
+        if ($params != null) {
+            foreach ($params as $param) {
                 $param_pos = strpos($sql, '?');
-                if($param_pos !== false) {
+                if ($param_pos !== false) {
                     $sql = substr_replace($sql, '\'' . $this->escape($param) . '\'', $param_pos, 1);
                 }
             }
@@ -412,9 +428,10 @@ class MySQLiDriver {
      * @param null|array $data
      * @return bool
      */
-    public function insert($tableOrData, $data = null){
+    public function insert($tableOrData, $data = null)
+    {
         $sql = null;
-        if($data != null){
+        if ($data != null) {
             $this->queryBuilder->table($tableOrData);
             $sql = $this->queryBuilder->insert($data);
         } else {
@@ -431,11 +448,12 @@ class MySQLiDriver {
      * @param null|array $params
      * @return bool
      */
-    public function updateQuery($sql, $params = null){
-        if($params != null){
-            foreach($params as $param){
+    public function updateQuery($sql, $params = null)
+    {
+        if ($params != null) {
+            foreach ($params as $param) {
                 $param_pos = strpos($sql, '?');
-                if($param_pos !== false) {
+                if ($param_pos !== false) {
                     $sql = substr_replace($sql, '\'' . $this->escape($param) . '\'', $param_pos, 1);
                 }
             }
@@ -454,9 +472,10 @@ class MySQLiDriver {
      * @param null|array $data
      * @return bool
      */
-    public function update($tableOrData, $field = null, $id = null, $data = null, $limit = 1){
+    public function update($tableOrData, $field = null, $id = null, $data = null, $limit = 1)
+    {
         $sql = null;
-        if($field != null && $id != null && $data != null){
+        if ($field != null && $id != null && $data != null) {
             $sql = $this->queryBuilder->table($tableOrData)
                 ->where($field, $id)
                 ->limit($limit)
@@ -474,11 +493,12 @@ class MySQLiDriver {
      * @param string $sql
      * @return bool
      */
-    public function deleteQuery($sql, $params = null){
-        if($params != null){
-            foreach($params as $param){
+    public function deleteQuery($sql, $params = null)
+    {
+        if ($params != null) {
+            foreach ($params as $param) {
                 $param_pos = strpos($sql, '?');
-                if($param_pos !== false) {
+                if ($param_pos !== false) {
                     $sql = substr_replace($sql, '\'' . $this->escape($param) . '\'', $param_pos, 1);
                 }
             }
@@ -497,9 +517,10 @@ class MySQLiDriver {
      * @param int $limit
      * @return bool
      */
-    public function delete($table = null, $field = null, $id = null, $limit = 1){
+    public function delete($table = null, $field = null, $id = null, $limit = 1)
+    {
         $sql = null;
-        if($table != null && $field != null && $id != null){
+        if ($table != null && $field != null && $id != null) {
             $sql = $this->queryBuilder->table($table)
                 ->where($field, $id)
                 ->limit($limit)
@@ -516,7 +537,8 @@ class MySQLiDriver {
      *
      * @return bool
      */
-    public function beginTransaction(){
+    public function beginTransaction()
+    {
         $this->transaction_status = false;
         mysqli_autocommit($this->link, FALSE);
         return mysqli_query($this->link, "START TRANSACTION");
@@ -527,7 +549,8 @@ class MySQLiDriver {
      *
      * @return bool
      */
-    public function commit(){
+    public function commit()
+    {
         $this->transaction_status = mysqli_commit($this->link);
         mysqli_autocommit($this->link, TRUE);
         return $this->transaction_status;
@@ -538,14 +561,16 @@ class MySQLiDriver {
      *
      * @return bool
      */
-    public function rollback(){
+    public function rollback()
+    {
         return mysqli_rollback($this->link);
     }
 
     /**
      * @return mixed
      */
-    public function transactionStatus(){
+    public function transactionStatus()
+    {
         return $this->transaction_status;
     }
 
@@ -554,7 +579,8 @@ class MySQLiDriver {
      *
      * @return int|string
      */
-    public function insertId(){
+    public function insertId()
+    {
         return mysqli_insert_id($this->link);
     }
 
@@ -563,7 +589,8 @@ class MySQLiDriver {
      *
      * @return int
      */
-    public function affectedRows(){
+    public function affectedRows()
+    {
         return mysqli_affected_rows($this->link);
     }
 
@@ -574,13 +601,14 @@ class MySQLiDriver {
      * @param array $fields
      * @return bool
      */
-    public function createTable($table, $fields){
-        if($table != null && $fields != null){
+    public function createTable($table, $fields)
+    {
+        if ($table != null && $fields != null) {
             $sql = 'CREATE TABLE IF NOT EXISTS ' . $table . ' (';
             $_i = 0;
-            foreach($fields as $field){
-                if(is_array($field)){
-                    if($_i == 0){
+            foreach ($fields as $field) {
+                if (is_array($field)) {
+                    if ($_i == 0) {
                         $sql .= $field[0] . ' ' . $field[1] . (isset($field[2]) ? ' ' . $field[2] : '');
                     } else {
                         $sql .= ', ' . $field[0] . ' ' . $field[1] . (isset($field[2]) ? ' ' . $field[2] : '');
@@ -590,7 +618,7 @@ class MySQLiDriver {
             }
             $sql .= ')';
 
-            if(mysqli_query($this->link, $sql)){
+            if (mysqli_query($this->link, $sql)) {
                 return true;
             } else {
                 return false;
@@ -605,9 +633,10 @@ class MySQLiDriver {
      * @param string $table
      * @return bool
      */
-    public function dropTable($table){
+    public function dropTable($table)
+    {
         $sql = 'DROP TABLE IF EXISTS ' . $table;
-        if(mysqli_query($this->link, $sql)){
+        if (mysqli_query($this->link, $sql)) {
             return true;
         } else {
             return false;
@@ -620,7 +649,8 @@ class MySQLiDriver {
      * @param string $table
      * @return $this
      */
-    public function table($table){
+    public function table($table)
+    {
         $this->queryBuilder->table($table);
         return $this;
     }
@@ -631,7 +661,8 @@ class MySQLiDriver {
      * @param array $columns
      * @return $this
      */
-    public function select($columns = null){
+    public function select($columns = null)
+    {
         $this->queryBuilder->select($columns);
         return $this;
     }
@@ -645,7 +676,8 @@ class MySQLiDriver {
      * @param null|string $key2
      * @return $this
      */
-    public function join($table, $key1, $condition = null, $key2 = null){
+    public function join($table, $key1, $condition = null, $key2 = null)
+    {
         $this->queryBuilder->join($table, $key1, $condition, $key2);
         return $this;
     }
@@ -659,7 +691,8 @@ class MySQLiDriver {
      * @param null|string $key2
      * @return $this
      */
-    public function innerJoin($table, $key1, $condition = null, $key2 = null){
+    public function innerJoin($table, $key1, $condition = null, $key2 = null)
+    {
         $this->queryBuilder->innerJoin($table, $key1, $condition, $key2);
         return $this;
     }
@@ -673,7 +706,8 @@ class MySQLiDriver {
      * @param null|string $key2
      * @return $this
      */
-    public function outerJoin($table, $key1, $condition = null, $key2 = null){
+    public function outerJoin($table, $key1, $condition = null, $key2 = null)
+    {
         $this->queryBuilder->outerJoin($table, $key1, $condition, $key2);
         return $this;
     }
@@ -686,7 +720,8 @@ class MySQLiDriver {
      * @param null $value
      * @return $this
      */
-    public function where($field, $valueOrCondition, $value = null){
+    public function where($field, $valueOrCondition, $value = null)
+    {
         $this->queryBuilder->where($field, $valueOrCondition, $value);
         return $this;
     }
@@ -699,7 +734,8 @@ class MySQLiDriver {
      * @param null|string $value
      * @return $this
      */
-    public function orWhere($field, $valueOrCondition, $value = null){
+    public function orWhere($field, $valueOrCondition, $value = null)
+    {
         $this->queryBuilder->orWhere($field, $valueOrCondition, $value);
         return $this;
     }
@@ -712,7 +748,8 @@ class MySQLiDriver {
      * @param null|string $value
      * @return $this
      */
-    public function having($field, $valueOrCondition, $value = null){
+    public function having($field, $valueOrCondition, $value = null)
+    {
         $this->queryBuilder->having($field, $valueOrCondition, $value);
         return $this;
     }
@@ -725,7 +762,8 @@ class MySQLiDriver {
      * @param null|string $value
      * @return $this
      */
-    public function orHaving($field, $valueOrCondition, $value = null){
+    public function orHaving($field, $valueOrCondition, $value = null)
+    {
         $this->queryBuilder->orHaving($field, $valueOrCondition, $value);
         return $this;
     }
@@ -737,7 +775,8 @@ class MySQLiDriver {
      * @param string $order
      * @return $this
      */
-    public function orderBy($field, $order = 'ASC'){
+    public function orderBy($field, $order = 'ASC')
+    {
         $this->queryBuilder->orderBy($field, $order);
         return $this;
     }
@@ -749,7 +788,8 @@ class MySQLiDriver {
      * @param null|int $length
      * @return $this
      */
-    public function limit($start, $length = null){
+    public function limit($start, $length = null)
+    {
         $this->queryBuilder->limit($start, $length);
         return $this;
     }
@@ -759,7 +799,8 @@ class MySQLiDriver {
      *
      * @return array|null
      */
-    public function get(){
+    public function get()
+    {
         $sql = $this->queryBuilder->get();
         return $sql != null ? $this->getAllQuery($sql) : null;
     }
@@ -769,7 +810,8 @@ class MySQLiDriver {
      *
      * @return string
      */
-    public function getSQL(){
+    public function getSQL()
+    {
         return $this->queryBuilder->get();
     }
 
@@ -778,7 +820,8 @@ class MySQLiDriver {
      *
      * @return null|object
      */
-    public function first(){
+    public function first()
+    {
         $sql = $this->queryBuilder->get();
         return $sql != null ? $this->getFirstQuery($sql) : null;
     }
@@ -788,7 +831,8 @@ class MySQLiDriver {
      *
      * @return int
      */
-    public function count(){
+    public function count()
+    {
         $sql = $this->queryBuilder->count();
         return $sql != 0 ? $this->getCountQuery($sql) : 0;
     }

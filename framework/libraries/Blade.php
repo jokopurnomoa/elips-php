@@ -6,7 +6,8 @@
  *
  */
 
-class Blade {
+class Blade
+{
 
     /**
      * Experimental
@@ -50,37 +51,38 @@ class Blade {
      * @param bool $buffered
      * @return mixed|null|string
      */
-    public static function render($view, $data = null, $buffered = false){
+    public static function render($view, $data = null, $buffered = false)
+    {
         $module_path = MODULE_PATH;
         $module_view = '';
         $paths = explode('/', $view);
 
-        if(strpos($view, '/') !== false){
+        if (strpos($view, '/') !== false) {
             $module_path = str_replace('//', '/', 'modules/' . $paths[0] . '/');
             $module_view = trim(str_replace($paths[0] . '/', '', $view), '/');
         }
 
         $view = str_replace('.', '/', $view);
-        if(file_exists(APP_PATH . 'views/' . $view . '.blade.php') && $module_view === ''){
+        if (file_exists(APP_PATH . 'views/' . $view . '.blade.php') && $module_view === '') {
             $__buffer = self::parse(read_file(APP_PATH . 'views/' . $view . '.blade.php'));
             $__buffer = self::run($__buffer, $data);
 
-            if($buffered){
+            if ($buffered) {
                 return $__buffer;
             } else {
                 echo $__buffer;
             }
         }
-        elseif(file_exists(APP_PATH . $module_path . 'views/' . $module_view . '.blade.php')){
+        elseif (file_exists(APP_PATH . $module_path . 'views/' . $module_view . '.blade.php')) {
             $__buffer = self::parse(read_file(APP_PATH . $module_path . 'views/' . $module_view . '.blade.php'));
             $__buffer = self::run($__buffer, $data);
-            if($buffered){
+            if ($buffered) {
                 return $__buffer;
             } else {
                 echo $__buffer;
             }
         }
-        elseif(APP_ENV === 'development') {
+        elseif (APP_ENV === 'development') {
             error_dump('Blade : File \'' . APP_PATH . 'views/' . $view . '.blade.php\' not found!');
             die();
         }
@@ -94,10 +96,11 @@ class Blade {
      * @param array   $data
      * @return string
      */
-    private static function run($__buffer, $data){
+    private static function run($__buffer, $data)
+    {
         ob_start();
-        if($data !== null){
-            foreach($data as $key => $val){
+        if ($data !== null) {
+            foreach ($data as $key => $val) {
                 $$key = $val;
             }
         }
@@ -107,8 +110,8 @@ class Blade {
         @ob_end_clean();
 
         /* Display raw text */
-        if(self::$rawData != null){
-            foreach(self::$rawData as $key => $val){
+        if (self::$rawData != null) {
+            foreach (self::$rawData as $key => $val) {
                 $__buffer = str_replace($key, $val, $__buffer);
             }
         }
@@ -124,7 +127,8 @@ class Blade {
      * @param string  $subject
      * @return string
      */
-    private static function str_replace_first($search, $replace, $subject) {
+    private static function str_replace_first($search, $replace, $subject)
+    {
         $pos = strpos($subject, $search);
         if ($pos !== false) {
             $subject = substr_replace($subject, $replace, $pos, strlen($search));
@@ -138,8 +142,9 @@ class Blade {
      * @param string $__buffer
      * @return null|string
      */
-    private static function parse($__buffer){
-        if($__buffer !== ''){
+    private static function parse($__buffer)
+    {
+        if ($__buffer !== '') {
 
             /**
              * Parse echo raw text
@@ -156,12 +161,12 @@ class Blade {
             $__buffer = $parse_result[0];
             $sections = $parse_result[1];
 
-            if($parent_view != null && $sections != null){
+            if ($parent_view != null && $sections != null) {
                 $parse_result = self::parseSection($parent_view);
                 $parent_sections = $parse_result[1];
 
-                foreach($sections as $key => $val){
-                    if(isset($parent_sections[$key])){
+                foreach ($sections as $key => $val) {
+                    if (isset($parent_sections[$key])) {
                         $val = self::str_replace_first(self::$parentTag, $parent_sections[$key], $val);
                         $parent_view = self::str_replace_first(self::$sectionTag . '(\'' . $key . '\')' . $parent_sections[$key] . self::$stopTag, $val, $parent_view);
                     } else {
@@ -228,11 +233,12 @@ class Blade {
      * @param string $__buffer
      * @return null|string
      */
-    private static function parseExtends($__buffer){
+    private static function parseExtends($__buffer)
+    {
         $parent_view = null;
         $max_extend = substr_count($__buffer, self::$extendsTag);
-        for($__i = 0; $__i < $max_extend; $__i++) {
-            if(strpos($__buffer, self::$extendsTag) !== false){
+        for ($__i = 0; $__i < $max_extend; $__i++) {
+            if (strpos($__buffer, self::$extendsTag) !== false) {
                 $__start_pos = strpos($__buffer, self::$extendsTag);
                 $__end_pos = strpos($__buffer, ')', $__start_pos);
                 $__view = str_replace('.', '/', str_replace('\'', '', substr($__buffer, $__start_pos + strlen(self::$extendsTag) + 1, $__end_pos - $__start_pos  - (strlen(self::$extendsTag) + 1))));
@@ -245,8 +251,7 @@ class Blade {
                 @ob_end_clean();
 
                 $parent_view = $__view_buffer;
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -259,10 +264,11 @@ class Blade {
      * @param string $__buffer
      * @return string
      */
-    private static function parseInclude($__buffer){
+    private static function parseInclude($__buffer)
+    {
         $max_loop = strlen($__buffer);
-        for($__i = 0; $__i < $max_loop; $__i++) {
-            if(strpos($__buffer, self::$includeTag . '(') !== false){
+        for ($__i = 0; $__i < $max_loop; $__i++) {
+            if (strpos($__buffer, self::$includeTag . '(') !== false) {
                 $__start_pos = strpos($__buffer, self::$includeTag . '(');
                 $__end_pos = strpos($__buffer, ')', $__start_pos);
                 $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 1);
@@ -274,8 +280,7 @@ class Blade {
                 @ob_end_clean();
 
                 $__buffer = self::str_replace_first($__var, $__view_buffer, $__buffer);
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -289,16 +294,16 @@ class Blade {
      * @param string $__buffer
      * @return string
      */
-    private static function parseEchoWithEscapedVariable($__buffer){
+    private static function parseEchoWithEscapedVariable($__buffer)
+    {
         $max_loop = strlen($__buffer);
-        for($__i = 0; $__i < $max_loop; $__i++) {
+        for ($__i = 0; $__i < $max_loop; $__i++) {
             if (strpos($__buffer, self::$echoEscapedStartTag) !== false && strpos($__buffer, self::$echoEscapedEndTag) !== false) {
                 $__start_pos = strpos($__buffer, self::$echoEscapedStartTag);
                 $__end_pos = strpos($__buffer, self::$echoEscapedEndTag);
                 $__var = substr($__buffer, $__start_pos + strlen(self::$echoEscapedStartTag), $__end_pos - $__start_pos - strlen(self::$echoEscapedEndTag));
                 $__buffer = self::str_replace_first(self::$echoEscapedStartTag . $__var . self::$echoEscapedEndTag, '<?php echo htmlspecialchars(' . trim($__var) . ');?>', $__buffer);
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -312,17 +317,16 @@ class Blade {
      * @param string $__buffer
      * @return string
      */
-    private static function parseComment($__buffer){
+    private static function parseComment($__buffer)
+    {
         $max_loop = strlen($__buffer);
-        for($__i = 0; $__i < $max_loop; $__i++) {
+        for ($__i = 0; $__i < $max_loop; $__i++) {
             if (strpos($__buffer, self::$commentStartTag) !== false && strpos($__buffer, self::$commentEndTag) !== false) {
                 $__start_pos = strpos($__buffer, self::$commentStartTag);
                 $__end_pos = strpos($__buffer, self::$commentEndTag);
                 $__var = substr($__buffer, $__start_pos + strlen(self::$commentStartTag), $__end_pos - $__start_pos - strlen(self::$commentEndTag));
                 $__buffer = self::str_replace_first(self::$commentStartTag . $__var . self::$commentEndTag, '<?php /* echo ' . trim($__var) . '; */?>', $__buffer);
-
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -336,17 +340,16 @@ class Blade {
      * @param string $__buffer
      * @return string
      */
-    private static function parseEchoWithoutHtmlEntities($__buffer){
+    private static function parseEchoWithoutHtmlEntities($__buffer)
+    {
         $max_loop = strlen($__buffer);
-        for($__i = 0; $__i < $max_loop; $__i++) {
+        for ($__i = 0; $__i < $max_loop; $__i++) {
             if (strpos($__buffer, self::$echoWithoutHtmlEntitiesStartTag) !== false && strpos($__buffer, self::$echoWithoutHtmlEntitiesEndTag) !== false) {
                 $__start_pos = strpos($__buffer, self::$echoWithoutHtmlEntitiesStartTag);
                 $__end_pos = strpos($__buffer, self::$echoWithoutHtmlEntitiesEndTag);
                 $__var = substr($__buffer, $__start_pos + strlen(self::$echoWithoutHtmlEntitiesStartTag), $__end_pos - $__start_pos - strlen(self::$echoWithoutHtmlEntitiesEndTag));
                 $__buffer = self::str_replace_first(self::$echoWithoutHtmlEntitiesStartTag . $__var . self::$echoWithoutHtmlEntitiesEndTag, '<?php echo ' . trim($__var) . ';?>', $__buffer);
-
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -360,9 +363,10 @@ class Blade {
      * @param string $__buffer
      * @return string
      */
-    private static function parseEchoRawText($__buffer){
+    private static function parseEchoRawText($__buffer)
+    {
         $max_loop = strlen($__buffer);
-        for($__i = 0; $__i < $max_loop; $__i++) {
+        for ($__i = 0; $__i < $max_loop; $__i++) {
             if (strpos($__buffer, self::$rawTextStartTag) !== false && strpos($__buffer, self::$rawTextEndTag) !== false) {
                 $__start_pos = strpos($__buffer, ' ' . self::$rawTextStartTag);
                 $__end_pos = strpos($__buffer, ' ' . self::$rawTextEndTag);
@@ -370,8 +374,7 @@ class Blade {
                 $raw = 'RAW__' . sha1($__var);
                 self::$rawData[$raw] = trim($__var);
                 $__buffer = self::str_replace_first(self::$rawTextStartTag . $__var . self::$rawTextEndTag, '<?php echo \'' . $raw . '\';?>', $__buffer);
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -385,16 +388,16 @@ class Blade {
      * @param string $__buffer
      * @return string
      */
-    private static function parseEchoWithHtmlEntities($__buffer){
+    private static function parseEchoWithHtmlEntities($__buffer)
+    {
         $max_loop = strlen($__buffer);
-        for($__i = 0; $__i < $max_loop; $__i++) {
+        for ($__i = 0; $__i < $max_loop; $__i++) {
             if (strpos($__buffer, self::$echoStartTag) !== false && strpos($__buffer, self::$echoEndTag) !== false) {
                 $__start_pos = strpos($__buffer, self::$echoStartTag);
                 $__end_pos = strpos($__buffer, self::$echoEndTag);
                 $__var = substr($__buffer, $__start_pos + strlen(self::$echoStartTag), $__end_pos - $__start_pos - strlen(self::$echoEndTag));
                 $__buffer = self::str_replace_first(self::$echoStartTag . $__var . self::$echoEndTag, '<?php echo htmlentities(' . trim($__var) . ', ENT_QUOTES);?>', $__buffer);
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -408,11 +411,12 @@ class Blade {
      * @param string $__buffer
      * @return string
      */
-    private static function parseIf($__buffer){
+    private static function parseIf($__buffer)
+    {
         $max_loop = strlen($__buffer);
 
-        for($__i = 0; $__i < $max_loop; $__i++){
-            if(strpos($__buffer, self::$ifTag) !== false){
+        for ($__i = 0; $__i < $max_loop; $__i++) {
+            if (strpos($__buffer, self::$ifTag) !== false) {
                 $__start_pos = strpos($__buffer, self::$ifTag);
                 $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
                 $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
@@ -420,21 +424,20 @@ class Blade {
                 $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
                 $__buffer = self::str_replace_first(self::$ifTag, 'if', $__buffer);
             }
-            elseif(strpos($__buffer, self::$elseifTag) !== false){
+            elseif(strpos($__buffer, self::$elseifTag) !== false) {
                 $__start_pos = strpos($__buffer, self::$elseifTag);
                 $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
                 $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
                 $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
                 $__buffer = self::str_replace_first(self::$elseifTag, 'elseif', $__buffer);
             }
-            elseif(strpos($__buffer, self::$elseTag) !== false){
+            elseif(strpos($__buffer, self::$elseTag) !== false) {
                 $__buffer = self::str_replace_first(self::$elseTag, '<?php else: ?>', $__buffer);
             }
-            elseif(strpos($__buffer, self::$endifTag) !== false){
+            elseif(strpos($__buffer, self::$endifTag) !== false) {
                 $__buffer = self::str_replace_first(self::$endifTag, '<?php endif; ?>', $__buffer);
 
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -448,22 +451,21 @@ class Blade {
      * @param string $__buffer
      * @return string
      */
-    private static function parseForeach($__buffer){
+    private static function parseForeach($__buffer)
+    {
         $max_loop = strlen($__buffer);
 
-        for($__i = 0; $__i < $max_loop; $__i++){
-            if(strpos($__buffer, self::$foreachTag) !== false){
+        for ($__i = 0; $__i < $max_loop; $__i++) {
+            if (strpos($__buffer, self::$foreachTag) !== false) {
                 $__start_pos = strpos($__buffer, self::$foreachTag);
                 $__end_pos = strpos($__buffer, ')', $__start_pos);
                 $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 1);
                 $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
                 $__buffer = self::str_replace_first(self::$foreachTag, 'foreach', $__buffer);
             }
-            if(strpos($__buffer, self::$endForeachTag) !== false){
+            if (strpos($__buffer, self::$endForeachTag) !== false) {
                 $__buffer = self::str_replace_first(self::$endForeachTag, '<?php endforeach; ?>', $__buffer);
-
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -477,22 +479,21 @@ class Blade {
      * @param string $__buffer
      * @return string
      */
-    private static function parseFor($__buffer){
+    private static function parseFor($__buffer)
+    {
         $max_loop = strlen($__buffer);
 
-        for($__i = 0; $__i < $max_loop; $__i++){
-            if(strpos($__buffer, self::$forTag) !== false){
+        for ($__i = 0; $__i < $max_loop; $__i++) {
+            if (strpos($__buffer, self::$forTag) !== false) {
                 $__start_pos = strpos($__buffer, self::$forTag);
                 $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
                 $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
                 $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
                 $__buffer = self::str_replace_first(self::$forTag, 'for', $__buffer);
             }
-            elseif(strpos($__buffer, self::$endForTag) !== false){
+            elseif (strpos($__buffer, self::$endForTag) !== false) {
                 $__buffer = self::str_replace_first(self::$endForTag, '<?php endfor; ?>', $__buffer);
-
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -506,21 +507,20 @@ class Blade {
      * @param string $__buffer
      * @return string
      */
-    private static function parseWhile($__buffer){
+    private static function parseWhile($__buffer)
+    {
         $max_loop = strlen($__buffer);
-        for($__i = 0; $__i < $max_loop; $__i++){
-            if(strpos($__buffer, self::$whileTag) !== false){
+        for ($__i = 0; $__i < $max_loop; $__i++) {
+            if (strpos($__buffer, self::$whileTag) !== false) {
                 $__start_pos = strpos($__buffer, self::$whileTag);
                 $__end_pos = strpos($__buffer, PHP_EOL, $__start_pos);
                 $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos);
                 $__buffer = self::str_replace_first($__var, '<?php ' . $__var . ':?>', $__buffer);
                 $__buffer = self::str_replace_first(self::$whileTag, 'while', $__buffer);
             }
-            elseif(strpos($__buffer, self::$endWhileTag) !== false){
+            elseif (strpos($__buffer, self::$endWhileTag) !== false) {
                 $__buffer = self::str_replace_first(self::$endWhileTag, '<?php endwhile; ?>', $__buffer);
-
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -534,11 +534,12 @@ class Blade {
      * @param string $__buffer
      * @return array
      */
-    private static function parseSection($__buffer){
+    private static function parseSection($__buffer)
+    {
         $sections = array();
         $max_section = substr_count($__buffer, self::$sectionTag);
-        for($__i = 0; $__i < $max_section; $__i++) {
-            if(strpos($__buffer, self::$sectionTag) !== false){
+        for ($__i = 0; $__i < $max_section; $__i++) {
+            if (strpos($__buffer, self::$sectionTag) !== false) {
                 $__start_pos = strpos($__buffer, self::$sectionTag);
                 $__end_pos_sec_name = strpos($__buffer, ')', $__start_pos);
                 $__end_pos = strpos($__buffer, self::$stopTag, $__start_pos);
@@ -549,8 +550,7 @@ class Blade {
                 $__section_name = trim(rtrim(ltrim(trim(substr($__section_name, strlen(self::$sectionTag), strlen($__section_name))), '('), ')'), '\'');
 
                 $sections[$__section_name] = $__section;
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -562,7 +562,8 @@ class Blade {
      *
      * @param string $tag
      */
-    public static function setEchoStartTag($tag){
+    public static function setEchoStartTag($tag)
+    {
         self::$echoStartTag = $tag;
     }
 
@@ -571,7 +572,8 @@ class Blade {
      *
      * @param string $tag
      */
-    public static function setEchoEndTag($tag){
+    public static function setEchoEndTag($tag)
+    {
         self::$echoEndTag = $tag;
     }
 
@@ -580,7 +582,8 @@ class Blade {
      *
      * @param string $tag
      */
-    public static function setEchoEscapedStartTag($tag){
+    public static function setEchoEscapedStartTag($tag)
+    {
         self::$echoEscapedStartTag = $tag;
     }
 
@@ -589,7 +592,8 @@ class Blade {
      *
      * @param string $tag
      */
-    public static function setEchoEscapedEndTag($tag){
+    public static function setEchoEscapedEndTag($tag)
+    {
         self::$echoEscapedEndTag = $tag;
     }
 
@@ -598,7 +602,8 @@ class Blade {
      *
      * @param string $tag
      */
-    public static function setEchoWithoutHtmlEntitiesStartTag($tag){
+    public static function setEchoWithoutHtmlEntitiesStartTag($tag)
+    {
         self::$echoWithoutHtmlEntitiesStartTag = $tag;
     }
 
@@ -607,7 +612,8 @@ class Blade {
      *
      * @param string $tag
      */
-    public static function setEchoWithoutHtmlEntitiesEndTag($tag){
+    public static function setEchoWithoutHtmlEntitiesEndTag($tag)
+    {
         self::$echoWithoutHtmlEntitiesEndTag = $tag;
     }
 
@@ -616,7 +622,8 @@ class Blade {
      *
      * @param string $tag
      */
-    public static function setCommentStartTag($tag){
+    public static function setCommentStartTag($tag)
+    {
         self::$commentStartTag = $tag;
     }
 
@@ -625,7 +632,8 @@ class Blade {
      *
      * @param string $tag
      */
-    public static function setCommentEndTag($tag){
+    public static function setCommentEndTag($tag)
+    {
         self::$commentEndTag = $tag;
     }
 

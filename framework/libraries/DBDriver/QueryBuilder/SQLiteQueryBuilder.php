@@ -4,7 +4,8 @@
  *
  */
 
-class SQLiteQueryBuilder {
+class SQLiteQueryBuilder
+{
 
     private $db = null;
     private $table = '';
@@ -15,7 +16,8 @@ class SQLiteQueryBuilder {
     private $orders = array();
     private $limit = '';
 
-    public function __construct($db = ''){
+    public function __construct($db = '')
+    {
         $this->db = $db;
     }
 
@@ -24,7 +26,8 @@ class SQLiteQueryBuilder {
      *
      * @param $db
      */
-    public function setDB($db){
+    public function setDB($db)
+    {
         $this->db = $db;
     }
 
@@ -34,7 +37,8 @@ class SQLiteQueryBuilder {
      * @param string $table
      * @return $this
      */
-    public function table($table){
+    public function table($table)
+    {
         $this->table = $table;
         return $this;
     }
@@ -45,16 +49,17 @@ class SQLiteQueryBuilder {
      * @param array $columns
      * @return $this
      */
-    public function select($columns = null){
-        if($columns != null){
-            if(is_array($columns)){
-                foreach($columns as $row){
-                    if(!in_array($row, $this->columns)){
+    public function select($columns = null)
+    {
+        if ($columns != null) {
+            if (is_array($columns)) {
+                foreach ($columns as $row) {
+                    if (!in_array($row, $this->columns)) {
                         $this->columns[] = $row;
                     }
                 }
             } else {
-                if(!in_array($columns, $this->columns)) {
+                if (!in_array($columns, $this->columns)) {
                     $this->columns[] = $columns;
                 }
             }
@@ -72,8 +77,9 @@ class SQLiteQueryBuilder {
      * @param null|string $key2
      * @return $this
      */
-    public function join($table, $key1, $condition = null, $key2 = null){
-        if($condition != null && $key2 != null){
+    public function join($table, $key1, $condition = null, $key2 = null)
+    {
+        if ($condition != null && $key2 != null) {
             $this->joins[] = 'JOIN ' . $table . ' ON ' . $key1 . ' ' . $condition . ' ' . $key2 . ' ';
         } else {
             $this->joins[] = 'JOIN ' . $table . ' USING(' . $key1 . ') ';
@@ -91,8 +97,9 @@ class SQLiteQueryBuilder {
      * @param null|string $key2
      * @return $this
      */
-    public function innerJoin($table, $key1, $condition = null, $key2 = null){
-        if($condition != null && $key2 != null){
+    public function innerJoin($table, $key1, $condition = null, $key2 = null)
+    {
+        if ($condition != null && $key2 != null) {
             $this->joins[] = 'INNER JOIN ' . $table . ' ON ' . $key1 . ' ' . $condition . ' ' . $key2 . ' ';
         } else {
             $this->joins[] = 'INNER JOIN ' . $table . ' USING(' . $key1 . ') ';
@@ -110,8 +117,9 @@ class SQLiteQueryBuilder {
      * @param null|string $key2
      * @return $this
      */
-    public function outerJoin($table, $key1, $condition = null, $key2 = null){
-        if($condition != null && $key2 != null){
+    public function outerJoin($table, $key1, $condition = null, $key2 = null)
+    {
+        if ($condition != null && $key2 != null) {
             $this->joins[] = 'OUTER JOIN ' . $table . ' ON ' . $key1 . ' ' . $condition . ' ' . $key2 . ' ';
         } else {
             $this->joins[] = 'OUTER JOIN ' . $table . ' USING(' . $key1 . ') ';
@@ -128,8 +136,9 @@ class SQLiteQueryBuilder {
      * @param null|string $value
      * @return $this
      */
-    public function where($field, $valueOrCondition, $value = null){
-        if($value === null){
+    public function where($field, $valueOrCondition, $value = null)
+    {
+        if ($value === null) {
             $this->wheres[] = array(
                 'condition' => 'AND',
                 'value' => $field . ' = ' . '\''. $this->escape($valueOrCondition) .'\''
@@ -152,8 +161,9 @@ class SQLiteQueryBuilder {
      * @param null $value
      * @return $this
      */
-    public function orWhere($field, $valueOrCondition, $value = null){
-        if($value === null){
+    public function orWhere($field, $valueOrCondition, $value = null)
+    {
+        if ($value === null) {
             $this->wheres[] = array(
                 'condition' => 'OR',
                 'value' => $field . ' = ' . '\''. $this->escape($valueOrCondition) .'\''
@@ -176,8 +186,9 @@ class SQLiteQueryBuilder {
      * @param null|string $value
      * @return $this
      */
-    public function having($field, $valueOrCondition, $value = null){
-        if($value === null){
+    public function having($field, $valueOrCondition, $value = null)
+    {
+        if ($value === null) {
             $this->havings[] = array(
                 'condition' => 'AND',
                 'value' => $field . ' = ' . '\''. $this->escape($valueOrCondition) .'\''
@@ -200,8 +211,9 @@ class SQLiteQueryBuilder {
      * @param null|string $value
      * @return $this
      */
-    public function orHaving($field, $valueOrCondition, $value = null){
-        if($value === null){
+    public function orHaving($field, $valueOrCondition, $value = null)
+    {
+        if ($value === null) {
             $this->havings[] = array(
                 'condition' => 'OR',
                 'value' => $field . ' = ' . '\''. $this->escape($valueOrCondition) .'\''
@@ -223,7 +235,8 @@ class SQLiteQueryBuilder {
      * @param string $order
      * @return $this
      */
-    public function orderBy($field, $order = 'ASC'){
+    public function orderBy($field, $order = 'ASC')
+    {
         $this->orders[] = $field . ' ' . $order;
         return $this;
     }
@@ -235,8 +248,9 @@ class SQLiteQueryBuilder {
      * @param null|int $length
      * @return $this
      */
-    public function limit($start, $length = null){
-        if($length === null){
+    public function limit($start, $length = null)
+    {
+        if ($length === null) {
             $this->limit = (int)$start;
         } else {
             $this->limit = (int)$start . ',' . (int)$length;
@@ -250,26 +264,27 @@ class SQLiteQueryBuilder {
      *
      * @return string
      */
-    public function get(){
+    public function get()
+    {
         $sql = 'SELECT ';
 
-        if(is_array($this->columns) && $this->columns !== null){
+        if (is_array($this->columns) && $this->columns !== null) {
             $this->columns = implode(',', $this->columns);
         }
 
         $sql .= $this->columns . ' FROM ' . $this->table . ' ' . implode(' ', $this->joins);
 
         $where = '';
-        if($this->wheres != null){
-            foreach($this->wheres as $val){
-                if($where === ''){
-                    if(is_array($val)){
+        if ($this->wheres != null) {
+            foreach ($this->wheres as $val) {
+                if ($where === '') {
+                    if (is_array($val)) {
                         $where .= 'WHERE ' . $val['value'];
                     }
                 } else {
-                    if($val['condition'] === 'AND'){
+                    if ($val['condition'] === 'AND') {
                         $where .= ' AND ' . $val['value'];
-                    } elseif($val['condition'] === 'OR'){
+                    } elseif ($val['condition'] === 'OR') {
                         $where .= ' OR ' . $val['value'];
                     }
                 }
@@ -279,16 +294,16 @@ class SQLiteQueryBuilder {
         $sql .= $where;
 
         $having = '';
-        if($this->havings != null){
-            foreach($this->havings as $val){
-                if($having === ''){
-                    if(is_array($val)){
+        if ($this->havings != null) {
+            foreach ($this->havings as $val) {
+                if ($having === '') {
+                    if (is_array($val)) {
                         $having .= ' HAVING ' . $val['value'];
                     }
                 } else {
-                    if($val['condition'] === 'AND'){
+                    if ($val['condition'] === 'AND') {
                         $having .= ' AND ' . $val['value'];
-                    } elseif($val['condition'] === 'OR'){
+                    } elseif ($val['condition'] === 'OR') {
                         $having .= ' OR ' . $val['value'];
                     }
                 }
@@ -297,11 +312,11 @@ class SQLiteQueryBuilder {
 
         $sql .= $having;
 
-        if($this->orders != null){
+        if ($this->orders != null) {
             $sql .= ' ORDER BY ' . implode(',', $this->orders);
         }
 
-        if($this->limit != ''){
+        if ($this->limit != '') {
             $sql .= ' LIMIT ' . $this->limit;
         }
 
@@ -321,26 +336,27 @@ class SQLiteQueryBuilder {
      *
      * @return string
      */
-    public function count(){
+    public function count()
+    {
         $sql = 'SELECT ';
 
-        if(is_array($this->columns) && $this->columns !== null){
+        if (is_array($this->columns) && $this->columns !== null) {
             $this->columns = implode(',', $this->columns);
         }
 
         $sql .= $this->columns . ' FROM ' . $this->table . ' ' . implode(' ', $this->joins);
 
         $where = '';
-        if($this->wheres != null){
-            foreach($this->wheres as $val){
-                if($where === ''){
-                    if(is_array($val)){
+        if ($this->wheres != null) {
+            foreach ($this->wheres as $val) {
+                if ($where === '') {
+                    if (is_array($val)) {
                         $where .= 'WHERE ' . $val['value'];
                     }
                 } else {
-                    if($val['condition'] === 'AND'){
+                    if ($val['condition'] === 'AND') {
                         $where .= ' AND ' . $val['value'];
-                    } elseif($val['condition'] === 'OR'){
+                    } elseif ($val['condition'] === 'OR') {
                         $where .= ' OR ' . $val['value'];
                     }
                 }
@@ -350,16 +366,16 @@ class SQLiteQueryBuilder {
         $sql .= $where;
 
         $having = '';
-        if($this->havings != null){
-            foreach($this->havings as $val){
-                if($having === ''){
-                    if(is_array($val)){
+        if ($this->havings != null) {
+            foreach ($this->havings as $val) {
+                if ($having === '') {
+                    if (is_array($val)) {
                         $having .= ' HAVING ' . $val['value'];
                     }
                 } else {
-                    if($val['condition'] === 'AND'){
+                    if ($val['condition'] === 'AND') {
                         $having .= ' AND ' . $val['value'];
-                    } elseif($val['condition'] === 'OR'){
+                    } elseif ($val['condition'] === 'OR') {
                         $having .= ' OR ' . $val['value'];
                     }
                 }
@@ -383,14 +399,15 @@ class SQLiteQueryBuilder {
      * @param $data
      * @return null|string
      */
-    public function insert($data){
-        if($this->table != '' && $data != null){
+    public function insert($data)
+    {
+        if ($this->table != '' && $data != null) {
             $sql = 'INSERT INTO ' . $this->table . ' ';
             $i = 0;
             $fields = "(";
             $values = "(";
-            foreach($data as $key => $val){
-                if($i === 0){
+            foreach ($data as $key => $val) {
+                if ($i === 0) {
                     $fields .= $key;
                     $values .= "'" . $this->escape($val) . "'";
                 } else {
@@ -418,19 +435,20 @@ class SQLiteQueryBuilder {
      * @param $data
      * @return null|string
      */
-    public function update($data){
-        if($this->table != '' && $this->wheres != null && $data != null){
+    public function update($data)
+    {
+        if ($this->table != '' && $this->wheres != null && $data != null) {
             $where = '';
-            if($this->wheres != null){
-                foreach($this->wheres as $val){
-                    if($where === ''){
-                        if(is_array($val)){
+            if ($this->wheres != null) {
+                foreach ($this->wheres as $val) {
+                    if ($where === '') {
+                        if (is_array($val)) {
                             $where .= 'WHERE ' . $val['value'];
                         }
                     } else {
-                        if($val['condition'] === 'AND'){
+                        if ($val['condition'] === 'AND') {
                             $where .= ' AND ' . $val['value'];
-                        } elseif($val['condition'] === 'OR'){
+                        } elseif ($val['condition'] === 'OR') {
                             $where .= ' OR ' . $val['value'];
                         }
                     }
@@ -439,8 +457,8 @@ class SQLiteQueryBuilder {
 
             $sql = 'UPDATE ' . $this->table . ' SET ';
             $_i = 0;
-            foreach($data as $key => $val){
-                if($_i === 0){
+            foreach ($data as $key => $val) {
+                if ($_i === 0) {
                     $sql .= "$key = '" . $this->escape($val) . "' ";
                 } else {
                     $sql .= ",$key = '" . $this->escape($val) . "' ";
@@ -451,8 +469,8 @@ class SQLiteQueryBuilder {
 
             $sql .= $where;
 
-            if($this->limit != ''){
-                if($this->limit != '-1'){
+            if ($this->limit != '') {
+                if ($this->limit != '-1') {
                     $sql .= ' LIMIT ' . $this->limit;
                 }
             } else {
@@ -473,19 +491,20 @@ class SQLiteQueryBuilder {
      *
      * @return null|string
      */
-    public function delete(){
-        if($this->table != '' && $this->wheres != null){
+    public function delete()
+    {
+        if ($this->table != '' && $this->wheres != null) {
             $where = '';
-            if($this->wheres != null){
-                foreach($this->wheres as $val){
-                    if($where === ''){
-                        if(is_array($val)){
+            if ($this->wheres != null) {
+                foreach ($this->wheres as $val) {
+                    if ($where === '') {
+                        if (is_array($val)) {
                             $where .= 'WHERE ' . $val['value'];
                         }
                     } else {
-                        if($val['condition'] === 'AND'){
+                        if ($val['condition'] === 'AND') {
                             $where .= ' AND ' . $val['value'];
-                        } elseif($val['condition'] === 'OR'){
+                        } elseif ($val['condition'] === 'OR') {
                             $where .= ' OR ' . $val['value'];
                         }
                     }
@@ -493,8 +512,8 @@ class SQLiteQueryBuilder {
             }
 
             $sql = 'DELETE FROM ' . $this->table . ' ' . $where;
-            if($this->limit != ''){
-                if($this->limit != '-1'){
+            if ($this->limit != '') {
+                if ($this->limit != '-1') {
                     $sql .= ' LIMIT ' . $this->limit;
                 }
             } else {
@@ -516,7 +535,8 @@ class SQLiteQueryBuilder {
      * @param $string
      * @return string
      */
-    private function escape($string){
+    private function escape($string)
+    {
         return $this->db->escapeString($string);
     }
 

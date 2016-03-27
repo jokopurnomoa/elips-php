@@ -6,7 +6,8 @@
  *
  */
 
-class Encryption {
+class Encryption
+{
 
     private static $key_std;
 
@@ -23,8 +24,9 @@ class Encryption {
     /**
      * Initialize Library
      */
-    public static function init(){
-        if(get_app_config('encryption_key') != ''){
+    public static function init()
+    {
+        if (get_app_config('encryption_key') != '') {
             self::$key_std = get_app_config('encryption_key');
         } elseif(APP_ENV === 'development') {
             error_dump('Encryption key not yet set in \'' . APP_PATH . 'config/app.php\'!');die();
@@ -38,7 +40,8 @@ class Encryption {
      * @param string $key
      * @return string
      */
-    public static function encode($plaintext, $key = ''){
+    public static function encode($plaintext, $key = '')
+    {
         $key = self::getKey($key);
 
         $iv_size = mcrypt_get_iv_size(self::$cipher, self::$mode);
@@ -55,8 +58,9 @@ class Encryption {
      * @param string $key
      * @return null|string
      */
-    public static function decode($ciphertext, $key = ''){
-        if (preg_match('/[^a-zA-Z0-9\/\+=]/', $ciphertext)){
+    public static function decode($ciphertext, $key = '')
+    {
+        if (preg_match('/[^a-zA-Z0-9\/\+=]/', $ciphertext)) {
             return false;
         }
 
@@ -72,9 +76,9 @@ class Encryption {
         $result = ob_get_contents();
         @ob_end_clean();
 
-        if(strpos($result, '<b>Warning</b>:  mcrypt_decrypt():') === false){
+        if (strpos($result, '<b>Warning</b>:  mcrypt_decrypt():') === false) {
             return trim($result);
-        } elseif(APP_ENV === 'development'){
+        } elseif(APP_ENV === 'development') {
             error_dump($result);
             die();
         }
@@ -88,8 +92,9 @@ class Encryption {
      * @param $key
      * @return string
      */
-    private static function getKey($key){
-        if($key === ''){
+    private static function getKey($key)
+    {
+        if ($key === '') {
             $key = self::$key_std;
         }
         return substr(base64_encode(sha1($key)), 0, 32);
@@ -100,7 +105,8 @@ class Encryption {
      *
      * @param $cipher
      */
-    public static function setCipher($cipher){
+    public static function setCipher($cipher)
+    {
         self::$cipher = $cipher;
     }
 
@@ -109,7 +115,8 @@ class Encryption {
      *
      * @param $mode
      */
-    public static function setMode($mode){
+    public static function setMode($mode)
+    {
         self::$mode = $mode;
     }
 }

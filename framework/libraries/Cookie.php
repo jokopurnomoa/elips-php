@@ -4,7 +4,8 @@
  *
  */
 
-class Cookie {
+class Cookie
+{
 
     /**
      * Set Cookie
@@ -18,8 +19,9 @@ class Cookie {
      * @param bool      $httpOnly
      * @return bool
      */
-    public static function set($name, $value, $expire = 0, $path = '/', $domain = '', $secure = false, $httpOnly = false){
-        if($expire > 0){
+    public static function set($name, $value, $expire = 0, $path = '/', $domain = '', $secure = false, $httpOnly = false)
+    {
+        if ($expire > 0) {
             $expire = time() + (int)$expire;
         }
         return setcookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
@@ -31,8 +33,9 @@ class Cookie {
      * @param string        $name
      * @return null|string
      */
-    public static function get($name){
-        if(isset($_COOKIE[$name])){
+    public static function get($name)
+    {
+        if (isset($_COOKIE[$name])) {
             return $_COOKIE[$name];
         }
         return null;
@@ -44,7 +47,8 @@ class Cookie {
      * @param string $name
      * @return bool
      */
-    public static function delete($name){
+    public static function delete($name)
+    {
         return setcookie($name, null, -1, '/');
     }
 

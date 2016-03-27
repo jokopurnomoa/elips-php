@@ -6,7 +6,8 @@
  *
  */
 
-class Upload {
+class Upload
+{
 
     private static $upload_path = '';
     private static $filename = '';
@@ -28,10 +29,11 @@ class Upload {
      *
      * @param array $config
      */
-    public static function setConfig($config = array()){
-        if($config != null){
-            foreach($config as $key => $value){
-                if(isset(self::$$key)){
+    public static function setConfig($config = array())
+    {
+        if ($config != null) {
+            foreach ($config as $key => $value) {
+                if (isset(self::$$key)) {
                     self::$$key = $value;
                 }
             }
@@ -42,7 +44,8 @@ class Upload {
      * Reset Config
      *
      */
-    public static function resetConfig(){
+    public static function resetConfig()
+    {
         self::$upload_path = '';
         self::$filename = '';
         self::$max_size = 0;
@@ -65,8 +68,9 @@ class Upload {
      * @param string $fieldname
      * @return bool
      */
-    public static function doUpload($fieldname = 'userfile'){
-        if(self::$filename === ''){
+    public static function doUpload($fieldname = 'userfile')
+    {
+        if (self::$filename === '') {
             self::$filename = $_FILES[$fieldname]['name'];
         }
 
@@ -77,7 +81,7 @@ class Upload {
         self::$file_size = $_FILES[$fieldname]['size'];
         self::$is_image = (getimagesize($_FILES[$fieldname]['tmp_name']) != false ? true : false);
 
-        if(self::$is_image){
+        if (self::$is_image) {
             $image_size = getimagesize($_FILES[$fieldname]['tmp_name']);
             self::$image_width = $image_size[0];
             self::$image_height = $image_size[1];
@@ -85,15 +89,15 @@ class Upload {
 
         $upload_ok = true;
 
-        if(self::$allowed_types != null){
+        if (self::$allowed_types != null) {
             $is_allowed = false;
-            foreach(self::$allowed_types as $row){
-                if(trim($row) === self::$file_type){
+            foreach (self::$allowed_types as $row) {
+                if (trim($row) === self::$file_type) {
                     $is_allowed = true;break;
                 }
             }
 
-            if(!$is_allowed){
+            if (!$is_allowed) {
                 $upload_ok = false;
                 self::$error_message = 'File is not allowed.';
             }
@@ -102,26 +106,26 @@ class Upload {
             self::$error_message = 'File is not allowed.';
         }
 
-        if(self::$file_size > self::$max_size && self::$max_size > 0){
+        if (self::$file_size > self::$max_size && self::$max_size > 0) {
             $upload_ok = false;
             self::$error_message = 'File is too large.';
         }
 
-        if(self::$image_width > 0 && self::$max_height > 0){
-            if(self::$image_width > self::$max_width || self::$image_height > self::$max_height){
+        if (self::$image_width > 0 && self::$max_height > 0) {
+            if (self::$image_width > self::$max_width || self::$image_height > self::$max_height) {
                 $upload_ok = false;
                 self::$error_message = 'Image size is too big.';
             }
         }
 
-        if(!self::$overwrite){
-            if(file_exists($target_file)){
+        if (!self::$overwrite) {
+            if (file_exists($target_file)) {
                 $upload_ok = false;
                 self::$error_message = 'File already exists.';
             }
         }
 
-        if($upload_ok){
+        if ($upload_ok) {
             if (move_uploaded_file($_FILES[$fieldname]['tmp_name'], $target_file)) {
                 return true;
             } else {
@@ -145,22 +149,23 @@ class Upload {
      * @param $type
      * @return string
      */
-    private static function getFileType($type){
-        if(file_exists(APP_PATH . 'config/mimes.php')){
+    private static function getFileType($type)
+    {
+        if (file_exists(APP_PATH . 'config/mimes.php')) {
             $mimes = null;
             require APP_PATH . 'config/mimes.php';
-            if($mimes != null){
-                foreach($mimes as $key => $value){
-                    if(is_array($value)){
-                        if($value != null){
-                            foreach($value as $val){
-                                if(trim($val) === $type){
+            if ($mimes != null) {
+                foreach ($mimes as $key => $value) {
+                    if (is_array($value)) {
+                        if ($value != null){
+                            foreach ($value as $val) {
+                                if (trim($val) === $type) {
                                     return trim($key);
                                 }
                             }
                         }
                     } else {
-                        if(trim($value) === $type){
+                        if (trim($value) === $type) {
                             return trim($key);
                         }
                     }
@@ -174,7 +179,8 @@ class Upload {
      *
      * @return string
      */
-    public static function getUploadData(){
+    public static function getUploadData()
+    {
         return self::$data_upload;
     }
 
@@ -183,7 +189,8 @@ class Upload {
      *
      * @return string
      */
-    public static function getError(){
+    public static function getError()
+    {
         return self::$error_message;
     }
 

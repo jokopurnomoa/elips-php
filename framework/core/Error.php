@@ -1,8 +1,10 @@
 <?php
 
-class Error extends Controller {
+class Error extends Controller
+{
 
-    public function index(){
+    public function index()
+    {
         Blade::render('404', $this->data);
     }
 

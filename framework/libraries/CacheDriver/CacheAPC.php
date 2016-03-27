@@ -5,7 +5,8 @@
  *
  */
 
-class CacheAPC {
+class CacheAPC
+{
 
     /**
      * @var bool
@@ -20,8 +21,9 @@ class CacheAPC {
     /**
      * Constructor
      */
-    public function __construct(){
-        if(!extension_loaded('apc') && !ini_get('apc.enabled') && APP_ENV === 'development'){
+    public function __construct()
+    {
+        if (!extension_loaded('apc') && !ini_get('apc.enabled') && APP_ENV === 'development') {
             error_dump('APC Cache is disabled!');
             die();
         }
@@ -35,9 +37,10 @@ class CacheAPC {
      * @param int    $max_age
      * @return bool
      */
-    public function store($flag, $data, $max_age = 60){
-        if($this->cache_active){
-            if($this->cache_encrypt){
+    public function store($flag, $data, $max_age = 60)
+    {
+        if ($this->cache_active) {
+            if ($this->cache_encrypt) {
                 $data = Encryption::encode($data);
             }
             return write_file(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')), $data);
@@ -51,11 +54,12 @@ class CacheAPC {
      * @param string $flag
      * @return null|mixed
      */
-    public function get($flag){
-        if($this->cache_active){
+    public function get($flag)
+    {
+        if ($this->cache_active) {
             $cache = apc_fetch(sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')));
-            if($cache != null){
-                if($this->cache_encrypt) {
+            if ($cache != null) {
+                if ($this->cache_encrypt) {
                     $cache = trim(Encryption::decode($cache));
                 }
 
@@ -71,7 +75,8 @@ class CacheAPC {
      * @param string $flag
      * @return bool
      */
-    public function delete($flag){
+    public function delete($flag)
+    {
         return apc_delete(sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')));
     }
 

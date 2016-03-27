@@ -6,15 +6,17 @@
  *
  */
 
-class Session {
+class Session
+{
 
     private static $session_driver;
 
     /**
      * Initialize Session Library
      */
-    public static function init(){
-        if(get_app_config('session', 'driver') === 'file'){
+    public static function init()
+    {
+        if (get_app_config('session', 'driver') === 'file') {
             require 'SessionDriver/SessionFile.php';
             self::$session_driver = new SessionFile();
             self::$session_driver->init(get_app_config('session'));
@@ -29,7 +31,8 @@ class Session {
      * @param string $key
      * @return bool
      */
-    public static function has($key){
+    public static function has($key)
+    {
         return self::$session_driver->has($key);
     }
 
@@ -40,7 +43,8 @@ class Session {
      * @param string $default
      * @return mixed
      */
-    public static function get($key, $default = null){
+    public static function get($key, $default = null)
+    {
         return self::$session_driver->get($key, $default);
     }
 
@@ -49,7 +53,8 @@ class Session {
      *
      * @return mixed
      */
-    public static function all(){
+    public static function all()
+    {
         return self::$session_driver->all();
     }
 
@@ -59,7 +64,8 @@ class Session {
      * @param string $key
      * @param string $value
      */
-    public static function set($key, $value){
+    public static function set($key, $value)
+    {
         self::$session_driver->set($key, $value);
     }
 
@@ -68,21 +74,24 @@ class Session {
      *
      * @param string $key
      */
-    public static function remove($key){
+    public static function remove($key)
+    {
         self::$session_driver->remove($key);
     }
 
     /**
      * Destroy Session Data
      */
-    public static function destroy(){
+    public static function destroy()
+    {
         self::$session_driver->destroy();
     }
 
     /**
      * Regenerate Session ID
      */
-    public static function regenerate(){
+    public static function regenerate()
+    {
         self::$session_driver->regenerate();
     }
 

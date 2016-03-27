@@ -4,7 +4,8 @@
  *
  *
  */
-class CURL {
+class CURL
+{
 
     /**
      * CURL Get Request
@@ -13,7 +14,8 @@ class CURL {
      * @param int $timeout
      * @return mixed
      */
-    public static function get($url, $timeout = 30){
+    public static function get($url, $timeout = 30)
+    {
         $curlHandle = curl_init();
         curl_setopt($curlHandle, CURLOPT_URL, $url);
         curl_setopt($curlHandle, CURLOPT_HEADER, 0);
@@ -34,13 +36,14 @@ class CURL {
      * @param int $timeout
      * @return mixed
      */
-    public static function post($url, $post_field = array(), $timeout = 30){
+    public static function post($url, $post_field = array(), $timeout = 30)
+    {
         $_post_field = '';
-        if($post_field != null){
-            if(is_array($post_field)){
+        if ($post_field != null) {
+            if (is_array($post_field)) {
                 $_i = 0;
-                foreach($post_field as $key => $val){
-                    if($_i === 0){
+                foreach ($post_field as $key => $val) {
+                    if ($_i === 0) {
                         $_post_field .= $key . '=' . $val;
                     } else {
                         $_post_field .= '&' . $key . '=' . $val;

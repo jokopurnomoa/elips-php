@@ -6,7 +6,8 @@
  *
  */
 
-class Benchmark {
+class Benchmark
+{
 
     /**
      * @var int
@@ -18,7 +19,8 @@ class Benchmark {
      *
      * @return float
      */
-    public static function microtime_float(){
+    public static function microtime_float()
+    {
         list($usec, $sec) = explode(" ", microtime());
         return ((float)$usec + (float)$sec);
     }
@@ -28,7 +30,8 @@ class Benchmark {
      *
      * @param string $flagname
      */
-    public static function start($flagname = 'std'){
+    public static function start($flagname = 'std')
+    {
         self::$time[$flagname] = self::microtime_float();
     }
 
@@ -37,7 +40,8 @@ class Benchmark {
      *
      * @param string $flagname
      */
-    public static function startTime($flagname = 'std'){
+    public static function startTime($flagname = 'std')
+    {
         self::$time[$flagname] = self::microtime_float();
     }
 
@@ -48,8 +52,9 @@ class Benchmark {
      * @param int $round
      * @return float|int
      */
-    public static function getTime($flagname = 'std', $round = 4){
-        if(isset(self::$time[$flagname])){
+    public static function getTime($flagname = 'std', $round = 4)
+    {
+        if (isset(self::$time[$flagname])) {
             return round(self::microtime_float() - self::$time[$flagname], $round);
         }
         return 0;
@@ -61,7 +66,8 @@ class Benchmark {
      * @param bool $real_usage
      * @return int
      */
-    public static function memoryUsage($real_usage = false){
+    public static function memoryUsage($real_usage = false)
+    {
         return memory_get_usage($real_usage);
     }
 

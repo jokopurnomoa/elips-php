@@ -5,7 +5,8 @@
  *
  */
 
-class Validate {
+class Validate
+{
 
     /**
      * Validate Email
@@ -13,7 +14,8 @@ class Validate {
      * @param $email
      * @return mixed
      */
-    public static function email($email){
+    public static function email($email)
+    {
         return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
@@ -24,8 +26,9 @@ class Validate {
      * @param string $flag
      * @return mixed
      */
-    public static function url($url, $flag = ''){
-        if($flag != ''){
+    public static function url($url, $flag = '')
+    {
+        if ($flag != '') {
             return filter_var($url, FILTER_VALIDATE_URL, $flag);
         } else {
             return filter_var($url, FILTER_VALIDATE_URL);
@@ -39,8 +42,9 @@ class Validate {
      * @param string $flag
      * @return mixed
      */
-    public static function ip($ip, $flag = ''){
-        if($flag != ''){
+    public static function ip($ip, $flag = '')
+    {
+        if ($flag != '') {
             return filter_var($ip, FILTER_VALIDATE_IP, $flag);
         } else {
             return filter_var($ip, FILTER_VALIDATE_IP);
@@ -53,7 +57,8 @@ class Validate {
      * @param $mac
      * @return mixed
      */
-    public static function mac($mac){
+    public static function mac($mac)
+    {
         return filter_var($mac, FILTER_VALIDATE_MAC);
     }
 
@@ -63,7 +68,8 @@ class Validate {
      * @param $boolean
      * @return mixed
      */
-    public static function boolean($boolean){
+    public static function boolean($boolean)
+    {
         return filter_var($boolean, FILTER_VALIDATE_BOOLEAN);
     }
 
@@ -74,8 +80,9 @@ class Validate {
      * @param string $flag
      * @return mixed
      */
-    public static function float($float, $flag = ''){
-        if($flag != ''){
+    public static function float($float, $flag = '')
+    {
+        if ($flag != '') {
             return filter_var($float, FILTER_VALIDATE_FLOAT, $flag);
         } else {
             return filter_var($float, FILTER_VALIDATE_FLOAT);
@@ -88,8 +95,9 @@ class Validate {
      * @param $int
      * @return mixed
      */
-    public static function int($int, $flag = ''){
-        if($flag != ''){
+    public static function int($int, $flag = '')
+    {
+        if ($flag != '') {
             return filter_var($int, FILTER_VALIDATE_INT, $flag);
         } else {
             return filter_var($int, FILTER_VALIDATE_INT);
@@ -102,7 +110,8 @@ class Validate {
      * @param $reg_exp
      * @return mixed
      */
-    public static function regExp($reg_exp){
+    public static function regExp($reg_exp)
+    {
         return filter_var($reg_exp, FILTER_VALIDATE_REGEXP);
     }
 
@@ -113,7 +122,8 @@ class Validate {
      * @param $min_length
      * @return bool
      */
-    public static function minLength($string, $min_length){
+    public static function minLength($string, $min_length)
+    {
         return strlen($string) >= $min_length ? true : false;
     }
 
@@ -124,7 +134,8 @@ class Validate {
      * @param $max_length
      * @return bool
      */
-    public static function maxLength($string, $max_length){
+    public static function maxLength($string, $max_length)
+    {
         return strlen($string) <= $max_length ? true : false;
     }
 

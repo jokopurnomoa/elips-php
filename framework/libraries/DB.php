@@ -6,19 +6,21 @@
  *
  */
 
-class DB {
+class DB
+{
 
     private static $dbDriver;
 
     /**
      * Initialize Database
      */
-    public static function init(){
-        if(get_app_config('db', 'main', 'driver') === 'mysqli'){
+    public static function init()
+    {
+        if (get_app_config('db', 'main', 'driver') === 'mysqli') {
             require_once 'DBDriver/MySQLi.php';
             self::$dbDriver = new MySQLiDriver(get_app_config('db', 'main'));
             self::$dbDriver->connect();
-        } elseif(get_app_config('db', 'main', 'driver') === 'sqlite'){
+        } elseif(get_app_config('db', 'main', 'driver') === 'sqlite') {
             require_once 'DBDriver/SQLite.php';
             self::$dbDriver = new SQLiteDriver(get_app_config('db', 'main'));
             self::$dbDriver->connect();
@@ -34,7 +36,8 @@ class DB {
      * @param array $config
      * @return Database
      */
-    public static function getInstance($config){
+    public static function getInstance($config)
+    {
         return new Database($config);
     }
 
@@ -44,7 +47,8 @@ class DB {
      * @param string $string
      * @return mixed
      */
-    public static function escape($string){
+    public static function escape($string)
+    {
         return self::$dbDriver->escape($string);
     }
 
@@ -54,7 +58,8 @@ class DB {
      * @param string $sql
      * @return mixed
      */
-    public static function getCountQuery($sql, $params = null){
+    public static function getCountQuery($sql, $params = null)
+    {
         return self::$dbDriver->getCountQuery($sql, $params);
     }
 
@@ -67,7 +72,8 @@ class DB {
      * @param null|string $limit
      * @return mixed
      */
-    public static function getCount($table, $where = null, $order = null, $limit = null){
+    public static function getCount($table, $where = null, $order = null, $limit = null)
+    {
         return self::$dbDriver->getCount($table, $where, $order, $limit);
     }
 
@@ -77,7 +83,8 @@ class DB {
      * @param string $sql
      * @return mixed
      */
-    public static function getAllQuery($sql, $params = null){
+    public static function getAllQuery($sql, $params = null)
+    {
         return self::$dbDriver->getAllQuery($sql, $params);
     }
 
@@ -90,7 +97,8 @@ class DB {
      * @param null|string $limit
      * @return mixed
      */
-    public static function getAll($table, $where = null, $order = null, $limit = null){
+    public static function getAll($table, $where = null, $order = null, $limit = null)
+    {
         return self::$dbDriver->getAll($table, $where, $order, $limit);
     }
 
@@ -104,7 +112,8 @@ class DB {
      * @param null|string $limit
      * @return mixed
      */
-    public static function getAllField($table, $field = null, $where = null, $order = null, $limit = null){
+    public static function getAllField($table, $field = null, $where = null, $order = null, $limit = null)
+    {
         return self::$dbDriver->getAllField($table, $field, $where, $order, $limit);
     }
 
@@ -114,7 +123,8 @@ class DB {
      * @param string $sql
      * @return mixed
      */
-    public static function getFirstQuery($sql, $params = null){
+    public static function getFirstQuery($sql, $params = null)
+    {
         return self::$dbDriver->getFirstQuery($sql, $params);
     }
 
@@ -127,7 +137,8 @@ class DB {
      * @param null|string $limit
      * @return mixed
      */
-    public static function getFirst($table, $where = null, $order = null, $limit = null){
+    public static function getFirst($table, $where = null, $order = null, $limit = null)
+    {
         return self::$dbDriver->getFirst($table, $where, $order, $limit);
     }
 
@@ -141,7 +152,8 @@ class DB {
      * @param null|string $limit
      * @return mixed
      */
-    public static function getFirstField($table, $field = null, $where = null, $order = null, $limit = null){
+    public static function getFirstField($table, $field = null, $where = null, $order = null, $limit = null)
+    {
         return self::$dbDriver->getFirstField($table, $field, $where, $order, $limit);
     }
 
@@ -151,7 +163,8 @@ class DB {
      * @param string $sql
      * @return mixed
      */
-    public static function insertQuery($sql, $params = null){
+    public static function insertQuery($sql, $params = null)
+    {
         return self::$dbDriver->insertQuery($sql, $params);
     }
 
@@ -162,7 +175,8 @@ class DB {
      * @param array $data
      * @return mixed
      */
-    public static function insert($table, $data){
+    public static function insert($table, $data)
+    {
         return self::$dbDriver->insert($table, $data);
     }
 
@@ -172,7 +186,8 @@ class DB {
      * @param string $sql
      * @return mixed
      */
-    public static function updateQuery($sql, $params = null){
+    public static function updateQuery($sql, $params = null)
+    {
         return self::$dbDriver->updateQuery($sql, $params);
     }
 
@@ -185,7 +200,8 @@ class DB {
      * @param array $data
      * @return mixed
      */
-    public static function update($table, $field, $id, $data){
+    public static function update($table, $field, $id, $data)
+    {
         return self::$dbDriver->update($table, $field, $id, $data);
     }
 
@@ -195,7 +211,8 @@ class DB {
      * @param string $sql
      * @return mixed
      */
-    public static function deleteQuery($sql, $params = null){
+    public static function deleteQuery($sql, $params = null)
+    {
         return self::$dbDriver->deleteQuery($sql, $params);
     }
 
@@ -208,7 +225,8 @@ class DB {
      * @param int $limit
      * @return mixed
      */
-    public static function delete($table, $field, $id, $limit = 1){
+    public static function delete($table, $field, $id, $limit = 1)
+    {
         return self::$dbDriver->delete($table, $field, $id, $limit);
     }
 
@@ -217,7 +235,8 @@ class DB {
      *
      * @return mixed
      */
-    public static function beginTransaction(){
+    public static function beginTransaction()
+    {
         return self::$dbDriver->beginTransaction();
     }
 
@@ -226,7 +245,8 @@ class DB {
      *
      * @return mixed
      */
-    public static function commit(){
+    public static function commit()
+    {
         return self::$dbDriver->commit();
     }
 
@@ -235,7 +255,8 @@ class DB {
      *
      * @return mixed
      */
-    public static function rollback(){
+    public static function rollback()
+    {
         return self::$dbDriver->rollback();
     }
 
@@ -244,7 +265,8 @@ class DB {
      *
      * @return mixed
      */
-    public static function transactionStatus(){
+    public static function transactionStatus()
+    {
         return self::$dbDriver->transactionStatus();
     }
 
@@ -253,7 +275,8 @@ class DB {
      *
      * @return mixed
      */
-    public static function insertId(){
+    public static function insertId()
+    {
         return self::$dbDriver->insertId();
     }
 
@@ -262,7 +285,8 @@ class DB {
      *
      * @return mixed
      */
-    public static function affectedRows(){
+    public static function affectedRows()
+    {
         return self::$dbDriver->affectedRows();
     }
 
@@ -272,7 +296,8 @@ class DB {
      * @param $structure
      * @return mixed
      */
-    public static function createTable($table, $fields){
+    public static function createTable($table, $fields)
+    {
         return self::$dbDriver->createTable($table, $fields);
     }
 
@@ -282,7 +307,8 @@ class DB {
      * @param string $table
      * @return mixed
      */
-    public static function dropTable($table){
+    public static function dropTable($table)
+    {
         return self::$dbDriver->dropTable($table);
     }
 
@@ -292,23 +318,26 @@ class DB {
      * @param string $table
      * @return mixed
      */
-    public static function table($table){
+    public static function table($table)
+    {
         self::$dbDriver->table($table);
         return self::$dbDriver;
     }
 
 }
 
-class Database {
+class Database
+{
 
     private $dbDriver;
 
-    public function __construct($config){
-        if($config['driver'] === 'mysqli'){
+    public function __construct($config)
+    {
+        if ($config['driver'] === 'mysqli') {
             require_once 'DBDriver/MySQLi.php';
             $this->dbDriver = new MySQLiDriver($config);
             $this->dbDriver->connect();
-        } elseif($config['driver'] === 'sqlite'){
+        } elseif($config['driver'] === 'sqlite') {
             require_once 'DBDriver/SQLite.php';
             $this->dbDriver = new SQLiteDriver($config);
             $this->dbDriver->connect();
@@ -323,7 +352,8 @@ class Database {
      * @param string $string
      * @return mixed
      */
-    public function escape($string){
+    public function escape($string)
+    {
         return $this->dbDriver->escape($string);
     }
 
@@ -333,7 +363,8 @@ class Database {
      * @param string $sql
      * @return mixed
      */
-    public function getCountQuery($sql, $params = null){
+    public function getCountQuery($sql, $params = null)
+    {
         return $this->dbDriver->getCountQuery($sql, $params);
     }
 
@@ -346,7 +377,8 @@ class Database {
      * @param null|string $limit
      * @return mixed
      */
-    public function getCount($table, $where = null, $order = null, $limit = null){
+    public function getCount($table, $where = null, $order = null, $limit = null)
+    {
         return $this->dbDriver->getCount($table, $where, $order, $limit);
     }
 
@@ -356,7 +388,8 @@ class Database {
      * @param string $sql
      * @return mixed
      */
-    public function getAllQuery($sql, $params = null){
+    public function getAllQuery($sql, $params = null)
+    {
         return $this->dbDriver->getAllQuery($sql, $params);
     }
 
@@ -369,7 +402,8 @@ class Database {
      * @param null|string $limit
      * @return mixed
      */
-    public function getAll($table, $where = null, $order = null, $limit = null){
+    public function getAll($table, $where = null, $order = null, $limit = null)
+    {
         return $this->dbDriver->getAll($table, $where, $order, $limit);
     }
 
@@ -383,7 +417,8 @@ class Database {
      * @param null|string $limit
      * @return mixed
      */
-    public function getAllField($table, $field = null, $where = null, $order = null, $limit = null){
+    public function getAllField($table, $field = null, $where = null, $order = null, $limit = null)
+    {
         return $this->dbDriver->getAllField($table, $field, $where, $order, $limit);
     }
 
@@ -393,7 +428,8 @@ class Database {
      * @param string $sql
      * @return mixed
      */
-    public function getFirstQuery($sql, $params = null){
+    public function getFirstQuery($sql, $params = null)
+    {
         return $this->dbDriver->getFirstQuery($sql, $params);
     }
 
@@ -406,7 +442,8 @@ class Database {
      * @param null|string $limit
      * @return mixed
      */
-    public function getFirst($table, $where = null, $order = null, $limit = null){
+    public function getFirst($table, $where = null, $order = null, $limit = null)
+    {
         return $this->dbDriver->getFirst($table, $where, $order, $limit);
     }
 
@@ -420,7 +457,8 @@ class Database {
      * @param null|string $limit
      * @return mixed
      */
-    public function getFirstField($table, $field = null, $where = null, $order = null, $limit = null){
+    public function getFirstField($table, $field = null, $where = null, $order = null, $limit = null)
+    {
         return $this->dbDriver->getFirstField($table, $field, $where, $order, $limit);
     }
 
@@ -430,7 +468,8 @@ class Database {
      * @param string $sql
      * @return mixed
      */
-    public function insertQuery($sql, $params = null){
+    public function insertQuery($sql, $params = null)
+    {
         return $this->dbDriver->insertQuery($sql, $params);
     }
 
@@ -441,7 +480,8 @@ class Database {
      * @param array $data
      * @return mixed
      */
-    public function insert($table, $data){
+    public function insert($table, $data)
+    {
         return $this->dbDriver->insert($table, $data);
     }
 
@@ -451,7 +491,8 @@ class Database {
      * @param string $sql
      * @return mixed
      */
-    public function updateQuery($sql, $params = null){
+    public function updateQuery($sql, $params = null)
+    {
         return $this->dbDriver->updateQuery($sql, $params);
     }
 
@@ -464,7 +505,8 @@ class Database {
      * @param array $data
      * @return mixed
      */
-    public function update($table, $field, $id, $data){
+    public function update($table, $field, $id, $data)
+    {
         return $this->dbDriver->update($table, $field, $id, $data);
     }
 
@@ -474,7 +516,8 @@ class Database {
      * @param string $sql
      * @return mixed
      */
-    public function deleteQuery($sql, $params = null){
+    public function deleteQuery($sql, $params = null)
+    {
         return $this->dbDriver->deleteQuery($sql, $params);
     }
 
@@ -487,7 +530,8 @@ class Database {
      * @param int $limit
      * @return mixed
      */
-    public function delete($table, $field, $id, $limit = 1){
+    public function delete($table, $field, $id, $limit = 1)
+    {
         return $this->dbDriver->delete($table, $field, $id, $limit);
     }
 
@@ -496,7 +540,8 @@ class Database {
      *
      * @return mixed
      */
-    public function beginTransaction(){
+    public function beginTransaction()
+    {
         return $this->dbDriver->beginTransaction();
     }
 
@@ -505,7 +550,8 @@ class Database {
      *
      * @return mixed
      */
-    public function commit(){
+    public function commit()
+    {
         return $this->dbDriver->commit();
     }
 
@@ -514,7 +560,8 @@ class Database {
      *
      * @return mixed
      */
-    public function rollback(){
+    public function rollback()
+    {
         return $this->dbDriver->rollback();
     }
 
@@ -523,7 +570,8 @@ class Database {
      *
      * @return mixed
      */
-    public function transactionStatus(){
+    public function transactionStatus()
+    {
         return $this->dbDriver->transactionStatus();
     }
 
@@ -532,7 +580,8 @@ class Database {
      *
      * @return mixed
      */
-    public function insertId(){
+    public function insertId()
+    {
         return $this->dbDriver->insertId();
     }
 
@@ -541,7 +590,8 @@ class Database {
      *
      * @return mixed
      */
-    public function affectedRows(){
+    public function affectedRows()
+    {
         return $this->dbDriver->affectedRows();
     }
 
@@ -551,7 +601,8 @@ class Database {
      * @param $structure
      * @return mixed
      */
-    public function createTable($table, $fields){
+    public function createTable($table, $fields)
+    {
         return $this->dbDriver->createTable($table, $fields);
     }
 
@@ -561,7 +612,8 @@ class Database {
      * @param string $table
      * @return mixed
      */
-    public function dropTable($table){
+    public function dropTable($table)
+    {
         return $this->dbDriver->dropTable($table);
     }
 
@@ -571,7 +623,8 @@ class Database {
      * @param string $table
      * @return mixed
      */
-    public function table($table){
+    public function table($table)
+    {
         $this->dbDriver->table($table);
         return $this->dbDriver;
     }

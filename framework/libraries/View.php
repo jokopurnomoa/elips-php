@@ -6,7 +6,8 @@
  *
  */
 
-class View {
+class View
+{
 
     /**
      * Render View (Load::view alias)
@@ -16,7 +17,8 @@ class View {
      * @param bool          $buffered
      * @return null|string
      */
-    public static function render($view, $data = null, $buffered = false){
+    public static function render($view, $data = null, $buffered = false)
+    {
         Load::view($view, $data, $buffered);
     }
 

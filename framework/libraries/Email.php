@@ -6,14 +6,16 @@
  *
  */
 
-class Email {
+class Email
+{
 
     private static $phpMailer;
 
     /**
      * Initialize Library
      */
-    public static function init(){
+    public static function init()
+    {
         require MAIN_PATH . 'vendor/PHPMailer/PHPMailerAutoload.php';
         self::$phpMailer = new PHPMailer();
         self::$phpMailer->isMail();
@@ -25,8 +27,9 @@ class Email {
      * @param $status
      * @return bool
      */
-    public static function smtp($status){
-        if($status === true){
+    public static function smtp($status)
+    {
+        if ($status === true) {
             self::$phpMailer->SMTPAuth = true;
             return self::$phpMailer->isSMTP();
         }
@@ -38,7 +41,8 @@ class Email {
      *
      * @param $host
      */
-    public static function host($host){
+    public static function host($host)
+    {
         self::$phpMailer->Host = $host;
     }
 
@@ -47,7 +51,8 @@ class Email {
      *
      * @param $username
      */
-    public static function username($username){
+    public static function username($username)
+    {
         self::$phpMailer->Username = $username;
     }
 
@@ -56,7 +61,8 @@ class Email {
      *
      * @param $password
      */
-    public static function password($password){
+    public static function password($password)
+    {
         self::$phpMailer->Password = $password;
     }
 
@@ -65,7 +71,8 @@ class Email {
      *
      * @param $smtp_secure ('ssl' OR 'tls' OR other)
      */
-    public static function SMTPSecure($smtp_secure){
+    public static function SMTPSecure($smtp_secure)
+    {
         self::$phpMailer->SMTPSecure = $smtp_secure;
     }
 
@@ -74,7 +81,8 @@ class Email {
      *
      * @param $port (465 OR 587 OR other)
      */
-    public static function port($port){
+    public static function port($port)
+    {
         self::$phpMailer->Port = $port;
     }
 
@@ -85,7 +93,8 @@ class Email {
      * @param $name
      * @return mixed
      */
-    public static function from($email, $name){
+    public static function from($email, $name)
+    {
         return self::$phpMailer->setFrom($email, $name);
     }
 
@@ -96,7 +105,8 @@ class Email {
      * @param string $name
      * @return mixed
      */
-    public static function to($email, $name = ''){
+    public static function to($email, $name = '')
+    {
         return self::$phpMailer->addAddress($email, $name);
     }
 
@@ -107,7 +117,8 @@ class Email {
      * @param $name
      * @return mixed
      */
-    public static function replyTo($email, $name){
+    public static function replyTo($email, $name)
+    {
         return self::$phpMailer->addReplyTo($email, $name);
     }
 
@@ -117,7 +128,8 @@ class Email {
      * @param $email
      * @return mixed
      */
-    public static function cc($email){
+    public static function cc($email)
+    {
         return self::$phpMailer->addCC($email);
     }
 
@@ -127,7 +139,8 @@ class Email {
      * @param $email
      * @return mixed
      */
-    public static function bcc($email){
+    public static function bcc($email)
+    {
         return self::$phpMailer->addBCC($email);
     }
 
@@ -137,7 +150,8 @@ class Email {
      * @param $file
      * @return mixed
      */
-    public static function attachment($file){
+    public static function attachment($file)
+    {
         return self::$phpMailer->addAttachment($file);
     }
 
@@ -147,7 +161,8 @@ class Email {
      * @param $option
      * @return bool
      */
-    public static function html($option){
+    public static function html($option)
+    {
         if($option === true){
             return self::$phpMailer->isHTML();
         }
@@ -159,7 +174,8 @@ class Email {
      *
      * @param $subject
      */
-    public static function subject($subject){
+    public static function subject($subject)
+    {
          self::$phpMailer->Subject = $subject;
     }
 
@@ -168,7 +184,8 @@ class Email {
      *
      * @param $body
      */
-    public static function message($body){
+    public static function message($body)
+    {
         self::$phpMailer->Body = $body;
     }
 
@@ -177,7 +194,8 @@ class Email {
      *
      * @param $alt_body
      */
-    public static function altBody($alt_body){
+    public static function altBody($alt_body)
+    {
         self::$phpMailer->AltBody = $alt_body;
     }
 
@@ -186,7 +204,8 @@ class Email {
      *
      * @return mixed
      */
-    public static function send(){
+    public static function send()
+    {
         return self::$phpMailer->send();
     }
 
@@ -195,7 +214,8 @@ class Email {
      *
      * @return mixed
      */
-    public static function getErrorInfo(){
+    public static function getErrorInfo()
+    {
         return self::$phpMailer->ErrorInfo;
     }
 
@@ -205,7 +225,8 @@ class Email {
      * @param int $time
      * @return int
      */
-    public static function setTimeout($time = 30){
+    public static function setTimeout($time = 30)
+    {
         return self::$phpMailer->Timeout = $time;
     }
 }
