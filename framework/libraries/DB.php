@@ -324,6 +324,18 @@ class DB
         return self::$dbDriver;
     }
 
+    /**
+     * Get data with raw SQL
+     *
+     * @param string $sql
+     * @param null|array $params
+     * @return mixed
+     */
+    public static function select($sql, $params = null)
+    {
+        return self::$dbDriver->getAllQuery($sql, $params);
+    }
+
 }
 
 class Database
@@ -627,6 +639,18 @@ class Database
     {
         $this->dbDriver->table($table);
         return $this->dbDriver;
+    }
+
+    /**
+     * Get data with raw SQL
+     *
+     * @param string $sql
+     * @param null|array $params
+     * @return mixed
+     */
+    public function select($sql, $params = null)
+    {
+        return $this->dbDriver->getAllQuery($sql, $params);
     }
 
 }
