@@ -97,7 +97,14 @@ class Encryption
         if ($key === '') {
             $key = self::$key_std;
         }
-        return substr(base64_encode(sha1($key)), 0, 32);
+
+        $key = base64_encode($key);
+        $keyLength = strlen($key);
+        if($keyLength < 32){
+            $key .= str_pad($key, 32, '#');
+        }
+
+        return substr($key, 0, 32);
     }
 
     /**
@@ -119,4 +126,5 @@ class Encryption
     {
         self::$mode = $mode;
     }
+
 }

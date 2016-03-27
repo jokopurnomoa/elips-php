@@ -346,4 +346,36 @@ class TestingController extends BaseController
         header('Content-type: image/jpeg');
         $builder->output();
     }
+
+    public function encryption(){
+        echo $cipher = Encryption::encode('Hello');
+        echo nl2br(PHP_EOL);
+        echo Encryption::decode($cipher);
+    }
+
+    public function complex()
+    {
+        Load::library('DB');
+        Load::library('Session');
+
+        $memberList = DB::table('member')
+            ->limit(100)
+            ->get();
+
+        Cache::store('member_list_cache', $memberList);
+        Session::set('member_list', Cache::get('member_list_cache'));
+        $this->data['member_list'] = Session::get('member_list');
+
+        DB::beginTransaction();
+        DB::insert('test', array('val1' => 'A', 'val2' => 'B'));
+        $insert_id = DB::insertId();
+        DB::update('test', 'test_id', $insert_id - 1, array('val1' => 'A2', 'val2' => 'B2'));
+        DB::delete('test', 'test_id', $insert_id - 3);
+        DB::commit();
+
+        $sql = "SELECT * FROM member WHERE email = ? AND name LIKE ?";
+        $data = DB::getAllQuery($sql, array('jokopurnomoa@gmail.com', '%Elips%'));
+
+        Blade::render('testing', $this->data);
+    }
 }
