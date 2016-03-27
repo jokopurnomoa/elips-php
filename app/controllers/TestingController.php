@@ -348,8 +348,8 @@ class TestingController extends BaseController
     }
 
     public function encryption(){
-        echo $cipher = Encryption::encode('Hello');
-        echo nl2br(PHP_EOL);
+        echo $cipher = Encryption::encode('Are you authorized to profile this page? Probe not found or invalid signature. This is the most common issue when installing the Blackfire stack. If this issue occurs, please follow these steps:');
+        echo nl2br(PHP_EOL) . nl2br(PHP_EOL);
         echo Encryption::decode($cipher);
     }
 

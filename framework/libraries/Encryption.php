@@ -48,7 +48,8 @@ class Encryption
         $iv = mcrypt_create_iv($iv_size, MCRYPT_DEV_RANDOM);
         $ciphertext = mcrypt_encrypt(self::$cipher, $key, $plaintext, self::$mode, $iv);
 
-        return trim(base64_encode($iv . $ciphertext));
+        $ciphertext = trim(base64_encode($iv . $ciphertext));
+        return self::addSalt($ciphertext);
     }
 
     /**
@@ -60,6 +61,8 @@ class Encryption
      */
     public static function decode($ciphertext, $key = '')
     {
+        $ciphertext = self::removeSalt($ciphertext);
+
         if (preg_match('/[^a-zA-Z0-9\/\+=]/', $ciphertext)) {
             return false;
         }
@@ -87,6 +90,45 @@ class Encryption
     }
 
     /**
+     * Add ciphertext salt
+     *
+     * @param $ciphertext
+     * @return string
+     */
+    private static function addSalt($ciphertext)
+    {
+        $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $result = '';
+        if ($ciphertext != '') {
+            for ($i = 0; $i < strlen($ciphertext); $i++) {
+                $result .= $ciphertext[$i] . $keyspace[rand(0, strlen($keyspace) - 1)];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Remove ciphertext salt
+     *
+     * @param $ciphertext
+     * @return string
+     */
+    private static function removeSalt($ciphertext)
+    {
+        $result = '';
+        if ($ciphertext != '') {
+            for ($i = 0; $i < strlen($ciphertext); $i++) {
+                if($i % 2 == 0){
+                    $result .= $ciphertext[$i];
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Get Encryption Key
      *
      * @param $key
@@ -98,13 +140,7 @@ class Encryption
             $key = self::$key_std;
         }
 
-        $key = base64_encode($key);
-        $keyLength = strlen($key);
-        if($keyLength < 32){
-            $key .= str_pad($key, 32, '#');
-        }
-
-        return substr($key, 0, 32);
+        return md5(hash('sha256', $key));
     }
 
     /**
