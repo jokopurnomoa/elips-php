@@ -17,7 +17,8 @@ class Example2Controller extends BaseController
 
         $this->data['member_list'] = Example2::all('*', 10);
 
-        Blade::render('example/example', $this->data);
+        //Blade::render('example/example', $this->data);
+        Blade::render('example', $this->data);
 
     }
 
