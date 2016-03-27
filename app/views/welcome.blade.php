@@ -20,7 +20,7 @@
     @include('slices.header')
 
     <div class="content">
-        Welcome to ELIPS PHP
+        Welcome to Elips PHP
     </div>
 
     @include('slices.footer')
