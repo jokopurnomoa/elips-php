@@ -17,7 +17,7 @@ class Session
     public static function init()
     {
         if (get_app_config('session', 'driver') === 'file') {
-            require 'SessionDriver/SessionFile.php';
+            require_once 'SessionDriver/SessionFile.php';
             self::$session_driver = new SessionFile();
             self::$session_driver->init(get_app_config('session'));
         } elseif(APP_ENV === 'development') {

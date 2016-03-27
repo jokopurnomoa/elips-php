@@ -25,19 +25,19 @@ class Load
         }
 
         if (file_exists(APP_PATH . 'libraries/' . $library . '.php')) {
-            require APP_PATH . 'libraries/' . $library . '.php';
+            require_once APP_PATH . 'libraries/' . $library . '.php';
             if(method_exists($library, 'init')) {
                 $library::init();
             }
         }
         elseif (file_exists(FW_PATH . 'libraries/' . $library . '.php')) {
-            require FW_PATH . 'libraries/' . $library . '.php';
+            require_once FW_PATH . 'libraries/' . $library . '.php';
             if(method_exists($library, 'init')) {
                 $library::init();
             }
         }
         elseif (file_exists(APP_PATH . $modulePath . 'libraries/' . $library . '.php')) {
-            require APP_PATH . $modulePath . 'libraries/' . $library . '.php';
+            require_once APP_PATH . $modulePath . 'libraries/' . $library . '.php';
             if (method_exists($library, 'init')) {
                 $library::init();
             }
@@ -64,13 +64,13 @@ class Load
         }
 
         if (file_exists(APP_PATH . 'models/' . $model . '.php')) {
-            require APP_PATH . 'models/' . $model . '.php';
+            require_once APP_PATH . 'models/' . $model . '.php';
             if(method_exists($model, 'init')) {
                 $model::init();
             }
         }
         elseif (file_exists(APP_PATH . $modulePath . 'models/' . $model . '.php')) {
-            require APP_PATH . $modulePath . 'models/' . $model . '.php';
+            require_once APP_PATH . $modulePath . 'models/' . $model . '.php';
             if(method_exists($model, 'init')) {
                 $model::init();
             }
@@ -156,13 +156,13 @@ class Load
         }
 
         if (file_exists(APP_PATH . 'helpers/' . $helper . '.php')) {
-            require APP_PATH . 'helpers/' . $helper . '.php';
+            require_once APP_PATH . 'helpers/' . $helper . '.php';
         }
         elseif (file_exists(FW_PATH . 'helpers/' . $helper . '.php')) {
-            require FW_PATH . 'helpers/' . $helper . '.php';
+            require_once FW_PATH . 'helpers/' . $helper . '.php';
         }
         elseif (file_exists(FW_PATH . $modulePath . 'helpers/' . $helper . '.php')) {
-            require FW_PATH . $modulePath . 'helpers/' . $helper . '.php';
+            require_once FW_PATH . $modulePath . 'helpers/' . $helper . '.php';
         }
         elseif (APP_ENV === 'development') {
             error_dump('File \'' . APP_PATH . 'helpers/' . $helper . '.php\' not found!');
@@ -190,13 +190,13 @@ class Load
         }
 
         if (file_exists(APP_PATH . 'lang/' . $language . '/' . $name . '.php')) {
-            require APP_PATH . 'lang/' . $language . '/' . $name . '.php';
+            require_once APP_PATH . 'lang/' . $language . '/' . $name . '.php';
         }
         elseif (file_exists(FW_PATH . 'lang/' . $language . '/' . $name . '.php')) {
-            require FW_PATH . 'lang/' . $language . '/' . $name . '.php';
+            require_once FW_PATH . 'lang/' . $language . '/' . $name . '.php';
         }
         elseif (file_exists(FW_PATH . $modulePath . 'lang/' . $language . '/' . $name . '.php')) {
-            require FW_PATH . $modulePath . 'lang/' . $language . '/' . $name . '.php';
+            require_once FW_PATH . $modulePath . 'lang/' . $language . '/' . $name . '.php';
         }
         elseif (APP_ENV === 'development') {
             error_dump('File \'' . APP_PATH . 'helpers/' . $language . '.php\' not found!');
