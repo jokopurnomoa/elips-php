@@ -16,12 +16,14 @@
 
 $route = array(
 
-    'default_controller'        => 'Welcome',
+    'default_controller'    => 'Welcome',
 
-    'root_controller'           => 'Base',
+    'root_controller'       => 'Base',
 
-    '404'                       => '',
+    '404'                   => '',
 
-    'method_separator'          => '',
+    'method_separator'      => '',
+
+    'example4'              => 'Example'
 
 );

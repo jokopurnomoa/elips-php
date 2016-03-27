@@ -53,12 +53,12 @@ class Blade
      */
     public static function render($view, $data = null, $buffered = false)
     {
-        $module_path = MODULE_PATH;
+        global $modulePath;
         $module_view = '';
         $paths = explode('/', $view);
 
         if (strpos($view, '/') !== false) {
-            $module_path = str_replace('//', '/', 'modules/' . $paths[0] . '/');
+            $modulePath = str_replace('//', '/', 'modules/' . $paths[0] . '/');
             $module_view = trim(str_replace($paths[0] . '/', '', $view), '/');
         }
 
@@ -73,8 +73,8 @@ class Blade
                 echo $__buffer;
             }
         }
-        elseif (file_exists(APP_PATH . $module_path . 'views/' . $module_view . '.blade.php')) {
-            $__buffer = self::parse(read_file(APP_PATH . $module_path . 'views/' . $module_view . '.blade.php'));
+        elseif (file_exists(APP_PATH . $modulePath . 'views/' . $module_view . '.blade.php')) {
+            $__buffer = self::parse(read_file(APP_PATH . $modulePath . 'views/' . $module_view . '.blade.php'));
             $__buffer = self::run($__buffer, $data);
             if ($buffered) {
                 return $__buffer;

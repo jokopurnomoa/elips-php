@@ -8,12 +8,21 @@
 
 class Route
 {
+    private static $className;
+    private static $methodName = 'index';
+    private static $routeFound = false;
+    private static $page404;
+    private static $methodSeparator;
+    private static $rootController;
 
     /**
      * Run Routing
      */
     public static function run()
     {
+        global $modulePath;
+
+        $route = null;
         if(file_exists(APP_PATH . 'config/route.php')){
             require_once APP_PATH . 'config/route.php';
         } elseif(APP_ENV === 'development') {
@@ -21,175 +30,43 @@ class Route
             die();
         }
 
-        $classname = '';
-        $methodname = 'index';
-        $method_separator = '_';
-        $root_controller = '';
-        $page_404 = 'Error';
+        self::$rootController = '';
 
         $uri = URI::getURI();
-        $arr_uri = explode('/', $uri);
+        $arrUri = explode('/', $uri);
 
-        $route_found = false;
-        if (isset($route)) {
-            if ($route !== null) {
-                if (isset($route['404'])) {
-                    if ($route['404'] != '') {
-                        $page_404 = $route['404'];
-                    }
-                }
-
-                if (isset($route['method_separator'])) {
-                    if ($route['method_separator'] != '') {
-                        $method_separator = $route['method_separator'];
-                    }
-                }
-
-                /* Load root controller */
-                if (isset($route['root_controller'])) {
-                    if ($route['root_controller'] != '') {
-                        $route['root_controller'] .= 'Controller';
-                        $root_controller = $route['root_controller'];
-                        if (file_exists(APP_PATH . 'controllers/' . $route['root_controller'] . '.php')) {
-                            require_once APP_PATH . 'controllers/' . $route['root_controller'] . '.php';
-                        } elseif (APP_ENV === 'development') {
-                            error_dump('File \'' . APP_PATH . 'controllers/' . $route['root_controller'] . '.php\' not found');die();
-                        }
-                    }
-                }
-                /* End load root controller */
-
-                if ($uri != '/' && $uri != '') {
-                    foreach ($route as $key => $value) {
-                        $key = trim($key, '/');
-                        $value = trim($value, '/');
-
-                        $arr_key = explode('/', $key);
-                        $arr_value = explode('/', $value);
-
-                        if (count($arr_value) > 0 && count($arr_key) > 0) {
-                            if ($uri === $key) {
-                                if (count($arr_value) === 1) {
-                                    $classname = $arr_value[0];
-                                    $route_found = true;
-                                }
-                                elseif (count($arr_value) >= 2) {
-                                    $classname = $arr_value[0];
-                                    $methodname = $arr_value[1];
-                                    $route_found = true;
-                                }
-                                break;
-                            } else {
-                                if (count($arr_key) > 1) {
-                                    if ($arr_uri[0] === $arr_key[0]) {
-                                        if ($arr_key[1] === '(:any)') {
-                                            if (count($arr_value) === 1) {
-                                                $classname = $arr_value[0];
-                                                $route_found = true;
-                                            }
-                                            elseif (count($arr_value) >= 2) {
-                                                $classname = $arr_value[0];
-                                                if ($arr_value[1] === '(:any)' && isset($arr_uri[1])) {
-                                                    $methodname = $arr_uri[1];
-                                                } else {
-                                                    $methodname = $arr_value[1];
-                                                }
-                                                $route_found = true;
-                                            }
-                                            break;
-                                        }
-                                        elseif ($arr_uri[1] === $arr_key[1] && count($arr_value) >= 2) {
-                                            $classname = $arr_value[0];
-                                            $methodname = $arr_value[1];
-                                            $route_found = true;
-                                        }
-                                    }
-                                }
-                            }
-                        } elseif (APP_ENV === 'development') {
-                            error_dump('Routing error!');die();
-                        }
-                    }
-                } elseif (isset($route['default_controller'])) {
-                    $classname = $route['default_controller'] . 'Controller';
-                    $route_found = true;
-                }
+        if ($route == null) {
+            if (APP_ENV === 'development') {
+                error_dump('Route config is not set correctly!');die();
             }
         }
 
-        if (!$route_found) {
-            $classname = (isset($arr_uri[0]) ? $arr_uri[0] : '') . 'Controller';
-            $methodname = isset($arr_uri[1]) ? $arr_uri[1] : 'index';
+        self::$page404 = self::getPage404Config($route);
+        self::$methodSeparator = self::getMethodSeparator($route);
+
+        self::loadRootController($route);
+        self::getClassAndMethod($route, $uri);
+
+        if (!self::$routeFound) {
+            self::$className = (isset($arrUri[0]) ? $arrUri[0] : '') . 'Controller';
+            self::$methodName = isset($arrUri[1]) ? $arrUri[1] : 'index';
         }
 
-        if ($classname != '' && $methodname != '' && strtolower($classname) != strtolower($root_controller)) {
-            $module_path = trim('modules/' . trim(strtolower(str_replace('Controller', '', $classname))), '/') . '/';
-            $classname = ucfirst($classname);
+        if (self::$className != '' && self::$methodName != '' &&
+            strtolower(self::$className) != strtolower(self::$rootController)) {
 
-            if (file_exists(APP_PATH . 'controllers/' . $classname . '.php')) {
-                require_once APP_PATH . 'controllers/' . $classname . '.php';
-                $class = new $classname();
+            $modulePath = trim('modules/' . trim(strtolower(str_replace('Controller', '', self::$className))), '/') . '/';
+            self::$className = ucfirst(self::$className);
 
-                if (method_exists($classname, $methodname)) {
-                    $class->$methodname();
-                } else {
-                    $separator_found = substr_count($methodname, $method_separator);
-                    if ($separator_found > 0) {
-                        for ($i=0;$i<$separator_found;$i++) {
-                            $separator_pos = strpos($methodname, $method_separator);
-                            if ($separator_pos !== false) {
-                                $methodname = substr($methodname, 0, $separator_pos) . ucfirst(substr($methodname, $separator_pos + 1, strlen($methodname) - $separator_pos - 1));
-                            }
-                        }
-                    }
-
-                    if (APP_ENV === 'development') {
-                        $class->$methodname();
-                    } elseif (method_exists($classname, $methodname)) {
-                        $class->$methodname();
-                    } elseif (file_exists(APP_PATH . 'views/404.blade.php')) {
-                        require_once FW_PATH . 'core/' . $page_404 . '.php';
-                        $class = new $page_404();
-                        $class->index();
-                    } else {
-                        error_dump('404 Page Not Found!');
-                        die();
-                    }
-                }
-            } elseif (file_exists(APP_PATH . $module_path . 'controllers/' . $classname . '.php')) {
-                require_once APP_PATH . $module_path . 'controllers/' . $classname . '.php';
-                $class = new $classname();
-                $module_path = MODULE_PATH;
-
-                if (method_exists($classname, $methodname)) {
-                    $class->$methodname();
-                } else {
-                    $separator_found = substr_count($methodname, $method_separator);
-                    if ($separator_found > 0) {
-                        for ($i=0;$i<$separator_found;$i++) {
-                            $separator_pos = strpos($methodname, $method_separator);
-                            if ($separator_pos !== false) {
-                                $methodname = substr($methodname, 0, $separator_pos) . ucfirst(substr($methodname, $separator_pos + 1, strlen($methodname) - $separator_pos - 1));
-                            }
-                        }
-                    }
-
-                    if (APP_ENV === 'development') {
-                        $class->$methodname();
-                    } elseif (method_exists($classname, $methodname)) {
-                        $class->$methodname();
-                    } elseif (file_exists(APP_PATH . 'views/404.blade.php')) {
-                        require_once FW_PATH . 'core/' . $page_404 . '.php';
-                        $class = new $page_404();
-                        $class->index();
-                    } else {
-                        error_dump('404 Page Not Found!');
-                        die();
-                    }
-                }
+            if (file_exists(APP_PATH . 'controllers/' . self::$className . '.php')) {
+                require_once APP_PATH . 'controllers/' . self::$className . '.php';
+                self::callClassMethod();
+            } elseif (file_exists(APP_PATH . $modulePath . 'controllers/' . self::$className . '.php')) {
+                require_once APP_PATH . $modulePath . 'controllers/' . self::$className . '.php';
+                self::callClassMethod();
             } elseif (file_exists(APP_PATH . 'views/404.blade.php')) {
-                require_once FW_PATH . 'core/' . $page_404 . '.php';
-                $class = new $page_404();
+                require_once FW_PATH . 'core/' . self::$page404 . '.php';
+                $class = new self::$page404();
                 $class->index();
             } else {
                 error_dump('404 Page Not Found!');
@@ -197,6 +74,178 @@ class Route
             }
         }
 
+    }
+
+    /**
+     * Get page 404 config
+     *
+     * @param array $route
+     * @return string
+     */
+    private static function getPage404Config($route)
+    {
+        if (isset($route['404'])) {
+            if ($route['404'] != '') {
+                return $route['404'];
+            }
+        }
+        return 'Error';
+    }
+
+    /**
+     * Get method separator
+     *
+     * @param array $route
+     * @return string
+     */
+    private static function getMethodSeparator($route)
+    {
+        if (isset($route['method_separator'])) {
+            if ($route['method_separator'] != '') {
+                return $route['method_separator'];
+            }
+        }
+        return '_';
+    }
+
+    /**
+     * Load root controller
+     *
+     * @param array $route
+     */
+    private static function loadRootController($route)
+    {
+        if (isset($route['root_controller'])) {
+            if ($route['root_controller'] != '') {
+                $root_controller = $route['root_controller'] . 'Controller';
+                if (file_exists(APP_PATH . 'controllers/' . $root_controller . '.php')) {
+                    require_once APP_PATH . 'controllers/' . $root_controller . '.php';
+                } elseif (APP_ENV === 'development') {
+                    error_dump('File \'' . APP_PATH . 'controllers/' . $root_controller . '.php\' not found');die();
+                }
+            }
+        }
+    }
+
+    /**
+     * Get class and method
+     *
+     * @param array $route
+     * @param string $uri
+     */
+    private static function getClassAndMethod($route, $uri)
+    {
+        if ($uri != '/' && $uri != '') {
+            foreach ($route as $key => $value) {
+                if (self::parseRoute($uri, trim($key, '/'), trim($value, '/'))) {
+                    break;
+                }
+            }
+        } elseif (isset($route['default_controller'])) {
+            self::$className = $route['default_controller'];
+            self::$routeFound = true;
+        }
+
+        self::$className .= 'Controller';
+    }
+
+    /**
+     * Parse route
+     *
+     * @param string $uri
+     * @param string $routeSource
+     * @param string $routeDest
+     * @return bool
+     */
+    private static function parseRoute($uri, $routeSource, $routeDest)
+    {
+        $arrUri = explode('/', $uri);
+        $arrKey = explode('/', $routeSource);
+        $arrValue = explode('/', $routeDest);
+
+        if (count($arrValue) > 0 && count($arrKey) > 0) {
+            if ($uri === $routeSource) {
+                if (count($arrValue) === 1) {
+                    self::$className = $arrValue[0];
+                    self::$routeFound = true;
+                }
+                elseif (count($arrValue) >= 2) {
+                    self::$className = $arrValue[0];
+                    self::$methodName = $arrValue[1];
+                    self::$routeFound = true;
+                }
+                return true;
+            } else {
+                if (count($arrKey) > 1) {
+                    if ($arrUri[0] === $arrKey[0]) {
+                        if ($arrKey[1] === '(:any)') {
+                            if (count($arrValue) === 1) {
+                                self::$className = $arrValue[0];
+                                self::$routeFound = true;
+                            }
+                            elseif (count($arrValue) >= 2) {
+                                self::$className = $arrValue[0];
+                                if ($arrValue[1] === '(:any)' && isset($arrUri[1])) {
+                                    self::$methodName = $arrUri[1];
+                                } else {
+                                    self::$methodName = $arrValue[1];
+                                }
+                                self::$routeFound = true;
+                            }
+                            return true;
+                        }
+                        elseif ($arrUri[1] === $arrKey[1] && count($arrValue) >= 2) {
+                            self::$className = $arrValue[0];
+                            self::$methodName = $arrValue[1];
+                            self::$routeFound = true;
+                            return true;
+                        }
+                    }
+                }
+            }
+        } elseif (APP_ENV === 'development') {
+            error_dump('Routing error!');die();
+        }
+
+        return false;
+    }
+
+    /**
+     * Call method of class
+     */
+    private static function callClassMethod()
+    {
+        $class = new self::$className();
+
+        if (method_exists(self::$className, self::$methodName)) {
+            $methodName = self::$methodName;
+            $class->$methodName();
+        } else {
+            $separatorFound = substr_count(self::$methodName, self::$methodSeparator);
+            if ($separatorFound > 0) {
+                for ($i=0; $i<$separatorFound; $i++) {
+                    $separator_pos = strpos(self::$methodName, self::$methodSeparator);
+                    if ($separator_pos !== false) {
+                        self::$methodName = substr(self::$methodName, 0, $separator_pos) . ucfirst(substr(self::$methodName, $separator_pos + 1, strlen(self::$methodName) - $separator_pos - 1));
+                    }
+                }
+            }
+
+            if (APP_ENV === 'development') {
+                $methodName = self::$methodName;
+                $class->$methodName();
+            } elseif (method_exists(self::$className, self::$methodName)) {
+                $methodName = self::$methodName;
+                $class->$methodName();
+            } elseif (file_exists(APP_PATH . 'views/404.blade.php')) {
+                require_once FW_PATH . 'core/' . self::$page404 . '.php';
+                $class = new self::$page404();
+                $class->index();
+            } else {
+                error_dump('404 Page Not Found!');
+                die();
+            }
+        }
     }
 
 }

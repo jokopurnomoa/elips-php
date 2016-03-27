@@ -24,11 +24,6 @@ define('FW_PATH', __DIR__ . '/framework/');
 define('APP_PATH', __DIR__ . '/app/');
 
 /**
- * Path to the module folder
- */
-define('MODULE_PATH', __DIR__ . '');
-
-/**
  * Instance Core Class
  */
 $instance = null;
@@ -37,6 +32,11 @@ $instance = null;
  * Language Var
  */
 $lang = null;
+
+/**
+ * Module path
+ */
+$modulePath = '';
 
 /**
  * Checking Application Environtment

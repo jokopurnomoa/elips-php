@@ -16,11 +16,11 @@ class Load
      */
     public static function library($library)
     {
-        $module_path = MODULE_PATH;
+        global $modulePath;
         $paths = explode('/', $library);
 
         if (strpos($library, '/') !== false) {
-            $module_path = str_replace('//', '/', 'modules/' . $paths[0] . '/');
+            $modulePath = str_replace('//', '/', 'modules/' . $paths[0] . '/');
             $library = trim(str_replace($paths[0] . '/', '', $library), '/');
         }
 
@@ -36,8 +36,8 @@ class Load
                 $library::init();
             }
         }
-        elseif (file_exists(APP_PATH . $module_path . 'libraries/' . $library . '.php')) {
-            require APP_PATH . $module_path . 'libraries/' . $library . '.php';
+        elseif (file_exists(APP_PATH . $modulePath . 'libraries/' . $library . '.php')) {
+            require APP_PATH . $modulePath . 'libraries/' . $library . '.php';
             if (method_exists($library, 'init')) {
                 $library::init();
             }
@@ -55,11 +55,11 @@ class Load
      */
     public static function model($model)
     {
-        $module_path = MODULE_PATH;
+        global $modulePath;
         $paths = explode('/', $model);
 
         if (strpos($model, '/') !== false) {
-            $module_path = str_replace('//', '/', 'modules/' . $paths[0] . '/');
+            $modulePath = str_replace('//', '/', 'modules/' . $paths[0] . '/');
             $model = trim(str_replace($paths[0] . '/', '', $model), '/');
         }
 
@@ -69,8 +69,8 @@ class Load
                 $model::init();
             }
         }
-        elseif (file_exists(APP_PATH . $module_path . 'models/' . $model . '.php')) {
-            require APP_PATH . $module_path . 'models/' . $model . '.php';
+        elseif (file_exists(APP_PATH . $modulePath . 'models/' . $model . '.php')) {
+            require APP_PATH . $modulePath . 'models/' . $model . '.php';
             if(method_exists($model, 'init')) {
                 $model::init();
             }
@@ -90,11 +90,11 @@ class Load
      */
     public static function view($view, $data = null, $buffered = false)
     {
-        $module_path = MODULE_PATH;
+        global $modulePath;
         $paths = explode('/', $view);
 
         if (strpos($view, '/') !== false) {
-            $module_path = str_replace('//', '/', 'modules/' . $paths[0] . '/');
+            $modulePath = str_replace('//', '/', 'modules/' . $paths[0] . '/');
             $view = trim(str_replace($paths[0] . '/', '', $view), '/');
         }
 
@@ -116,14 +116,14 @@ class Load
                 echo $buffer;
             }
         }
-        elseif (file_exists(APP_PATH . $module_path . 'views/' . $view . '.php')) {
+        elseif (file_exists(APP_PATH . $modulePath . 'views/' . $view . '.php')) {
             ob_start();
             if ($data !== null) {
                 foreach ($data as $key => $val) {
                     $$key = $val;
                 }
             }
-            require APP_PATH . $module_path . 'views/' . $view . '.php';
+            require APP_PATH . $modulePath . 'views/' . $view . '.php';
             $buffer = ob_get_contents();
             @ob_end_clean();
 
@@ -147,11 +147,11 @@ class Load
      */
     public static function helper($helper)
     {
-        $module_path = MODULE_PATH;
+        global $modulePath;
         $paths = explode('/', $helper);
 
         if (strpos($helper, '/') !== false) {
-            $module_path = str_replace('//', '/', 'modules/' . $paths[0] . '/');
+            $modulePath = str_replace('//', '/', 'modules/' . $paths[0] . '/');
             $helper = trim(str_replace($paths[0] . '/', '', $helper), '/');
         }
 
@@ -161,8 +161,8 @@ class Load
         elseif (file_exists(FW_PATH . 'helpers/' . $helper . '.php')) {
             require FW_PATH . 'helpers/' . $helper . '.php';
         }
-        elseif (file_exists(FW_PATH . $module_path . 'helpers/' . $helper . '.php')) {
-            require FW_PATH . $module_path . 'helpers/' . $helper . '.php';
+        elseif (file_exists(FW_PATH . $modulePath . 'helpers/' . $helper . '.php')) {
+            require FW_PATH . $modulePath . 'helpers/' . $helper . '.php';
         }
         elseif (APP_ENV === 'development') {
             error_dump('File \'' . APP_PATH . 'helpers/' . $helper . '.php\' not found!');
@@ -177,11 +177,11 @@ class Load
      */
     public static function language($language, $name = null)
     {
-        $module_path = MODULE_PATH;
+        global $modulePath;
         $paths = explode('/', $language);
 
         if (strpos($language, '/') !== false) {
-            $module_path = str_replace('//', '/', 'modules/' . $paths[0] . '/');
+            $modulePath = str_replace('//', '/', 'modules/' . $paths[0] . '/');
             $language = trim(str_replace($paths[0] . '/', '', $language), '/');
         }
 
@@ -195,8 +195,8 @@ class Load
         elseif (file_exists(FW_PATH . 'lang/' . $language . '/' . $name . '.php')) {
             require FW_PATH . 'lang/' . $language . '/' . $name . '.php';
         }
-        elseif (file_exists(FW_PATH . $module_path . 'lang/' . $language . '/' . $name . '.php')) {
-            require FW_PATH . $module_path . 'lang/' . $language . '/' . $name . '.php';
+        elseif (file_exists(FW_PATH . $modulePath . 'lang/' . $language . '/' . $name . '.php')) {
+            require FW_PATH . $modulePath . 'lang/' . $language . '/' . $name . '.php';
         }
         elseif (APP_ENV === 'development') {
             error_dump('File \'' . APP_PATH . 'helpers/' . $language . '.php\' not found!');

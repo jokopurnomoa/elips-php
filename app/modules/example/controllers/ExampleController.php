@@ -11,7 +11,7 @@ class Example extends BaseController {
     public function index(){
 
         Load::library('Database');
-        Load::model('ExampleModel');
+        Load::model('Example');
 
         $this->data['member_list'] = Example::all('*', 10);
         $this->data['var'] = array('<?php echo "AAA";?>');

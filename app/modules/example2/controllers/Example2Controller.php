@@ -11,9 +11,9 @@ class Example2Controller extends BaseController {
     public function index(){
 
         Load::library('DB');
-        Load::model('example/Example');
+        Load::model('Example2');
 
-        $this->data['member_list'] = Example::all('*', 10);
+        $this->data['member_list'] = Example2::all('*', 10);
 
         Blade::render('example/example', $this->data);
 
