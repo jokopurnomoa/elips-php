@@ -6,7 +6,8 @@
  *
  */
 
-class SessionFile {
+class SessionFile
+{
 
     var $session_id = null;
     var $session_name = 'ELIPS_PHP_SESSID';
@@ -23,28 +24,29 @@ class SessionFile {
      *
      * @param null $config
      */
-    public function init($config = null){
-        if(isset($config['name'])){
+    public function init($config = null)
+    {
+        if (isset($config['name'])) {
             $this->session_name = $config['name'];
         }
 
-        if(isset($config['encryption_key'])){
+        if (isset($config['encryption_key'])) {
             $this->session_key = $config['encryption_key'];
         }
 
-        if(isset($config['expire'])){
+        if (isset($config['expire'])) {
             $this->session_expire = $config['expire'];
         }
 
-        if(isset($config['match_ip'])){
+        if (isset($config['match_ip'])) {
             $this->session_match_ip = $config['match_ip'];
         }
 
-        if(isset($config['max_size'])){
+        if (isset($config['max_size'])) {
             $this->session_max_size = $config['max_size'];
         }
 
-        if(time() - $this->get('SESS_CREATED') > $this->session_expire){
+        if (time() - $this->get('SESS_CREATED') > $this->session_expire) {
             $this->destroy();
         }
 
@@ -57,7 +59,8 @@ class SessionFile {
      * @param $length
      * @return string
      */
-    private function generateRandomString($length) {
+    private function generateRandomString($length)
+    {
         return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
     }
 
@@ -66,7 +69,8 @@ class SessionFile {
      *
      * @return string
      */
-    private function generateSessionId(){
+    private function generateSessionId()
+    {
         return sha1(uniqid('', true).$this->generateRandomString(25).microtime(true));
     }
 
@@ -75,8 +79,9 @@ class SessionFile {
      *
      * @return string
      */
-    private function generateSession(){
-        if(Cookie::get($this->session_name) == null){
+    private function generateSession()
+    {
+        if (Cookie::get($this->session_name) == null) {
             $this->session_data['SESS_USER_AGENT'] = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
             $this->session_data['SESS_IP_ADDR'] = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
             $this->session_data['SESS_CREATED'] = time();
@@ -96,8 +101,9 @@ class SessionFile {
      *
      * @return null|string
      */
-    private function getSessionId(){
-        if(Cookie::get($this->session_name) !== null){
+    private function getSessionId()
+    {
+        if (Cookie::get($this->session_name) !== null) {
             return Cookie::get($this->session_name);
         }
         return $this->session_id;
@@ -108,24 +114,25 @@ class SessionFile {
      *
      * @return array|null
      */
-    private function getSessionData(){
+    private function getSessionData()
+    {
         $session_id = $this->getSessionId();
 
         $string = read_file($this->session_path . $session_id, $this->session_max_size);
-        if($string != null){
+        if ($string != null) {
             $this->session_data = (array)@unserialize(trim(Encryption::decode($string, $this->session_key)));
 
-            if($this->session_data != null){
+            if ($this->session_data != null) {
                 $sess_user_agent = isset($this->session_data['SESS_USER_AGENT']) ? $this->session_data['SESS_USER_AGENT'] : '';
                 $sess_ip_addr = isset($this->session_data['SESS_IP_ADDR']) ? $this->session_data['SESS_IP_ADDR'] : '';
 
                 $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
                 $ip_addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';;
 
-                if($user_agent == $sess_user_agent){
-                    if(!$this->session_match_ip){
+                if ($user_agent == $sess_user_agent) {
+                    if (!$this->session_match_ip) {
                         return $this->session_data;
-                    } elseif($ip_addr == $sess_ip_addr){
+                    } elseif ($ip_addr == $sess_ip_addr) {
                         return $this->session_data;
                     }
                 }
@@ -140,11 +147,12 @@ class SessionFile {
      * @param string $key
      * @return bool
      */
-    public function has($key){
+    public function has($key)
+    {
         $this->session_data = $this->getSessionData();
 
-        if($this->session_data != null){
-            if(isset($this->session_data[$key])){
+        if ($this->session_data != null) {
+            if (isset($this->session_data[$key])) {
                 return true;
             }
         }
@@ -158,12 +166,13 @@ class SessionFile {
      * @param string $key
      * @return null | mixed
      */
-    public function get($key, $default = null){
+    public function get($key, $default = null)
+    {
         $session_id = $this->getSessionId();
         $this->session_data = $this->getSessionData();
 
-        if($this->session_data != null){
-            if(isset($this->session_data[$key])){
+        if ($this->session_data != null) {
+            if (isset($this->session_data[$key])) {
                 return $this->session_data[$key];
             }
 
@@ -179,7 +188,8 @@ class SessionFile {
      *
      * @return array|null
      */
-    public function all(){
+    public function all()
+    {
         return $this->getSessionData();
     }
 
@@ -190,7 +200,8 @@ class SessionFile {
      * @param string $value
      * @return bool
      */
-    public function set($key, $value){
+    public function set($key, $value)
+    {
         $session_id = $this->getSessionId();
         $this->session_data = $this->getSessionData();
         $this->session_data[$key] = $value;
@@ -204,7 +215,8 @@ class SessionFile {
      * @param $key
      * @return bool
      */
-    public function remove($key){
+    public function remove($key)
+    {
         $session_id = $this->getSessionId();
         $this->session_data = $this->getSessionData();
         unset($this->session_data[$key]);
@@ -217,7 +229,8 @@ class SessionFile {
      *
      * @return bool
      */
-    public function destroy(){
+    public function destroy()
+    {
         $session_id = $this->getSessionId();
         $this->session_data = null;
         delete_file($this->session_path . $session_id);
@@ -227,7 +240,8 @@ class SessionFile {
     /**
      * Regenerate Session Id
      */
-    public function regenerate(){
+    public function regenerate()
+    {
         $this->session_id = $this->getSessionId();
         $this->session_data = $this->getSessionData();
         delete_file($this->session_path . $this->session_id);
