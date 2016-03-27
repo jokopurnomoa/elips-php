@@ -56,7 +56,7 @@ class Blade
         global $modulePath;
 
         $inSelfModule = false;
-        if(strpos($view, '/') === false){
+        if($modulePath != '' && strpos($view, '/') === false){
             $inSelfModule = true;
         }
 

@@ -55,14 +55,15 @@ class Route
         if (self::$className != '' && self::$methodName != '' &&
             strtolower(self::$className) != strtolower(self::$rootController)) {
 
-            $modulePath = trim('modules/' . trim(strtolower(str_replace('Controller', '', self::$className))), '/') . '/';
+            $_modulePath = trim('modules/' . trim(strtolower(str_replace('Controller', '', self::$className))), '/') . '/';
             self::$className = ucfirst(self::$className);
 
             if (file_exists(APP_PATH . 'controllers/' . self::$className . '.php')) {
                 require_once APP_PATH . 'controllers/' . self::$className . '.php';
                 self::callClassMethod();
-            } elseif (file_exists(APP_PATH . $modulePath . 'controllers/' . self::$className . '.php')) {
-                require_once APP_PATH . $modulePath . 'controllers/' . self::$className . '.php';
+            } elseif (file_exists(APP_PATH . $_modulePath . 'controllers/' . self::$className . '.php')) {
+                require_once APP_PATH . $_modulePath . 'controllers/' . self::$className . '.php';
+                $modulePath = $_modulePath;
                 self::callClassMethod();
             } elseif (file_exists(APP_PATH . 'views/404.blade.php')) {
                 require_once FW_PATH . 'core/' . self::$page404 . '.php';
