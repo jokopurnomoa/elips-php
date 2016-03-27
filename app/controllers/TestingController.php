@@ -179,11 +179,10 @@ class TestingController extends BaseController
     {
         Load::library('Email');
 
-        Email::smtp(true);
         Email::host('smtp.gmail.com');
         Email::username('email@gmail.com');
         Email::password('secret');
-        Email::SMTPSecure('ssl');
+        Email::encryption('ssl');
         Email::port(465);
 
         Email::from('email@gmail.com', 'Name');
@@ -194,7 +193,7 @@ class TestingController extends BaseController
         Email::message('Message Test');
         Email::send();
 
-        echo Email::getErrorInfo();
+        print_r(Email::getSendingMessage());
     }
 
     public function session()

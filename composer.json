@@ -1,6 +1,6 @@
 {
     "require": {
-        "phpmailer/phpmailer": "~5.2",
+        "swiftmailer/swiftmailer": "@stable",
         "gregwar/captcha": "1.*",
         "jasongrimes/paginator": "~1.0"
     }

@@ -9,31 +9,31 @@
 class Email
 {
 
-    private static $phpMailer;
+    private static $host;
+    private static $port;
+    private static $encryption;
+    private static $username;
+    private static $password;
+
+    private static $from;
+    private static $to;
+    private static $subject;
+    private static $body;
+    private static $altBody;
+    private static $replyTo;
+    private static $cc;
+    private static $bcc;
+    private static $attachment;
+    private static $html = false;
+
+    private static $sendingMessage;
 
     /**
      * Initialize Library
      */
     public static function init()
     {
-        require MAIN_PATH . 'vendor/PHPMailer/PHPMailerAutoload.php';
-        self::$phpMailer = new PHPMailer();
-        self::$phpMailer->isMail();
-    }
-
-    /**
-     * Set SMTP Mail
-     *
-     * @param $status
-     * @return bool
-     */
-    public static function smtp($status)
-    {
-        if ($status === true) {
-            self::$phpMailer->SMTPAuth = true;
-            return self::$phpMailer->isSMTP();
-        }
-        return false;
+        require MAIN_PATH . 'vendor/swiftmailer/swiftmailer/lib/swift_required.php';
     }
 
     /**
@@ -43,7 +43,7 @@ class Email
      */
     public static function host($host)
     {
-        self::$phpMailer->Host = $host;
+        self::$host = $host;
     }
 
     /**
@@ -53,7 +53,7 @@ class Email
      */
     public static function username($username)
     {
-        self::$phpMailer->Username = $username;
+        self::$username = $username;
     }
 
     /**
@@ -63,17 +63,17 @@ class Email
      */
     public static function password($password)
     {
-        self::$phpMailer->Password = $password;
+        self::$password = $password;
     }
 
     /**
-     * Set SMTP Secure
+     * Set Encryption
      *
-     * @param $smtp_secure ('ssl' OR 'tls' OR other)
+     * @param $encryption
      */
-    public static function SMTPSecure($smtp_secure)
+    public static function encryption($encryption)
     {
-        self::$phpMailer->SMTPSecure = $smtp_secure;
+        self::$encryption = $encryption;
     }
 
     /**
@@ -83,7 +83,7 @@ class Email
      */
     public static function port($port)
     {
-        self::$phpMailer->Port = $port;
+        self::$port = $port;
     }
 
     /**
@@ -93,9 +93,13 @@ class Email
      * @param $name
      * @return mixed
      */
-    public static function from($email, $name)
+    public static function from($emailOrFrom, $name = null)
     {
-        return self::$phpMailer->setFrom($email, $name);
+        if ($name != null) {
+            self::$from = array($emailOrFrom => $name);
+        } elseif (is_array($emailOrFrom)) {
+            self::$from = $emailOrFrom;
+        }
     }
 
     /**
@@ -107,7 +111,13 @@ class Email
      */
     public static function to($email, $name = '')
     {
-        return self::$phpMailer->addAddress($email, $name);
+        if (is_array($email)) {
+            self::$to = $email;
+        } elseif ($name != '') {
+            self::$to = array($email => $name);
+        } else {
+            self::$to = array($email);
+        }
     }
 
     /**
@@ -119,7 +129,11 @@ class Email
      */
     public static function replyTo($email, $name)
     {
-        return self::$phpMailer->addReplyTo($email, $name);
+        if (is_array($email)) {
+            self::$replyTo = $email;
+        } else {
+            self::$replyTo = array($email => $name);
+        }
     }
 
     /**
@@ -130,7 +144,7 @@ class Email
      */
     public static function cc($email)
     {
-        return self::$phpMailer->addCC($email);
+        self::$cc = $email;
     }
 
     /**
@@ -141,7 +155,7 @@ class Email
      */
     public static function bcc($email)
     {
-        return self::$phpMailer->addBCC($email);
+        self::$bcc = $email;
     }
 
     /**
@@ -152,7 +166,7 @@ class Email
      */
     public static function attachment($file)
     {
-        return self::$phpMailer->addAttachment($file);
+        self::$attachment = $file;
     }
 
     /**
@@ -163,10 +177,9 @@ class Email
      */
     public static function html($option)
     {
-        if($option === true){
-            return self::$phpMailer->isHTML();
+        if ($option === true) {
+            self::$html = true;
         }
-        return false;
     }
 
     /**
@@ -176,7 +189,7 @@ class Email
      */
     public static function subject($subject)
     {
-         self::$phpMailer->Subject = $subject;
+        self::$subject = $subject;
     }
 
     /**
@@ -186,7 +199,7 @@ class Email
      */
     public static function message($body)
     {
-        self::$phpMailer->Body = $body;
+        self::$body = $body;
     }
 
     /**
@@ -194,9 +207,66 @@ class Email
      *
      * @param $alt_body
      */
-    public static function altBody($alt_body)
+    public static function altMessage($altBody)
     {
-        self::$phpMailer->AltBody = $alt_body;
+        self::$altBody = $altBody;
+    }
+
+    /**
+     * Set email configuration
+     *
+     * @param array $config
+     */
+    public static function setConfig($config)
+    {
+        if (is_array($config)) {
+            if ($config != null) {
+                foreach ($config as $key => $value) {
+                    switch ($key) {
+                        case 'host'         : self::host($value);break;
+                        case 'username'     : self::username($value);break;
+                        case 'password'     : self::password($value);break;
+                        case 'encryption'   : self::encryption($value);break;
+                        case 'port'         : self::port($value);break;
+
+                        case 'from'         : self::from($value);break;
+                        case 'to'           : self::to($value);break;
+                        case 'cc'           : self::cc($value);break;
+                        case 'bcc'          : self::bcc($value);break;
+
+                        case 'html'         : self::html($value);break;
+                        case 'subject'      : self::subject($value);break;
+                        case 'message'      : self::message($value);break;
+                        case 'altMessage'   : self::altMessage($value);break;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Reset email configuration
+     */
+    public static function resetConfig()
+    {
+        self::$host = null;
+        self::$port = null;
+        self::$encryption = null;
+        self::$username = null;
+        self::$password = null;
+
+        self::$from = null;
+        self::$to = null;
+        self::$subject = null;
+        self::$body = null;
+        self::$altBody = null;
+        self::$replyTo = null;
+        self::$cc = null;
+        self::$bcc = null;
+        self::$attachment = null;
+        self::$html = false;
+
+        self::$sendingMessage = null;
     }
 
     /**
@@ -206,27 +276,65 @@ class Email
      */
     public static function send()
     {
-        return self::$phpMailer->send();
+        if (self::$encryption != null) {
+            $transport = Swift_SmtpTransport::newInstance(self::$host, self::$port, self::$encryption);
+        } else {
+            $transport = Swift_SmtpTransport::newInstance(self::$host, self::$port);
+        }
+
+        $transport->setUsername(self::$username)->setPassword(self::$password);
+
+        $mailer = Swift_Mailer::newInstance($transport);
+
+        $message = Swift_Message::newInstance()
+            ->setSubject(self::$subject)
+            ->setFrom(self::$from)
+            ->setTo(self::$to)
+            ->setBody(self::$body);
+
+        if (self::$altBody != null) {
+            $message->addPart(self::$altBody);
+        }
+
+        if (self::$attachment != null) {
+            $message->attach(Swift_Attachment::fromPath(self::$attachment));
+        }
+
+        if (self::$cc != null){
+            $message->setCc(self::$cc);
+        }
+
+        if (self::$bcc != null){
+            $message->setBcc(self::$bcc);
+        }
+
+        if (self::$html) {
+            $message->setContentType('text/html');
+        } else {
+            $message->setContentType('text/plain');
+        }
+
+        $result = false;
+        try {
+            if ($mailer->send($message)) {
+                $result = true;
+            }
+        } catch (Swift_TransportException $e) {
+            self::$sendingMessage = $e->getMessage();
+            $mailer->getTransport()->stop();
+        }
+
+        return $result;
     }
 
     /**
-     * Get Error Info
+     * Get sending message
      *
      * @return mixed
      */
-    public static function getErrorInfo()
+    public static function getSendingMessage()
     {
-        return self::$phpMailer->ErrorInfo;
+        return self::$sendingMessage;
     }
 
-    /**
-     * Set Timeout
-     *
-     * @param int $time
-     * @return int
-     */
-    public static function setTimeout($time = 30)
-    {
-        return self::$phpMailer->Timeout = $time;
-    }
 }
