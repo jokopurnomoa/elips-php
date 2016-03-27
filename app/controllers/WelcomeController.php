@@ -6,9 +6,11 @@
  * Time: 12:02 PM
  */
 
-class WelcomeController extends Controller {
+class WelcomeController extends Controller
+{
 
-    public function index(){
+    public function index()
+    {
 
         Blade::render('welcome');
 

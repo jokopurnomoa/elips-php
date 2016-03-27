@@ -6,9 +6,11 @@
  * Time: 12:02 PM
  */
 
-class ExampleController {
+class ExampleController
+{
 
-    public function index(){
+    public function index()
+    {
         Blade::render('example');
     }
 

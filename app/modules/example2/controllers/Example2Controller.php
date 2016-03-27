@@ -6,9 +6,11 @@
  * Time: 12:02 PM
  */
 
-class Example2Controller extends BaseController {
+class Example2Controller extends BaseController
+{
 
-    public function index(){
+    public function index()
+    {
 
         Load::library('DB');
         Load::model('Example2');

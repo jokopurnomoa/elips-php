@@ -9,9 +9,11 @@
 use JasonGrimes\Paginator;
 use Gregwar\Captcha\CaptchaBuilder;
 
-class TestingController extends BaseController {
+class TestingController extends BaseController
+{
 
-    public function index(){
+    public function index()
+    {
         Load::library('DB');
         Load::model('Member');
 
@@ -30,11 +32,13 @@ class TestingController extends BaseController {
             ));
     }
 
-    public function ajax(){
+    public function ajax()
+    {
         Blade::render('ajax');
     }
 
-    public function cache(){
+    public function cache()
+    {
 
         Load::library('DB');
 
@@ -60,7 +64,8 @@ class TestingController extends BaseController {
         echo '</pre>';
     }
 
-    public function database(){
+    public function database()
+    {
         Load::library('DB');
 
         DB::beginTransaction();
@@ -71,7 +76,8 @@ class TestingController extends BaseController {
         DB::commit();
     }
 
-    public function database2(){
+    public function database2()
+    {
         Load::library('DB');
 
         $sql = "SELECT * FROM member WHERE email = ? AND name LIKE ?";
@@ -81,7 +87,8 @@ class TestingController extends BaseController {
         echo '</pre>';
     }
 
-    public function database3(){
+    public function database3()
+    {
         Load::library('DB');
 
         $data = DB::table('member')
@@ -118,7 +125,8 @@ class TestingController extends BaseController {
             ->delete();
     }
 
-    public function database4(){
+    public function database4()
+    {
         Load::library('DB');
 
         $db2 = DB::getInstance(get_app_config('db', 'optional'));
@@ -139,7 +147,8 @@ class TestingController extends BaseController {
         echo '</pre>';
     }
 
-    public function sqlite(){
+    public function sqlite()
+    {
         Load::library('DB');
 
         DB::createTable('member', array(
@@ -166,7 +175,8 @@ class TestingController extends BaseController {
         print_r($data);
     }
 
-    public function email(){
+    public function email()
+    {
         Load::library('Email');
 
         Email::smtp(true);
@@ -187,7 +197,8 @@ class TestingController extends BaseController {
         echo Email::getErrorInfo();
     }
 
-    public function session(){
+    public function session()
+    {
         Load::library('Session');
 
         Session::set('name', 'Joko');
@@ -201,21 +212,25 @@ class TestingController extends BaseController {
         echo Session::get('address');
     }
 
-    public function sessionDestroy(){
+    public function sessionDestroy()
+    {
         Load::library('Session');
 
         Session::destroy();
     }
 
-    public function methodGet(){
+    public function methodGet()
+    {
         echo get_input('name');
     }
 
-    public function memory(){
+    public function memory()
+    {
         echo Benchmark::memoryUsage();
     }
 
-    public function sanitize(){
+    public function sanitize()
+    {
         Load::library('Sanitize');
         Load::library('Validate');
 
@@ -230,7 +245,8 @@ class TestingController extends BaseController {
         }
     }
 
-    public function cookie(){
+    public function cookie()
+    {
         Load::library('Cookie');
 
         Cookie::set('test', 'AAA');
@@ -239,11 +255,13 @@ class TestingController extends BaseController {
 
     }
 
-    public function showMessage(){
+    public function showMessage()
+    {
         echo 'This is a test message';
     }
 
-    public function resizeImage(){
+    public function resizeImage()
+    {
         Load::library('ImageLib');
 
         ImageLib::setConfig(array(
@@ -258,7 +276,8 @@ class TestingController extends BaseController {
         ImageLib::resize();
     }
 
-    public function security(){
+    public function security()
+    {
         Load::library('Session');
         Security::generateCSRFToken('test');
         echo Security::getCSRFToken('test');
@@ -266,7 +285,8 @@ class TestingController extends BaseController {
         echo Security::xssFilter('<script>alert("malicious code");</script>');
     }
 
-    public function curlGet(){
+    public function curlGet()
+    {
         echo '<pre>';
         echo 'ID   : ' . Input::get('id');
         echo '<br>';
@@ -274,7 +294,8 @@ class TestingController extends BaseController {
         echo '</pre>';
     }
 
-    public function curlPost(){
+    public function curlPost()
+    {
         echo '<pre>';
         echo 'ID   : ' . Input::post('id');
         echo '<br>';
@@ -282,7 +303,8 @@ class TestingController extends BaseController {
         echo '</pre>';
     }
 
-    public function curl(){
+    public function curl()
+    {
         Load::library('CURL');
 
         echo 'CURL get<br>';
@@ -291,7 +313,8 @@ class TestingController extends BaseController {
         echo CURL::post(URI::baseUrl() . 'testing/curl_post', array('id' => 200, 'name' => 'Joko Purnomo A'));
     }
 
-    public function pagination(){
+    public function pagination()
+    {
         require MAIN_PATH . 'vendor/php-paginator/src/JasonGrimes/Paginator.php';
 
         $totalItems = 100000;
@@ -304,7 +327,8 @@ class TestingController extends BaseController {
         echo $paginator;
     }
 
-    public function captcha(){
+    public function captcha()
+    {
         Load::library('Session');
 
         require MAIN_PATH . 'vendor/Gregwar/Captcha/autoload.php';

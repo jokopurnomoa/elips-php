@@ -1,6 +1,7 @@
 <?php
 
-class Example extends Model {
+class Example extends Model
+{
 
     protected $table = 'member';
 
