@@ -315,7 +315,7 @@ class TestingController extends BaseController
 
     public function pagination()
     {
-        require MAIN_PATH . 'vendor/php-paginator/src/JasonGrimes/Paginator.php';
+        require MAIN_PATH . 'vendor/jasongrimes/paginator/src/JasonGrimes/Paginator.php';
 
         $totalItems = 100000;
         $itemsPerPage = 50;
@@ -331,7 +331,7 @@ class TestingController extends BaseController
     {
         Load::library('Session');
 
-        require MAIN_PATH . 'vendor/Gregwar/Captcha/autoload.php';
+        require MAIN_PATH . 'vendor/gregwar/captcha/autoload.php';
 
         $builder = new CaptchaBuilder;
         $builder->build();

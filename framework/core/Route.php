@@ -90,7 +90,7 @@ class Route
                 return $route['404'];
             }
         }
-        return 'Error';
+        return 'Error404';
     }
 
     /**

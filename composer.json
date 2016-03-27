@@ -1,0 +1,7 @@
+{
+    "require": {
+        "phpmailer/phpmailer": "~5.2",
+        "gregwar/captcha": "1.*",
+        "jasongrimes/paginator": "~1.0"
+    }
+}
