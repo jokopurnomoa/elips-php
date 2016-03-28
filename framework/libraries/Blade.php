@@ -246,12 +246,7 @@ class Blade
                 $__extend = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 2);
                 $__buffer = self::str_replace_first($__extend, '', $__buffer);
 
-                ob_start();
-                require(APP_PATH . 'views/' . $__view . '.blade.php');
-                $__view_buffer = ob_get_contents();
-                @ob_end_clean();
-
-                $parent_view = $__view_buffer;
+                $parent_view = read_file(APP_PATH . 'views/' . $__view . '.blade.php');
             } else {
                 break;
             }
@@ -275,12 +270,9 @@ class Blade
                 $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 1);
                 $__view = str_replace('.', '/', str_replace('\'', '', substr($__buffer, $__start_pos + strlen(self::$includeTag) + 1, $__end_pos - $__start_pos  - (strlen(self::$includeTag) + 1))));
 
-                ob_start();
-                require(APP_PATH . 'views/' . $__view . '.blade.php');
-                $__view_buffer = ob_get_contents();
-                @ob_end_clean();
-
+                $__view_buffer = read_file(APP_PATH . 'views/' . $__view . '.blade.php');
                 $__buffer = self::str_replace_first($__var, $__view_buffer, $__buffer);
+
             } else {
                 break;
             }

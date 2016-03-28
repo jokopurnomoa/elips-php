@@ -20,7 +20,7 @@ $config['db'] = array(
     ),
 
     'optional' => array(
-        'host'      => 'mysqli',
+        'host'      => 'localhost',
         'user'      => 'root',
         'pass'      => '',
         'db'        => 'elips',
