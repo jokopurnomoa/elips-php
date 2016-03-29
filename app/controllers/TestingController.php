@@ -302,8 +302,6 @@ class TestingController extends BaseController
 
     public function pagination()
     {
-        require MAIN_PATH . 'vendor/jasongrimes/paginator/src/JasonGrimes/Paginator.php';
-
         $totalItems = 100000;
         $itemsPerPage = 50;
         $currentPage = 1900;
@@ -316,8 +314,6 @@ class TestingController extends BaseController
 
     public function captcha()
     {
-        require MAIN_PATH . 'vendor/gregwar/captcha/autoload.php';
-
         $builder = new CaptchaBuilder;
         $builder->build();
 
