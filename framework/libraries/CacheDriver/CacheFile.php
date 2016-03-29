@@ -7,6 +7,8 @@
 
 namespace Elips\Libraries\CacheDriver;
 
+use Elips\Libraries\Encryption;
+
 class CacheFile
 {
 
