@@ -8,6 +8,8 @@
 
 namespace Elips\Libraries;
 
+use Elips\Core\Load;
+
 class View
 {
 

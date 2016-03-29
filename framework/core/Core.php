@@ -23,18 +23,8 @@ class Core
     {
         require FW_PATH . 'Helpers/file.php';
         require FW_PATH . 'Helpers/input.php';
-        /*
-        Load::library('URI');
-        Load::library('Encryption');
-        Load::library('Cookie');
-        Load::library('Security');
-        Load::library('Cache');
-        Load::library('Blade');
-        Load::library('Input');
-        Load::helper('input');
 
         $this->handleAutoload();
-        */
         Route::run();
     }
 
@@ -52,8 +42,6 @@ class Core
         }
 
         $this->autoloadLanguage($autoload);
-        $this->autoloadLibraries($autoload);
-        $this->autoloadModels($autoload);
         $this->autoloadHelpers($autoload);
     }
 
@@ -68,38 +56,6 @@ class Core
             if ($autoload['languages'] != null) {
                 foreach ($autoload['languages'] as $language) {
                     Load::language($language);
-                }
-            }
-        }
-    }
-
-    /**
-     * Autoload Libraries
-     *
-     * @param $autoload
-     */
-    private function autoloadLibraries($autoload)
-    {
-        if (isset($autoload['libraries'])) {
-            if ($autoload['libraries'] != null) {
-                foreach ($autoload['libraries'] as $library) {
-                    Load::library($library);
-                }
-            }
-        }
-    }
-
-    /**
-     * Autoload Models
-     *
-     * @param $autoload
-     */
-    private function autoloadModels($autoload)
-    {
-        if (isset($autoload['models'])) {
-            if ($autoload['models'] != null) {
-                foreach ($autoload['models'] as $model) {
-                    Load::model($model);
                 }
             }
         }

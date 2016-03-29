@@ -9,6 +9,7 @@
 namespace App\Controllers;
 
 use App\Models\Member;
+use Elips\Core\Load;
 use Elips\Libraries\Blade;
 use Elips\Libraries\DB;
 use Elips\Libraries\Benchmark;
@@ -23,6 +24,7 @@ use Elips\Libraries\Validate;
 use Elips\Libraries\Security;
 use Elips\Libraries\Input;
 use Elips\Libraries\Encryption;
+use Elips\Libraries\View;
 use JasonGrimes\Paginator;
 use Gregwar\Captcha\CaptchaBuilder;
 
