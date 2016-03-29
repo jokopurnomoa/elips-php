@@ -38,10 +38,10 @@ class CacheAPC
      *
      * @param string $flag
      * @param mixed  $data
-     * @param int    $max_age
+     * @param int    $maxAge
      * @return bool
      */
-    public function store($flag, $data, $max_age = 60)
+    public function store($flag, $data, $maxAge = 60)
     {
         if ($this->cacheActive) {
             if ($this->cacheEncrypt) {

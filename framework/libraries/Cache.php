@@ -44,13 +44,13 @@ class Cache
      *
      * @param string $flag
      * @param mixed  $data
-     * @param int    $max_age
+     * @param int    $maxAge
      * @return bool
      */
-    public static function store($flag, $data, $max_age = 60)
+    public static function store($flag, $data, $maxAge = 60)
     {
         self::init();
-        return self::$cacheDriver->store($flag, $data, $max_age);
+        return self::$cacheDriver->store($flag, $data, $maxAge);
     }
 
     /**
@@ -58,13 +58,13 @@ class Cache
      *
      * @param string $flag
      * @param mixed  $data
-     * @param int    $max_age
+     * @param int    $maxAge
      * @return bool
      */
-    public static function save($flag, $data, $max_age = 60)
+    public static function save($flag, $data, $maxAge = 60)
     {
         self::init();
-        return self::$cacheDriver->store($flag, $data, $max_age);
+        return self::$cacheDriver->store($flag, $data, $maxAge);
     }
 
     /**
