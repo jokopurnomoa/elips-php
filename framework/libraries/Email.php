@@ -11,6 +11,7 @@ namespace Elips\Libraries;
 class Email
 {
 
+    private static $smtp = true;
     private static $host;
     private static $port;
     private static $encryption;
@@ -29,6 +30,16 @@ class Email
     private static $html = false;
 
     private static $sendingMessage;
+
+    /**
+     * Set Hostname
+     *
+     * @param $host
+     */
+    public static function smtp($smtp)
+    {
+        self::$smtp = $smtp;
+    }
 
     /**
      * Set Hostname
@@ -270,11 +281,16 @@ class Email
      */
     public static function send()
     {
-        if (self::$encryption != null) {
-            $transport = \Swift_SmtpTransport::newInstance(self::$host, self::$port, self::$encryption);
+        if (self::$smtp){
+            if (self::$encryption != null) {
+                $transport = \Swift_SmtpTransport::newInstance(self::$host, self::$port, self::$encryption);
+            } else {
+                $transport = \Swift_SmtpTransport::newInstance(self::$host, self::$port);
+            }
         } else {
-            $transport = \Swift_SmtpTransport::newInstance(self::$host, self::$port);
+            $transport = \Swift_SmtpTransport::newInstance();
         }
+
 
         $transport->setUsername(self::$username)->setPassword(self::$password);
 
