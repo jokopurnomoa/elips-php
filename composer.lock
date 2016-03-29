@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "aef06dbd7e54130400ca968df614d22e",
-    "content-hash": "0b096afb0500277fed253f25b34dcd1b",
+    "hash": "e9caf775fcc6d6226824f42b6fc7a6bc",
+    "content-hash": "1ce7bf64c41516fb6c5b4595380306dc",
     "packages": [
         {
             "name": "gregwar/captcha",
@@ -157,9 +157,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "swiftmailer/swiftmailer": 0
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

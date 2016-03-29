@@ -1,6 +1,6 @@
 {
     "require": {
-        "swiftmailer/swiftmailer": "@stable",
+        "swiftmailer/swiftmailer": "5.4.*",
         "gregwar/captcha": "1.*",
         "jasongrimes/paginator": "~1.0"
     }

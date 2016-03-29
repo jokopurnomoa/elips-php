@@ -14,6 +14,16 @@
             font-weight: 100;
             padding-top: 200px;
         }
+
+        .footer{
+            width: 100%;
+            text-align: center;
+            font-weight: 300;
+            font-size: 13px;
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+        }
     </style>
 </head>
 <body>
