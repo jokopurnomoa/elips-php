@@ -10,12 +10,12 @@ namespace Elips\Libraries;
 class ImageLib
 {
 
-    private static $image_library = 'gd2';
-    private static $source_image = '';
-    private static $new_image = '';
-    private static $create_thumb = false;
-    private static $maintain_ratio = true;
-    private static $maintain_size = true;
+    private static $imageLibrary = 'gd2';
+    private static $sourceImage = '';
+    private static $newImage = '';
+    private static $createThumb = false;
+    private static $maintainRatio = true;
+    private static $maintainSize = true;
     private static $width = 0;
     private static $height = 0;
     private static $quality = 100;
@@ -39,12 +39,12 @@ class ImageLib
      */
     public static function resetConfig()
     {
-        self::$image_library = 'gd2';
-        self::$source_image = '';
-        self::$new_image = '';
-        self::$create_thumb = false;
-        self::$maintain_ratio = true;
-        self::$maintain_size = true;
+        self::$imageLibrary = 'gd2';
+        self::$sourceImage = '';
+        self::$newImage = '';
+        self::$createThumb = false;
+        self::$maintainRatio = true;
+        self::$maintainSize = true;
         self::$width = 0;
         self::$height = 0;
         self::$quality = 100;
@@ -62,18 +62,18 @@ class ImageLib
             self::$quality = 0;
         }
 
-        if (self::$source_image != '') {
-            $source_image_path = str_replace('//', '/', __DIR__ . '/../../' . self::$source_image);
-            $source_new_image_path = str_replace('//', '/', __DIR__ . '/../../' . self::$new_image);
+        if (self::$sourceImage != '') {
+            $sourceImagePath = str_replace('//', '/', __DIR__ . '/../../' . self::$sourceImage);
+            $sourceNewImagePath = str_replace('//', '/', __DIR__ . '/../../' . self::$newImage);
 
-            if (file_exists($source_image_path)) {
-                if (self::$image_library === 'gd2') {
-                    self::resizeGD2($source_image_path, $source_new_image_path);
+            if (file_exists($sourceImagePath)) {
+                if (self::$imageLibrary === 'gd2') {
+                    self::resizeGD2($sourceImagePath, $sourceNewImagePath);
                 } elseif(APP_ENV === 'development') {
                     error_dump('Image library not supported!');die();
                 }
             } elseif (APP_ENV === 'development') {
-                error_dump('File \''.self::$source_image.'\' not found!');
+                error_dump('File \''.self::$sourceImage.'\' not found!');
             }
         }
     }
@@ -81,31 +81,31 @@ class ImageLib
     /**
      * Resize Image Using GD2 Library
      *
-     * @param $source_image_path
-     * @param $source_new_image_path
+     * @param $sourceImagePath
+     * @param $sourceNewImagePath
      */
-    private static function resizeGD2($source_image_path, $source_new_image_path)
+    private static function resizeGD2($sourceImagePath, $sourceNewImagePath)
     {
-        $ext = trim(pathinfo($source_image_path, PATHINFO_EXTENSION));
+        $ext = trim(pathinfo($sourceImagePath, PATHINFO_EXTENSION));
 
-        list($width, $height) = getimagesize($source_image_path);
+        list($width, $height) = getimagesize($sourceImagePath);
 
         $source = null;
         if ($ext === 'png') {
-            $source = imagecreatefrompng($source_image_path);
+            $source = imagecreatefrompng($sourceImagePath);
         } elseif ($ext === 'jpg' || $ext === 'jpeg') {
-            $source = imagecreatefromjpeg($source_image_path);
+            $source = imagecreatefromjpeg($sourceImagePath);
         } elseif ($ext === 'gif') {
-            $source = imagecreatefromgif($source_image_path);
+            $source = imagecreatefromgif($sourceImagePath);
         } elseif ($ext === 'bmp') {
-            $source = imagecreatefromwbmp($source_image_path);
+            $source = imagecreatefromwbmp($sourceImagePath);
         } elseif (APP_ENV === 'development') {
             error_dump('Image format not supported!');die();
         }
 
         if ($source != null) {
             $is_size_maintained = false;
-            if (self::$maintain_size) {
+            if (self::$maintainSize) {
                 if (self::$width > $width && self::$height > $height) {
                     self::$width = $width;
                     self::$height = $height;
@@ -114,7 +114,7 @@ class ImageLib
             }
 
             if (!$is_size_maintained) {
-                if (self::$maintain_ratio) {
+                if (self::$maintainRatio) {
                     if ($width > $height) {
                         self::$height = self::$width / ($width / $height);
                     } elseif ($width < $height) {
@@ -129,13 +129,13 @@ class ImageLib
             imagecopyresized($thumb, $source, 0, 0, 0, 0, self::$width, self::$height, $width, $height);
 
             if ($ext === 'png') {
-                self::$new_image != '' ? imagepng($thumb, $source_new_image_path, self::$quality) : imagepng($thumb, $source_image_path, self::$quality);
+                self::$newImage != '' ? imagepng($thumb, $sourceNewImagePath, self::$quality) : imagepng($thumb, $sourceImagePath, self::$quality);
             } elseif ($ext === 'jpg' || $ext === 'jpeg') {
-                self::$new_image != '' ? imagejpeg($thumb, $source_new_image_path, self::$quality) : imagejpeg($thumb, $source_image_path, self::$quality);
+                self::$newImage != '' ? imagejpeg($thumb, $sourceNewImagePath, self::$quality) : imagejpeg($thumb, $sourceImagePath, self::$quality);
             } elseif($ext === 'gif') {
-                self::$new_image != '' ? imagegif($thumb, $source_new_image_path, self::$quality) : imagegif($thumb, $source_image_path, self::$quality);
+                self::$newImage != '' ? imagegif($thumb, $sourceNewImagePath, self::$quality) : imagegif($thumb, $sourceImagePath, self::$quality);
             } elseif($ext === 'bmp') {
-                self::$new_image != '' ? imagewbmp($thumb, $source_new_image_path, self::$quality) : imagewbmp($thumb, $source_image_path, self::$quality);
+                self::$newImage != '' ? imagewbmp($thumb, $sourceNewImagePath, self::$quality) : imagewbmp($thumb, $sourceImagePath, self::$quality);
             }
 
         }
