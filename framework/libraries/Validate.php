@@ -109,36 +109,36 @@ class Validate
     /**
      * Validate Regular Expression
      *
-     * @param $reg_exp
+     * @param $regExp
      * @return mixed
      */
-    public static function regExp($reg_exp)
+    public static function regExp($regExp)
     {
-        return filter_var($reg_exp, FILTER_VALIDATE_REGEXP);
+        return filter_var($regExp, FILTER_VALIDATE_REGEXP);
     }
 
     /**
      * Validate Minimum Length
      *
      * @param $string
-     * @param $min_length
+     * @param $minLength
      * @return bool
      */
-    public static function minLength($string, $min_length)
+    public static function minLength($string, $minLength)
     {
-        return strlen($string) >= $min_length ? true : false;
+        return strlen($string) >= $minLength ? true : false;
     }
 
     /**
      * Validate Maximum Length
      *
      * @param $string
-     * @param $max_length
+     * @param $maxLength
      * @return bool
      */
-    public static function maxLength($string, $max_length)
+    public static function maxLength($string, $maxLength)
     {
-        return strlen($string) <= $max_length ? true : false;
+        return strlen($string) <= $maxLength ? true : false;
     }
 
 }
