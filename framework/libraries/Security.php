@@ -13,10 +13,10 @@ class Security
     /**
      * Generate CSRF Token
      *
-     * @param $token_name
+     * @param $tokenName
      * @return string
      */
-    public static function generateCSRFToken($token_name)
+    public static function generateCSRFToken($tokenName)
     {
         if (function_exists('openssl_random_pseudo_bytes')) {
             $token = sha1(bin2hex(openssl_random_pseudo_bytes(40, $cstrong)));
@@ -24,31 +24,31 @@ class Security
             $token = sha1(uniqid() . rand(0, 99999999));
         }
 
-        Session::set('CSRF_TOKEN_' . $token_name, $token);
+        Session::set('CSRF_TOKEN_' . $tokenName, $token);
         return $token;
     }
 
     /**
      * Get CSRF Token
      *
-     * @param $token_name
+     * @param $tokenName
      * @return mixed
      */
-    public static function getCSRFToken($token_name)
+    public static function getCSRFToken($tokenName)
     {
-        return Session::get('CSRF_TOKEN_' . $token_name);
+        return Session::get('CSRF_TOKEN_' . $tokenName);
     }
 
     /**
      * Check Token Valid
      *
-     * @param $token_name
+     * @param $tokenName
      * @param $token
      * @return bool
      */
-    public static function isCSRFTokenValid($token_name, $token)
+    public static function isCSRFTokenValid($tokenName, $token)
     {
-        if (Session::get('CSRF_TOKEN_' . $token_name) === $token) {
+        if (Session::get('CSRF_TOKEN_' . $tokenName) === $token) {
             return true;
         }
         return false;
