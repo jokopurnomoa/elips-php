@@ -16,13 +16,29 @@ class Core
      */
     public $data;
 
+    public function __construct()
+    {
+        /**
+         * Initialize
+         */
+        $GLOBALS['config'] = null;
+        $GLOBALS['lang'] = null;
+        $GLOBALS['modulePath'] = '';
+    }
+
     /**
      * Run Core
      */
     public function run()
     {
+        /**
+         * Require main helper
+         */
         require FW_PATH . 'Helpers/file.php';
         require FW_PATH . 'Helpers/input.php';
+        require FW_PATH . 'Helpers/error.php';
+        require FW_PATH . 'Helpers/url.php';
+        require FW_PATH . 'Helpers/config.php';
 
         /**
          * Require app config

@@ -1,24 +1,14 @@
 <?php
-
-/**
- * Register elips autoloader
- */
-require __DIR__ . '/framework/autoload.php';
-
-/**
- * Register composer autoloader
- */
-require __DIR__ . '/vendor/autoload.php';
-
-use Elips\Libraries\Benchmark;
-
-/**
- * Set application environtment
- *
- *      development
- *      testing
- *      production
- */
+/*
+|----------------------------------------------------------
+| Set application environtment
+|----------------------------------------------------------
+|
+|     development
+|     testing
+|     production
+|
+*/
 define('APP_ENV', 'development');
 
 /**
@@ -37,26 +27,6 @@ define('FW_PATH', __DIR__ . '/framework/');
 define('APP_PATH', __DIR__ . '/app/');
 
 /**
- * App config
- */
-$config = null;
-
-/**
- * Instance Core Class
- */
-$instance = null;
-
-/**
- * Language Var
- */
-$lang = null;
-
-/**
- * Module path
- */
-$modulePath = '';
-
-/**
  * Checking Application Environtment
  */
 if(APP_ENV === 'development'){
@@ -70,25 +40,20 @@ if(APP_ENV === 'development'){
 }
 
 /**
+ * Register elips autoloader
+ */
+require __DIR__ . '/framework/autoload.php';
+
+/**
+ * Register composer autoloader
+ */
+require __DIR__ . '/vendor/autoload.php';
+
+/**
  * Starting benchmark
  */
+use Elips\Libraries\Benchmark;
 Benchmark::startTime('execution_time');
-
-/**
- * Require error helper
- */
-require FW_PATH . 'Helpers/error.php';
-
-/**
- * Require url helper
- */
-require FW_PATH . 'Helpers/url.php';
-
-/**
- * Require config helper
- */
-require FW_PATH . 'Helpers/config.php';
-
 
 /**
  * Instantiate core class
