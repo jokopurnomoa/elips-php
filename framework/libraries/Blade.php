@@ -6,6 +6,8 @@
  *
  */
 
+namespace Elips\Libraries;
+
 class Blade
 {
 
@@ -50,6 +52,9 @@ class Blade
     {
         global $modulePath;
 
+        $isModular = false;
+        $modulePath = trim($modulePath, '\\');
+
         $inSelfModule = false;
         if($modulePath != '' && strpos($view, '/') === false){
             $inSelfModule = true;
@@ -59,13 +64,13 @@ class Blade
         $paths = explode('/', $view);
 
         if (strpos($view, '/') !== false) {
-            $modulePath = str_replace('//', '/', 'modules/' . $paths[0] . '/');
+            $modulePath = str_replace('//', '/', 'Modules/' . $paths[0] . '/');
             $module_view = trim(str_replace($paths[0] . '/', '', $view), '/');
         }
 
         $view = str_replace('.', '/', $view);
-        if (file_exists(APP_PATH . 'views/' . $view . '.blade.php') && $module_view === '' && !$inSelfModule) {
-            $__buffer = self::parse(read_file(APP_PATH . 'views/' . $view . '.blade.php'));
+        if (file_exists(APP_PATH . 'Views/' . $view . '.blade.php') && $module_view === '' && !$inSelfModule) {
+            $__buffer = self::parse(read_file(APP_PATH . 'Views/' . $view . '.blade.php'));
             $__buffer = self::run($__buffer, $data);
 
             if ($buffered) {
@@ -74,8 +79,8 @@ class Blade
                 echo $__buffer;
             }
         }
-        elseif (file_exists(APP_PATH . $modulePath . 'views/' . $view . '.blade.php')) {
-            $__buffer = self::parse(read_file(APP_PATH . $modulePath . 'views/' . $view . '.blade.php'));
+        elseif (file_exists(APP_PATH . 'Modules/' . $modulePath . '/Views/' . $view . '.blade.php')) {
+            $__buffer = self::parse(read_file(APP_PATH . 'Modules/' . $modulePath . '/Views/' . $view . '.blade.php'));
             $__buffer = self::run($__buffer, $data);
             if ($buffered) {
                 return $__buffer;
@@ -84,7 +89,12 @@ class Blade
             }
         }
         elseif (APP_ENV === 'development') {
-            error_dump('Blade : File \'' . APP_PATH . 'views/' . $view . '.blade.php\' not found!');
+            if ($isModular == true) {
+                error_dump('Blade : File \'' . APP_PATH . 'Modules/' . $modulePath . '/Views/' . $view . '.blade.php\' not found!');
+            } else {
+                error_dump('Blade : File \'' . APP_PATH . 'Views/' . $view . '.blade.php\' not found!');
+            }
+
             die();
         }
         return null;
@@ -246,7 +256,7 @@ class Blade
                 $__extend = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 2);
                 $__buffer = self::str_replace_first($__extend, '', $__buffer);
 
-                $parent_view = read_file(APP_PATH . 'views/' . $__view . '.blade.php');
+                $parent_view = read_file(APP_PATH . 'Views/' . $__view . '.blade.php');
             } else {
                 break;
             }
@@ -270,7 +280,7 @@ class Blade
                 $__var = substr($__buffer, $__start_pos, $__end_pos - $__start_pos + 1);
                 $__view = str_replace('.', '/', str_replace('\'', '', substr($__buffer, $__start_pos + strlen(self::$includeTag) + 1, $__end_pos - $__start_pos  - (strlen(self::$includeTag) + 1))));
 
-                $__view_buffer = read_file(APP_PATH . 'views/' . $__view . '.blade.php');
+                $__view_buffer = read_file(APP_PATH . 'Views/' . $__view . '.blade.php');
                 $__buffer = self::str_replace_first($__var, $__view_buffer, $__buffer);
 
             } else {

@@ -6,6 +6,23 @@
  * Time: 12:02 PM
  */
 
+namespace App\Controllers;
+
+use App\Models\Member;
+use Elips\Libraries\Blade;
+use Elips\Libraries\DB;
+use Elips\Libraries\Benchmark;
+use Elips\Libraries\Cache;
+use Elips\Libraries\Email;
+use Elips\Libraries\Session;
+use Elips\Libraries\Sanitize;
+use Elips\Libraries\ImageLib;
+use Elips\Libraries\Cookie;
+use Elips\Libraries\CURL;
+use Elips\Libraries\Validate;
+use Elips\Libraries\Security;
+use Elips\Libraries\Input;
+use Elips\Libraries\Encryption;
 use JasonGrimes\Paginator;
 use Gregwar\Captcha\CaptchaBuilder;
 
@@ -14,9 +31,6 @@ class TestingController extends BaseController
 
     public function index()
     {
-        Load::library('DB');
-        Load::model('Member');
-
         //$members = Member::all('*', 10);
         //$members = Member::where('email', 'LIKE', '%joko%')->get();
         //$members = Member::first();
@@ -39,8 +53,6 @@ class TestingController extends BaseController
 
     public function cache()
     {
-
-        Load::library('DB');
 
         Benchmark::startTime('get_data');
 
@@ -66,8 +78,6 @@ class TestingController extends BaseController
 
     public function database()
     {
-        Load::library('DB');
-
         DB::beginTransaction();
         DB::insert('test', array('val1' => 'A', 'val2' => 'B'));
         $insert_id = DB::insertId();
@@ -78,8 +88,6 @@ class TestingController extends BaseController
 
     public function database2()
     {
-        Load::library('DB');
-
         $sql = "SELECT * FROM member WHERE email = ? AND name LIKE ?";
         $data = DB::getAllQuery($sql, array('jokopurnomoa@gmail.com', '%Elips%'));
         echo '<pre>';
@@ -89,8 +97,6 @@ class TestingController extends BaseController
 
     public function database3()
     {
-        Load::library('DB');
-
         $data = DB::table('member')
             ->join('member_category', 'catm_id')
             ->select(array('*'))
@@ -127,8 +133,6 @@ class TestingController extends BaseController
 
     public function database4()
     {
-        Load::library('DB');
-
         $db2 = DB::getInstance(get_app_config('db', 'optional'));
         $db2->createTable('member', array(
             array('member_id', 'string(20) PRIMARY KEY'),
@@ -149,8 +153,6 @@ class TestingController extends BaseController
 
     public function sqlite()
     {
-        Load::library('DB');
-
         DB::createTable('member', array(
             array('member_id', 'VARCHAR(40)', 'PRIMARY KEY'),
             array('name', 'VARCHAR(100)'),
@@ -177,8 +179,6 @@ class TestingController extends BaseController
 
     public function email()
     {
-        Load::library('Email');
-
         Email::host('smtp.gmail.com');
         Email::username('email@gmail.com');
         Email::password('secret');
@@ -198,8 +198,6 @@ class TestingController extends BaseController
 
     public function session()
     {
-        Load::library('Session');
-
         Session::set('name', 'Joko');
         Session::set('email', 'jokopurnomoa@gmail.com');
         Session::set('address', 'Jl Dipatiukur No. 5 Bandung');
@@ -213,8 +211,6 @@ class TestingController extends BaseController
 
     public function sessionDestroy()
     {
-        Load::library('Session');
-
         Session::destroy();
     }
 
@@ -230,9 +226,6 @@ class TestingController extends BaseController
 
     public function sanitize()
     {
-        Load::library('Sanitize');
-        Load::library('Validate');
-
         $email = Sanitize::email('jokopurnomoa@gmail.com');
         if(Validate::email($email)){
             echo $email;
@@ -246,8 +239,6 @@ class TestingController extends BaseController
 
     public function cookie()
     {
-        Load::library('Cookie');
-
         Cookie::set('test', 'AAA');
         Cookie::delete('test');
         echo Cookie::get('test');
@@ -261,8 +252,6 @@ class TestingController extends BaseController
 
     public function resizeImage()
     {
-        Load::library('ImageLib');
-
         ImageLib::setConfig(array(
             'source_image' => './storage/the-lorax.jpg',
             'new_image' => './storage/the-lorax-thumb.jpg',
@@ -277,7 +266,6 @@ class TestingController extends BaseController
 
     public function security()
     {
-        Load::library('Session');
         Security::generateCSRFToken('test');
         echo Security::getCSRFToken('test');
         echo '<br>';
@@ -304,8 +292,6 @@ class TestingController extends BaseController
 
     public function curl()
     {
-        Load::library('CURL');
-
         echo 'CURL get<br>';
         echo CURL::get(URI::baseUrl() . 'testing/curl_get?id=100&name=Joko Purnomo A');
         echo '<br><br>CURL post<br>';
@@ -328,8 +314,6 @@ class TestingController extends BaseController
 
     public function captcha()
     {
-        Load::library('Session');
-
         require MAIN_PATH . 'vendor/gregwar/captcha/autoload.php';
 
         $builder = new CaptchaBuilder;
@@ -355,9 +339,6 @@ class TestingController extends BaseController
 
     public function complex()
     {
-        Load::library('DB');
-        Load::library('Session');
-
         $memberList = DB::table('member')
             ->limit(100)
             ->get();
@@ -374,7 +355,7 @@ class TestingController extends BaseController
         DB::commit();
 
         $sql = "SELECT * FROM member WHERE email = ? AND name LIKE ?";
-        $data = DB::getAllQuery($sql, array('jokopurnomoa@gmail.com', '%Elips%'));
+        $this->data['member_list'] = DB::getAllQuery($sql, array('jokopurnomoa@gmail.com', '%Elips%'));
 
         Blade::render('testing', $this->data);
     }

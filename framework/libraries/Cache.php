@@ -5,6 +5,11 @@
  *
  */
 
+namespace Elips\Libraries;
+
+use Elips\Libraries\CacheDriver\CacheFile;
+use Elips\Libraries\CacheDriver\CacheAPC;
+
 class Cache
 {
 
@@ -20,15 +25,19 @@ class Cache
         self::$cache_active = get_app_config('cache', 'active');
         self::$cache_encrypt = get_app_config('cache', 'encrypt');
         if (get_app_config('cache', 'driver') === 'file') {
-            require_once 'CacheDriver/CacheFile.php';
-            self::$cache_driver = new CacheFile();
-            self::$cache_driver->cache_active = self::$cache_active;
-            self::$cache_driver->cache_encrypt = self::$cache_encrypt;
+            //require_once 'CacheDriver/CacheFile.php';
+            if(self::$cache_driver === null){
+                self::$cache_driver = new CacheFile();
+                self::$cache_driver->cache_active = self::$cache_active;
+                self::$cache_driver->cache_encrypt = self::$cache_encrypt;
+            }
         } elseif(get_app_config('cache', 'driver') === 'apc') {
-            require_once 'CacheDriver/CacheAPC.php';
-            self::$cache_driver = new CacheAPC();
-            self::$cache_driver->cache_active = self::$cache_active;
-            self::$cache_driver->cache_encrypt = self::$cache_encrypt;
+            //require_once 'CacheDriver/CacheAPC.php';
+            if(self::$cache_driver === null) {
+                self::$cache_driver = new CacheAPC();
+                self::$cache_driver->cache_active = self::$cache_active;
+                self::$cache_driver->cache_encrypt = self::$cache_encrypt;
+            }
         }
     }
 
@@ -42,6 +51,7 @@ class Cache
      */
     public static function store($flag, $data, $max_age = 60)
     {
+        self::init();
         return self::$cache_driver->store($flag, $data, $max_age);
     }
 
@@ -55,6 +65,7 @@ class Cache
      */
     public static function save($flag, $data, $max_age = 60)
     {
+        self::init();
         return self::$cache_driver->store($flag, $data, $max_age);
     }
 
@@ -66,6 +77,7 @@ class Cache
      */
     public static function get($flag)
     {
+        self::init();
         return self::$cache_driver->get($flag);
     }
 
@@ -77,6 +89,7 @@ class Cache
      */
     public static function delete($flag)
     {
+        self::init();
         return self::$cache_driver->delete($flag);
     }
 

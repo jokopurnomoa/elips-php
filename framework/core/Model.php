@@ -5,6 +5,10 @@
  *
  */
 
+namespace Elips\Core;
+
+use Elips\Libraries\DB;
+
 class Model
 {
 

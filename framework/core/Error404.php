@@ -1,5 +1,9 @@
 <?php
 
+namespace Elips\Core;
+
+use Elips\Libraries\Blade;
+
 class Error404 extends Controller
 {
 

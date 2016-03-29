@@ -1,4 +1,9 @@
 <?php
+
+require __DIR__ . '/framework/autoload.php';
+
+use Elips\Libraries\Benchmark;
+
 /**
  * Set application environtment
  *
@@ -52,11 +57,6 @@ if(APP_ENV === 'development'){
 }
 
 /**
- * Require Benchmark library
- */
-require FW_PATH . 'libraries/Benchmark.php';
-
-/**
  * Starting benchmark
  */
 Benchmark::startTime('execution_time');
@@ -64,54 +64,49 @@ Benchmark::startTime('execution_time');
 /**
  * Require error helper
  */
-require FW_PATH . 'helpers/error.php';
+require FW_PATH . 'Helpers/error.php';
 
 /**
  * Require url helper
  */
-require FW_PATH . 'helpers/url.php';
+require FW_PATH . 'Helpers/url.php';
 
 /**
  * Require config helper
  */
-require FW_PATH . 'helpers/config.php';
+require FW_PATH . 'Helpers/config.php';
 
 /**
  * Require app config
  */
-if(file_exists(APP_PATH . 'config/app.php')){
-    require APP_PATH . 'config/app.php';
+if(file_exists(APP_PATH . 'Config/app.php')){
+    require APP_PATH . 'Config/app.php';
 } elseif(APP_ENV === 'development') {
-    error_dump('File \'' . APP_PATH . 'config/app.php\' not found!');die();
+    error_dump('File \'' . APP_PATH . 'Config/app.php\' not found!');die();
 }
 
 /**
  * Require database config
  */
-if(file_exists(APP_PATH . 'config/database.php')){
-    require APP_PATH . 'config/database.php';
+if(file_exists(APP_PATH . 'Config/database.php')){
+    require APP_PATH . 'Config/database.php';
 } elseif(APP_ENV === 'development') {
-    error_dump('File \'' . APP_PATH . 'config/database.php\' not found!');die();
+    error_dump('File \'' . APP_PATH . 'Config/database.php\' not found!');die();
 }
 
 /**
  * Require mimes config
  */
-if(file_exists(APP_PATH . 'config/mimes.php')){
-    require APP_PATH . 'config/mimes.php';
+if(file_exists(APP_PATH . 'Config/mimes.php')){
+    require APP_PATH . 'Config/mimes.php';
 } elseif(APP_ENV === 'development') {
-    error_dump('File \'' . APP_PATH . 'config/mimes.php\' not found!');die();
+    error_dump('File \'' . APP_PATH . 'Config/mimes.php\' not found!');die();
 }
-
-/**
- * Require core class
- */
-require FW_PATH . 'core/Core.php';
 
 /**
  * Instantiate core class
  */
-$instance = new Core();
+$instance = new \Elips\Core\Core();
 $instance->run();
 
 /**

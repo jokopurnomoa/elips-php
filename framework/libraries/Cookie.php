@@ -4,6 +4,8 @@
  *
  */
 
+namespace Elips\Libraries;
+
 class Cookie
 {
 

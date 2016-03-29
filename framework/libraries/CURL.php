@@ -4,6 +4,9 @@
  *
  *
  */
+
+namespace Elips\Libraries;
+
 class CURL
 {
 

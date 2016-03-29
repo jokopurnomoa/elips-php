@@ -4,6 +4,8 @@
  *
  */
 
+namespace Elips\Libraries\DBDriver\QueryBuilder;
+
 class MySQLQueryBuilder
 {
 

@@ -6,6 +6,10 @@
  *
  */
 
+namespace Elips\Libraries;
+
+use Elips\Libraries\SessionDriver\SessionFile;
+
 class Session
 {
 
@@ -17,9 +21,10 @@ class Session
     public static function init()
     {
         if (get_app_config('session', 'driver') === 'file') {
-            require_once 'SessionDriver/SessionFile.php';
-            self::$session_driver = new SessionFile();
-            self::$session_driver->init(get_app_config('session'));
+            if(self::$session_driver === null){
+                self::$session_driver = new SessionFile();
+                self::$session_driver->init(get_app_config('session'));
+            }
         } elseif(APP_ENV === 'development') {
             error_dump('Session Driver \'' . get_app_config('session', 'driver') . '\' not avaiable.');die();
         }
@@ -33,6 +38,7 @@ class Session
      */
     public static function has($key)
     {
+        self::init();
         return self::$session_driver->has($key);
     }
 
@@ -45,6 +51,7 @@ class Session
      */
     public static function get($key, $default = null)
     {
+        self::init();
         return self::$session_driver->get($key, $default);
     }
 
@@ -55,6 +62,7 @@ class Session
      */
     public static function all()
     {
+        self::init();
         return self::$session_driver->all();
     }
 
@@ -66,6 +74,7 @@ class Session
      */
     public static function set($key, $value)
     {
+        self::init();
         self::$session_driver->set($key, $value);
     }
 
@@ -76,6 +85,7 @@ class Session
      */
     public static function remove($key)
     {
+        self::init();
         self::$session_driver->remove($key);
     }
 
@@ -84,6 +94,7 @@ class Session
      */
     public static function destroy()
     {
+        self::init();
         self::$session_driver->destroy();
     }
 
@@ -92,6 +103,7 @@ class Session
      */
     public static function regenerate()
     {
+        self::init();
         self::$session_driver->regenerate();
     }
 

@@ -6,7 +6,9 @@
  *
  */
 
-require_once 'QueryBuilder/MySQLQueryBuilder.php';
+namespace Elips\Libraries\DBDriver;
+
+use Elips\Libraries\DBDriver\QueryBuilder\MySQLQueryBuilder;
 
 class MySQLiDriver
 {

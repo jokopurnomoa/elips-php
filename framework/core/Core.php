@@ -6,6 +6,8 @@
  *
  */
 
+namespace Elips\Core;
+
 class Core
 {
 
@@ -19,12 +21,9 @@ class Core
      */
     public function run()
     {
-        require FW_PATH . 'helpers/file.php';
-        require FW_PATH . 'core/Load.php';
-        require FW_PATH . 'core/Route.php';
-        require FW_PATH . 'core/Model.php';
-        require FW_PATH . 'core/Controller.php';
-
+        require FW_PATH . 'Helpers/file.php';
+        require FW_PATH . 'Helpers/input.php';
+        /*
         Load::library('URI');
         Load::library('Encryption');
         Load::library('Cookie');
@@ -35,6 +34,7 @@ class Core
         Load::helper('input');
 
         $this->handleAutoload();
+        */
         Route::run();
     }
 

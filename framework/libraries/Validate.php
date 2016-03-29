@@ -5,6 +5,8 @@
  *
  */
 
+namespace Elips\Libraries;
+
 class Validate
 {
 

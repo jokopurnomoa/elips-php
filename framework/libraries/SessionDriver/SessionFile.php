@@ -6,6 +6,11 @@
  *
  */
 
+namespace Elips\Libraries\SessionDriver;
+
+use Elips\Libraries\Cookie;
+use Elips\Libraries\Encryption;
+
 class SessionFile
 {
 

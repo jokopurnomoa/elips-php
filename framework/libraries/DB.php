@@ -6,6 +6,11 @@
  *
  */
 
+namespace Elips\Libraries;
+
+use Elips\Libraries\DBDriver\MySQLiDriver;
+use Elips\Libraries\DBDriver\SQLiteDriver;
+
 class DB
 {
 
@@ -17,13 +22,15 @@ class DB
     public static function init()
     {
         if (get_app_config('db', 'main', 'driver') === 'mysqli') {
-            require_once 'DBDriver/MySQLi.php';
-            self::$dbDriver = new MySQLiDriver(get_app_config('db', 'main'));
-            self::$dbDriver->connect();
+            if(self::$dbDriver === null){
+                self::$dbDriver = new MySQLiDriver(get_app_config('db', 'main'));
+                self::$dbDriver->connect();
+            }
         } elseif(get_app_config('db', 'main', 'driver') === 'sqlite') {
-            require_once 'DBDriver/SQLite.php';
-            self::$dbDriver = new SQLiteDriver(get_app_config('db', 'main'));
-            self::$dbDriver->connect();
+            if(self::$dbDriver === null) {
+                self::$dbDriver = new SQLiteDriver(get_app_config('db', 'main'));
+                self::$dbDriver->connect();
+            }
         } elseif(APP_ENV === 'development') {
             error_dump('Database Driver \'' . get_app_config('db', 'main', 'driver') . '\' not avaiable.');die();
         }
@@ -49,6 +56,7 @@ class DB
      */
     public static function escape($string)
     {
+        self::init();
         return self::$dbDriver->escape($string);
     }
 
@@ -60,6 +68,7 @@ class DB
      */
     public static function getCountQuery($sql, $params = null)
     {
+        self::init();
         return self::$dbDriver->getCountQuery($sql, $params);
     }
 
@@ -74,6 +83,7 @@ class DB
      */
     public static function getCount($table, $where = null, $order = null, $limit = null)
     {
+        self::init();
         return self::$dbDriver->getCount($table, $where, $order, $limit);
     }
 
@@ -85,6 +95,7 @@ class DB
      */
     public static function getAllQuery($sql, $params = null)
     {
+        self::init();
         return self::$dbDriver->getAllQuery($sql, $params);
     }
 
@@ -99,6 +110,7 @@ class DB
      */
     public static function getAll($table, $where = null, $order = null, $limit = null)
     {
+        self::init();
         return self::$dbDriver->getAll($table, $where, $order, $limit);
     }
 
@@ -114,6 +126,7 @@ class DB
      */
     public static function getAllField($table, $field = null, $where = null, $order = null, $limit = null)
     {
+        self::init();
         return self::$dbDriver->getAllField($table, $field, $where, $order, $limit);
     }
 
@@ -125,6 +138,7 @@ class DB
      */
     public static function getFirstQuery($sql, $params = null)
     {
+        self::init();
         return self::$dbDriver->getFirstQuery($sql, $params);
     }
 
@@ -139,6 +153,7 @@ class DB
      */
     public static function getFirst($table, $where = null, $order = null, $limit = null)
     {
+        self::init();
         return self::$dbDriver->getFirst($table, $where, $order, $limit);
     }
 
@@ -154,6 +169,7 @@ class DB
      */
     public static function getFirstField($table, $field = null, $where = null, $order = null, $limit = null)
     {
+        self::init();
         return self::$dbDriver->getFirstField($table, $field, $where, $order, $limit);
     }
 
@@ -165,6 +181,7 @@ class DB
      */
     public static function insertQuery($sql, $params = null)
     {
+        self::init();
         return self::$dbDriver->insertQuery($sql, $params);
     }
 
@@ -177,6 +194,7 @@ class DB
      */
     public static function insert($table, $data)
     {
+        self::init();
         return self::$dbDriver->insert($table, $data);
     }
 
@@ -188,6 +206,7 @@ class DB
      */
     public static function updateQuery($sql, $params = null)
     {
+        self::init();
         return self::$dbDriver->updateQuery($sql, $params);
     }
 
@@ -202,6 +221,7 @@ class DB
      */
     public static function update($table, $field, $id, $data)
     {
+        self::init();
         return self::$dbDriver->update($table, $field, $id, $data);
     }
 
@@ -213,6 +233,7 @@ class DB
      */
     public static function deleteQuery($sql, $params = null)
     {
+        self::init();
         return self::$dbDriver->deleteQuery($sql, $params);
     }
 
@@ -227,6 +248,7 @@ class DB
      */
     public static function delete($table, $field, $id, $limit = 1)
     {
+        self::init();
         return self::$dbDriver->delete($table, $field, $id, $limit);
     }
 
@@ -237,6 +259,7 @@ class DB
      */
     public static function beginTransaction()
     {
+        self::init();
         return self::$dbDriver->beginTransaction();
     }
 
@@ -247,6 +270,7 @@ class DB
      */
     public static function commit()
     {
+        self::init();
         return self::$dbDriver->commit();
     }
 
@@ -257,6 +281,7 @@ class DB
      */
     public static function rollback()
     {
+        self::init();
         return self::$dbDriver->rollback();
     }
 
@@ -267,6 +292,7 @@ class DB
      */
     public static function transactionStatus()
     {
+        self::init();
         return self::$dbDriver->transactionStatus();
     }
 
@@ -277,6 +303,7 @@ class DB
      */
     public static function insertId()
     {
+        self::init();
         return self::$dbDriver->insertId();
     }
 
@@ -287,6 +314,7 @@ class DB
      */
     public static function affectedRows()
     {
+        self::init();
         return self::$dbDriver->affectedRows();
     }
 
@@ -298,6 +326,7 @@ class DB
      */
     public static function createTable($table, $fields)
     {
+        self::init();
         return self::$dbDriver->createTable($table, $fields);
     }
 
@@ -309,6 +338,7 @@ class DB
      */
     public static function dropTable($table)
     {
+        self::init();
         return self::$dbDriver->dropTable($table);
     }
 
@@ -320,6 +350,7 @@ class DB
      */
     public static function table($table)
     {
+        self::init();
         self::$dbDriver->table($table);
         return self::$dbDriver;
     }
@@ -333,6 +364,7 @@ class DB
      */
     public static function select($sql, $params = null)
     {
+        self::init();
         return self::$dbDriver->getAllQuery($sql, $params);
     }
 
@@ -346,11 +378,9 @@ class Database
     public function __construct($config)
     {
         if ($config['driver'] === 'mysqli') {
-            require_once 'DBDriver/MySQLi.php';
             $this->dbDriver = new MySQLiDriver($config);
             $this->dbDriver->connect();
         } elseif($config['driver'] === 'sqlite') {
-            require_once 'DBDriver/SQLite.php';
             $this->dbDriver = new SQLiteDriver($config);
             $this->dbDriver->connect();
         } elseif(APP_ENV === 'development') {

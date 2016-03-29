@@ -6,6 +6,10 @@
  * Time: 12:02 PM
  */
 
+namespace App\Controllers;
+
+use Elips\Libraries\Blade;
+
 class ExampleController
 {
 

@@ -6,6 +6,11 @@
  * Time: 12:02 PM
  */
 
+namespace App\Controllers;
+
+use Elips\Core\Controller;
+use Elips\Libraries\Blade;
+
 class WelcomeController extends Controller
 {
 

@@ -6,9 +6,11 @@
  *
  */
 
-require_once 'QueryBuilder/SQLiteQueryBuilder.php';
+namespace Elips\Libraries\DBDriver;
 
-class SQLiteDriver extends SQLite3
+use Elips\Libraries\DBDriver\QueryBuilder\SQLiteQueryBuilder;
+
+class SQLiteDriver extends \SQLite3
 {
 
     private $db;
@@ -50,7 +52,7 @@ class SQLiteDriver extends SQLite3
      */
     public function connect()
     {
-        $this->db = new SQLite3('storage/sqlite/' . $this->config['db'] . '.db');
+        $this->db = new \SQLite3('storage/sqlite/' . $this->config['db'] . '.db');
         $this->queryBuilder->setDB($this->db);
     }
 

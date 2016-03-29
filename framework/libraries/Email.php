@@ -6,6 +6,8 @@
  *
  */
 
+namespace Elips\Libraries;
+
 class Email
 {
 

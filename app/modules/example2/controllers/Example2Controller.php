@@ -6,14 +6,18 @@
  * Time: 12:02 PM
  */
 
+namespace App\Modules\Example2\Controllers;
+
+use App\Controllers\BaseController;
+use App\Modules\Example2\Models\Example2;
+
+use Elips\Libraries\Blade;
+
 class Example2Controller extends BaseController
 {
 
     public function index()
     {
-
-        Load::library('DB');
-        Load::model('Example2');
 
         $this->data['member_list'] = Example2::all('*', 10);
 

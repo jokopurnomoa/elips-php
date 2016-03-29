@@ -5,6 +5,8 @@
  *
  */
 
+namespace Elips\Libraries\CacheDriver;
+
 class CacheAPC
 {
 

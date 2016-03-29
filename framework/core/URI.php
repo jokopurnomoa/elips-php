@@ -6,6 +6,8 @@
  *
  */
 
+namespace Elips\Core;
+
 class URI
 {
 

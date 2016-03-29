@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Models;
+
+use Elips\Core\Model;
+
 class Member extends Model
 {
 

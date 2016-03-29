@@ -6,6 +6,8 @@
  *
  */
 
+namespace Elips\Core;
+
 class Route
 {
     private static $className;
@@ -55,18 +57,18 @@ class Route
         if (self::$className != '' && self::$methodName != '' &&
             strtolower(self::$className) != strtolower(self::$rootController)) {
 
-            $_modulePath = trim('modules/' . trim(strtolower(str_replace('Controller', '', self::$className))), '/') . '/';
+            $_modulePath = trim('Modules/' . ucfirst(trim(strtolower(str_replace('Controller', '', self::$className)))), '/') . '/';
             self::$className = ucfirst(self::$className);
 
-            if (file_exists(APP_PATH . 'controllers/' . self::$className . '.php')) {
-                require_once APP_PATH . 'controllers/' . self::$className . '.php';
+            if (file_exists(APP_PATH . 'Controllers/' . self::$className . '.php')) {
+                //require_once APP_PATH . 'Controllers/' . self::$className . '.php';
                 self::callClassMethod();
-            } elseif (file_exists(APP_PATH . $_modulePath . 'controllers/' . self::$className . '.php')) {
-                require_once APP_PATH . $_modulePath . 'controllers/' . self::$className . '.php';
+            } elseif (file_exists(APP_PATH . $_modulePath . 'Controllers/' . self::$className . '.php')) {
+                //require_once APP_PATH . $_modulePath . 'Controllers/' . self::$className . '.php';
                 $modulePath = $_modulePath;
                 self::callClassMethod();
             } elseif (file_exists(APP_PATH . 'views/404.blade.php')) {
-                require_once FW_PATH . 'core/' . self::$page404 . '.php';
+                //require_once FW_PATH . 'core/' . self::$page404 . '.php';
                 $class = new self::$page404();
                 $class->index();
             } else {
@@ -90,7 +92,7 @@ class Route
                 return $route['404'];
             }
         }
-        return 'Error404';
+        return 'Elips\Core\Error404';
     }
 
     /**
@@ -119,10 +121,8 @@ class Route
         if (isset($route['root_controller'])) {
             if ($route['root_controller'] != '') {
                 $root_controller = $route['root_controller'] . 'Controller';
-                if (file_exists(APP_PATH . 'controllers/' . $root_controller . '.php')) {
-                    require_once APP_PATH . 'controllers/' . $root_controller . '.php';
-                } elseif (APP_ENV === 'development') {
-                    error_dump('File \'' . APP_PATH . 'controllers/' . $root_controller . '.php\' not found');die();
+                if (!file_exists(APP_PATH . 'Controllers/' . $root_controller . '.php') && APP_ENV === 'development') {
+                    error_dump('File \'' . APP_PATH . 'Controllers/' . $root_controller . '.php\' not found');die();
                 }
             }
         }
@@ -216,7 +216,16 @@ class Route
      */
     private static function callClassMethod()
     {
-        $class = new self::$className();
+        global $modulePath;
+
+        if($modulePath != ''){
+            $modulePath = str_replace('/', '\\', str_replace('Modules/', '', $modulePath));
+            $_className = 'App\\Modules\\' . $modulePath . 'Controllers\\' . self::$className;
+        } else {
+            $_className = 'App\\Controllers\\' . self::$className;
+        }
+
+        $class = new $_className();
 
         if (method_exists(self::$className, self::$methodName)) {
             $methodName = self::$methodName;

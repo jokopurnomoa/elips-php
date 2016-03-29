@@ -5,6 +5,8 @@
  *
  */
 
+namespace Elips\Core;
+
 class Controller
 {
 
