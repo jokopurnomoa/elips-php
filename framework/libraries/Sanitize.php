@@ -94,24 +94,24 @@ class Sanitize
     /**
      * Sanitize Number Integer
      *
-     * @param $number_int
+     * @param $numberInt
      * @return mixed
      */
-    public static function int($number_int)
+    public static function int($numberInt)
     {
-        return filter_var($number_int, FILTER_SANITIZE_NUMBER_INT);
+        return filter_var($numberInt, FILTER_SANITIZE_NUMBER_INT);
     }
 
     /**
      * Sanitize Number Float
      *
-     * @param $number_float
+     * @param $numberFloat
      * @param int $flag
      * @return mixed
      */
-    public static function float($number_float, $flag = FILTER_FLAG_ALLOW_FRACTION)
+    public static function float($numberFloat, $flag = FILTER_FLAG_ALLOW_FRACTION)
     {
-        return filter_var($number_float, FILTER_SANITIZE_NUMBER_FLOAT, $flag);
+        return filter_var($numberFloat, FILTER_SANITIZE_NUMBER_FLOAT, $flag);
     }
 
     /**
