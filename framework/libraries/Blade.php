@@ -50,13 +50,11 @@ class Blade
      */
     public static function render($view, $data = null, $buffered = false)
     {
-        global $modulePath;
-
         $isModular = false;
-        $modulePath = trim($modulePath, '\\');
+        $GLOBALS['modulePath'] = trim($GLOBALS['modulePath'], '\\');
 
         $inSelfModule = false;
-        if($modulePath != '' && strpos($view, '/') === false){
+        if($GLOBALS['modulePath'] != '' && strpos($view, '/') === false){
             $inSelfModule = true;
         }
 
@@ -64,7 +62,7 @@ class Blade
         $paths = explode('/', $view);
 
         if (strpos($view, '/') !== false) {
-            $modulePath = str_replace('//', '/', 'Modules/' . $paths[0] . '/');
+            $GLOBALS['modulePath'] = str_replace('//', '/', 'Modules/' . $paths[0] . '/');
             $module_view = trim(str_replace($paths[0] . '/', '', $view), '/');
         }
 
@@ -79,8 +77,8 @@ class Blade
                 echo $__buffer;
             }
         }
-        elseif (file_exists(APP_PATH . 'Modules/' . $modulePath . '/Views/' . $view . '.blade.php')) {
-            $__buffer = self::parse(read_file(APP_PATH . 'Modules/' . $modulePath . '/Views/' . $view . '.blade.php'));
+        elseif (file_exists(APP_PATH . 'Modules/' . $GLOBALS['modulePath'] . '/Views/' . $view . '.blade.php')) {
+            $__buffer = self::parse(read_file(APP_PATH . 'Modules/' . $GLOBALS['modulePath'] . '/Views/' . $view . '.blade.php'));
             $__buffer = self::run($__buffer, $data);
             if ($buffered) {
                 return $__buffer;
@@ -90,7 +88,7 @@ class Blade
         }
         elseif (APP_ENV === 'development') {
             if ($isModular == true) {
-                error_dump('Blade : File \'' . APP_PATH . 'Modules/' . $modulePath . '/Views/' . $view . '.blade.php\' not found!');
+                error_dump('Blade : File \'' . APP_PATH . 'Modules/' . $GLOBALS['modulePath'] . '/Views/' . $view . '.blade.php\' not found!');
             } else {
                 error_dump('Blade : File \'' . APP_PATH . 'Views/' . $view . '.blade.php\' not found!');
             }

@@ -5,23 +5,24 @@
  *
  */
 
-/**
- * autoload helpers
- *
- * $autoload['helpers'] = array('error', 'language')
- *
- */
+return array(
 
-$autoload['helpers'] = array();
+    /**
+     * autoload helpers
+     *
+     * 'helpers' = array('error', 'language')
+     *
+     */
 
+    'helpers'   => array(),
 
-/**
- * autoload language
- *
- * $autoload['languages'] = array('en', 'id')
- *
- */
+    /**
+     * autoload language
+     *
+     * 'languages' = array('en', 'id')
+     *
+     */
 
-$autoload['languages'] = array();
+    'language'  => array()
 
-
+);

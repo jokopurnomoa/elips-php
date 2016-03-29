@@ -22,11 +22,9 @@ class Route
      */
     public static function run()
     {
-        global $modulePath;
-
         $route = null;
         if(file_exists(APP_PATH . 'config/route.php')){
-            require_once APP_PATH . 'config/route.php';
+            $route = require_once APP_PATH . 'config/route.php';
         } elseif(APP_ENV === 'development') {
             error_dump('File \'' . APP_PATH . 'config/route.php\' not found');
             die();
@@ -65,7 +63,7 @@ class Route
                 self::callClassMethod();
             } elseif (file_exists(APP_PATH . $_modulePath . 'Controllers/' . self::$className . '.php')) {
                 //require_once APP_PATH . $_modulePath . 'Controllers/' . self::$className . '.php';
-                $modulePath = $_modulePath;
+                $GLOBALS['modulePath'] = $_modulePath;
                 self::callClassMethod();
             } elseif (file_exists(APP_PATH . 'views/404.blade.php')) {
                 //require_once FW_PATH . 'core/' . self::$page404 . '.php';
@@ -216,11 +214,9 @@ class Route
      */
     private static function callClassMethod()
     {
-        global $modulePath;
-
-        if($modulePath != ''){
-            $modulePath = str_replace('/', '\\', str_replace('Modules/', '', $modulePath));
-            $_className = 'App\\Modules\\' . $modulePath . 'Controllers\\' . self::$className;
+        if($GLOBALS['modulePath'] != ''){
+            $GLOBALS['modulePath'] = str_replace('/', '\\', str_replace('Modules/', '', $GLOBALS['modulePath']));
+            $_className = 'App\\Modules\\' . $GLOBALS['modulePath'] . 'Controllers\\' . self::$className;
         } else {
             $_className = 'App\\Controllers\\' . self::$className;
         }

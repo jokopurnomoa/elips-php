@@ -24,6 +24,48 @@ class Core
         require FW_PATH . 'Helpers/file.php';
         require FW_PATH . 'Helpers/input.php';
 
+        /**
+         * Require app config
+         */
+        if (file_exists(APP_PATH . 'Config/app.php')) {
+            $config = require APP_PATH . 'Config/app.php';
+            if (is_array($config) && $config !== null) {
+                foreach($config as $key =>$value) {
+                    $GLOBALS['config'][$key] = $value;
+                }
+            }
+        } elseif (APP_ENV === 'development') {
+            error_dump('File \'' . APP_PATH . 'Config/app.php\' not found!');die();
+        }
+
+        /**
+         * Require database config
+         */
+        if(file_exists(APP_PATH . 'Config/database.php')){
+            $config = require APP_PATH . 'Config/database.php';
+            if (is_array($config) && $config !== null) {
+                foreach($config as $key =>$value) {
+                    $GLOBALS['config'][$key] = $value;
+                }
+            }
+        } elseif(APP_ENV === 'development') {
+            error_dump('File \'' . APP_PATH . 'Config/database.php\' not found!');die();
+        }
+
+        /**
+         * Require mimes config
+         */
+        if(file_exists(APP_PATH . 'Config/mimes.php')){
+            $config = require APP_PATH . 'Config/mimes.php';
+            if (is_array($config) && $config !== null) {
+                foreach($config as $key =>$value) {
+                    $GLOBALS['config'][$key] = $value;
+                }
+            }
+        } elseif(APP_ENV === 'development') {
+            error_dump('File \'' . APP_PATH . 'Config/mimes.php\' not found!');die();
+        }
+
         $this->handleAutoload();
         Route::run();
     }
@@ -35,7 +77,7 @@ class Core
     {
         $autoload = null;
         if (file_exists(APP_PATH . 'config/autoload.php')) {
-            require(APP_PATH . 'config/autoload.php');
+            $autoload = require(APP_PATH . 'config/autoload.php');
         } elseif (APP_ENV === 'development') {
             error_dump('File \'' . APP_PATH . 'config/autoload.php\' not found!');
             die();

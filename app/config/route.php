@@ -14,7 +14,7 @@
  * method_separator         // method separator to call method in url ('_' | '-' | default is '_')
  */
 
-$route = array(
+return array(
 
     'default_controller'    => 'Welcome',
 

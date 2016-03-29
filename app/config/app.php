@@ -5,7 +5,7 @@
  *
  */
 
-$config = array(
+return array(
     /**
      * Application Base Url
      *

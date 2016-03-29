@@ -37,6 +37,11 @@ define('FW_PATH', __DIR__ . '/framework/');
 define('APP_PATH', __DIR__ . '/app/');
 
 /**
+ * App config
+ */
+$config = null;
+
+/**
  * Instance Core Class
  */
 $instance = null;
@@ -84,32 +89,6 @@ require FW_PATH . 'Helpers/url.php';
  */
 require FW_PATH . 'Helpers/config.php';
 
-/**
- * Require app config
- */
-if(file_exists(APP_PATH . 'Config/app.php')){
-    require APP_PATH . 'Config/app.php';
-} elseif(APP_ENV === 'development') {
-    error_dump('File \'' . APP_PATH . 'Config/app.php\' not found!');die();
-}
-
-/**
- * Require database config
- */
-if(file_exists(APP_PATH . 'Config/database.php')){
-    require APP_PATH . 'Config/database.php';
-} elseif(APP_ENV === 'development') {
-    error_dump('File \'' . APP_PATH . 'Config/database.php\' not found!');die();
-}
-
-/**
- * Require mimes config
- */
-if(file_exists(APP_PATH . 'Config/mimes.php')){
-    require APP_PATH . 'Config/mimes.php';
-} elseif(APP_ENV === 'development') {
-    error_dump('File \'' . APP_PATH . 'Config/mimes.php\' not found!');die();
-}
 
 /**
  * Instantiate core class
@@ -123,6 +102,5 @@ $instance->run();
  * @return Core|null
  */
 function get_instance(){
-    global $instance;
-    return $instance;
+    return $GLOBALS['instance'];
 }

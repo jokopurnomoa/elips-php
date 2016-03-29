@@ -10,20 +10,23 @@
  *
  */
 
-$config['db'] = array(
-    'main' => array(
-        'host'      => 'localhost',
-        'user'      => 'root',
-        'pass'      => 'root157',
-        'db'        => 'elips',
-        'driver'    => 'mysqli'
-    ),
+return array(
+    'db' => array(
 
-    'optional' => array(
-        'host'      => 'localhost',
-        'user'      => 'root',
-        'pass'      => '',
-        'db'        => 'elips',
-        'driver'    => 'sqlite'
+        'main' => array(
+            'host'      => 'localhost',
+            'user'      => 'root',
+            'pass'      => 'root157',
+            'db'        => 'elips',
+            'driver'    => 'mysqli'
+        ),
+
+        'optional' => array(
+            'host'      => 'localhost',
+            'user'      => 'root',
+            'pass'      => '',
+            'db'        => 'elips',
+            'driver'    => 'sqlite'
+        )
     )
 );
