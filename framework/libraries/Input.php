@@ -14,36 +14,36 @@ class Input
      * Get Method Input
      *
      * @param $name
-     * @param bool $xss_clean
+     * @param bool $xssClean
      * @return null|string
      */
-    public static function get($name, $xss_clean = false)
+    public static function get($name, $xssClean = false)
     {
-        return get_input($name, $xss_clean);
+        return get_input($name, $xssClean);
     }
 
     /**
      * Post Method Input
      *
      * @param $name
-     * @param bool $xss_clean
+     * @param bool $xssClean
      * @return null|string
      */
-    public static function post($name, $xss_clean = false)
+    public static function post($name, $xssClean = false)
     {
-        return post_input($name, $xss_clean);
+        return post_input($name, $xssClean);
     }
 
     /**
      * Post & Get Method Input (Post First)
      *
      * @param $name
-     * @param bool $xss_clean
+     * @param bool $xssClean
      * @return null
      */
-    public static function postGet($name, $xss_clean = false)
+    public static function postGet($name, $xssClean = false)
     {
-        return post_get_input($name, $xss_clean);
+        return post_get_input($name, $xssClean);
     }
 
 }
