@@ -31,14 +31,6 @@ class Email
     private static $sendingMessage;
 
     /**
-     * Initialize Library
-     */
-    public static function init()
-    {
-        require MAIN_PATH . 'vendor/swiftmailer/swiftmailer/lib/swift_required.php';
-    }
-
-    /**
      * Set Hostname
      *
      * @param $host
@@ -279,16 +271,16 @@ class Email
     public static function send()
     {
         if (self::$encryption != null) {
-            $transport = Swift_SmtpTransport::newInstance(self::$host, self::$port, self::$encryption);
+            $transport = \Swift_SmtpTransport::newInstance(self::$host, self::$port, self::$encryption);
         } else {
-            $transport = Swift_SmtpTransport::newInstance(self::$host, self::$port);
+            $transport = \Swift_SmtpTransport::newInstance(self::$host, self::$port);
         }
 
         $transport->setUsername(self::$username)->setPassword(self::$password);
 
-        $mailer = Swift_Mailer::newInstance($transport);
+        $mailer = \Swift_Mailer::newInstance($transport);
 
-        $message = Swift_Message::newInstance()
+        $message = \Swift_Message::newInstance()
             ->setSubject(self::$subject)
             ->setFrom(self::$from)
             ->setTo(self::$to)
@@ -299,7 +291,7 @@ class Email
         }
 
         if (self::$attachment != null) {
-            $message->attach(Swift_Attachment::fromPath(self::$attachment));
+            $message->attach(\Swift_Attachment::fromPath(self::$attachment));
         }
 
         if (self::$cc != null){
@@ -321,7 +313,7 @@ class Email
             if ($mailer->send($message)) {
                 $result = true;
             }
-        } catch (Swift_TransportException $e) {
+        } catch (\Swift_TransportException $e) {
             self::$sendingMessage = $e->getMessage();
             $mailer->getTransport()->stop();
         }
