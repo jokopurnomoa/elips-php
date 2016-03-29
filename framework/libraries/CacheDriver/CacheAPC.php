@@ -15,12 +15,12 @@ class CacheAPC
     /**
      * @var bool
      */
-    public $cache_active = false;
+    public $cacheActive = false;
 
     /**
      * @var bool
      */
-    public $cache_encrypt = false;
+    public $cacheEncrypt = false;
 
     /**
      * Constructor
@@ -43,11 +43,11 @@ class CacheAPC
      */
     public function store($flag, $data, $max_age = 60)
     {
-        if ($this->cache_active) {
-            if ($this->cache_encrypt) {
+        if ($this->cacheActive) {
+            if ($this->cacheEncrypt) {
                 $data = Encryption::encode($data);
             }
-            return write_file(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')), $data);
+            return write_file(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cacheEncrypt ? '_encrypt' : '')), $data);
         }
         return false;
     }
@@ -60,10 +60,10 @@ class CacheAPC
      */
     public function get($flag)
     {
-        if ($this->cache_active) {
-            $cache = apc_fetch(sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')));
+        if ($this->cacheActive) {
+            $cache = apc_fetch(sha1($flag . ($this->cacheEncrypt ? '_encrypt' : '')));
             if ($cache != null) {
-                if ($this->cache_encrypt) {
+                if ($this->cacheEncrypt) {
                     $cache = trim(Encryption::decode($cache));
                 }
 
@@ -81,7 +81,7 @@ class CacheAPC
      */
     public function delete($flag)
     {
-        return apc_delete(sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')));
+        return apc_delete(sha1($flag . ($this->cacheEncrypt ? '_encrypt' : '')));
     }
 
 }

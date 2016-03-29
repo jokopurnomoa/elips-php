@@ -15,12 +15,12 @@ class CacheFile
     /**
      * @var bool
      */
-    public $cache_active = false;
+    public $cacheActive = false;
 
     /**
      * @var bool
      */
-    public $cache_encrypt = false;
+    public $cacheEncrypt = false;
 
     /**
      * Store Cache
@@ -32,19 +32,19 @@ class CacheFile
      */
     public function store($flag, $data, $max_age = 60)
     {
-        if ($this->cache_active) {
+        if ($this->cacheActive) {
             $cache = array(
                 'DATE_CREATED' => time(),
                 'MAX_AGE' => $max_age,
                 'DATA' => $data
             );
 
-            if ($this->cache_encrypt) {
+            if ($this->cacheEncrypt) {
                 $cache = Encryption::encode(serialize($cache));
             } else {
                 $cache = serialize($cache);
             }
-            return write_file(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')), $cache);
+            return write_file(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cacheEncrypt ? '_encrypt' : '')), $cache);
         }
         return false;
     }
@@ -57,10 +57,10 @@ class CacheFile
      */
     public function get($flag)
     {
-        if ($this->cache_active) {
-            $cache = read_file(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')));
+        if ($this->cacheActive) {
+            $cache = read_file(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cacheEncrypt ? '_encrypt' : '')));
             if ($cache != null) {
-                if ($this->cache_encrypt) {
+                if ($this->cacheEncrypt) {
                     $cache = (array)@unserialize(trim(Encryption::decode($cache)));
                 } else {
                     $cache = (array)@unserialize($cache);
@@ -81,8 +81,8 @@ class CacheFile
      */
     public function delete($flag)
     {
-        if (file_exists(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')))) {
-            return unlink(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cache_encrypt ? '_encrypt' : '')));
+        if (file_exists(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cacheEncrypt ? '_encrypt' : '')))) {
+            return unlink(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cacheEncrypt ? '_encrypt' : '')));
         }
         return false;
     }
