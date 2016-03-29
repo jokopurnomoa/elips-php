@@ -14,15 +14,15 @@ use Elips\Libraries\Encryption;
 class SessionFile
 {
 
-    var $session_id = null;
-    var $session_name = 'ELIPS_PHP_SESSID';
-    var $session_key = 'SUPER_SECRET_KEY';
-    var $session_expire = 7200;
-    var $session_match_ip = false;
-    var $session_max_size = 1048576;
-    var $session_path = 'storage/sessions/';
-    var $session_data = array();
-    var $session_delete_id = null;
+    var $sessionId = null;
+    var $sessionName = 'ELIPS_PHP_SESSID';
+    var $sessionKey = 'SUPER_SECRET_KEY';
+    var $sessionExpire = 7200;
+    var $sessionMatchIP = false;
+    var $sessionMaxSize = 1048576;
+    var $sessionPath = 'storage/sessions/';
+    var $sessionData = array();
+    var $sessionDeleteId = null;
 
     /**
      * Initialize Config
@@ -32,26 +32,26 @@ class SessionFile
     public function init($config = null)
     {
         if (isset($config['name'])) {
-            $this->session_name = $config['name'];
+            $this->sessionName = $config['name'];
         }
 
         if (isset($config['encryption_key'])) {
-            $this->session_key = $config['encryption_key'];
+            $this->sessionKey = $config['encryption_key'];
         }
 
         if (isset($config['expire'])) {
-            $this->session_expire = $config['expire'];
+            $this->sessionExpire = $config['expire'];
         }
 
         if (isset($config['match_ip'])) {
-            $this->session_match_ip = $config['match_ip'];
+            $this->sessionMatchIP = $config['match_ip'];
         }
 
         if (isset($config['max_size'])) {
-            $this->session_max_size = $config['max_size'];
+            $this->sessionMaxSize = $config['max_size'];
         }
 
-        if (time() - $this->get('SESS_CREATED') > $this->session_expire) {
+        if (time() - $this->get('SESS_CREATED') > $this->sessionExpire) {
             $this->destroy();
         }
 
@@ -86,18 +86,18 @@ class SessionFile
      */
     private function generateSession()
     {
-        if (Cookie::get($this->session_name) == null) {
-            $this->session_data['SESS_USER_AGENT'] = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-            $this->session_data['SESS_IP_ADDR'] = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
-            $this->session_data['SESS_CREATED'] = time();
-            $this->session_data['SESS_EXPIRED'] = $this->session_expire;
-            $this->session_data['SESS_LAST_ACTIVITY'] = time();
+        if (Cookie::get($this->sessionName) == null) {
+            $this->sessionData['SESS_USER_AGENT'] = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+            $this->sessionData['SESS_IP_ADDR'] = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+            $this->sessionData['SESS_CREATED'] = time();
+            $this->sessionData['SESS_EXPIRED'] = $this->sessionExpire;
+            $this->sessionData['SESS_LAST_ACTIVITY'] = time();
 
-            $this->session_id = $this->generateSessionId();
-            Cookie::set($this->session_name, $this->session_id);
-            return $this->session_id;
+            $this->sessionId = $this->generateSessionId();
+            Cookie::set($this->sessionName, $this->sessionId);
+            return $this->sessionId;
         } else {
-            return Cookie::get($this->session_name);
+            return Cookie::get($this->sessionName);
         }
     }
 
@@ -108,10 +108,10 @@ class SessionFile
      */
     private function getSessionId()
     {
-        if (Cookie::get($this->session_name) !== null) {
-            return Cookie::get($this->session_name);
+        if (Cookie::get($this->sessionName) !== null) {
+            return Cookie::get($this->sessionName);
         }
-        return $this->session_id;
+        return $this->sessionId;
     }
 
     /**
@@ -121,29 +121,29 @@ class SessionFile
      */
     private function getSessionData()
     {
-        $session_id = $this->getSessionId();
+        $sessionId = $this->getSessionId();
 
-        $string = read_file($this->session_path . $session_id, $this->session_max_size);
+        $string = read_file($this->sessionPath . $sessionId, $this->sessionMaxSize);
         if ($string != null) {
-            $this->session_data = (array)@unserialize(trim(Encryption::decode($string, $this->session_key)));
+            $this->sessionData = (array)@unserialize(trim(Encryption::decode($string, $this->sessionKey)));
 
-            if ($this->session_data != null) {
-                $sess_user_agent = isset($this->session_data['SESS_USER_AGENT']) ? $this->session_data['SESS_USER_AGENT'] : '';
-                $sess_ip_addr = isset($this->session_data['SESS_IP_ADDR']) ? $this->session_data['SESS_IP_ADDR'] : '';
+            if ($this->sessionData != null) {
+                $sess_user_agent = isset($this->sessionData['SESS_USER_AGENT']) ? $this->sessionData['SESS_USER_AGENT'] : '';
+                $sess_ip_addr = isset($this->sessionData['SESS_IP_ADDR']) ? $this->sessionData['SESS_IP_ADDR'] : '';
 
                 $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
                 $ip_addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';;
 
                 if ($user_agent == $sess_user_agent) {
-                    if (!$this->session_match_ip) {
-                        return $this->session_data;
+                    if (!$this->sessionMatchIP) {
+                        return $this->sessionData;
                     } elseif ($ip_addr == $sess_ip_addr) {
-                        return $this->session_data;
+                        return $this->sessionData;
                     }
                 }
             }
         }
-        return $this->session_data;
+        return $this->sessionData;
     }
 
     /**
@@ -154,10 +154,10 @@ class SessionFile
      */
     public function has($key)
     {
-        $this->session_data = $this->getSessionData();
+        $this->sessionData = $this->getSessionData();
 
-        if ($this->session_data != null) {
-            if (isset($this->session_data[$key])) {
+        if ($this->sessionData != null) {
+            if (isset($this->sessionData[$key])) {
                 return true;
             }
         }
@@ -173,16 +173,16 @@ class SessionFile
      */
     public function get($key, $default = null)
     {
-        $session_id = $this->getSessionId();
-        $this->session_data = $this->getSessionData();
+        $sessionId = $this->getSessionId();
+        $this->sessionData = $this->getSessionData();
 
-        if ($this->session_data != null) {
-            if (isset($this->session_data[$key])) {
-                return $this->session_data[$key];
+        if ($this->sessionData != null) {
+            if (isset($this->sessionData[$key])) {
+                return $this->sessionData[$key];
             }
 
-            $this->session_data['SESS_LAST_ACTIVITY'] = time();
-            write_file($this->session_path . $session_id, Encryption::encode(serialize($this->session_data), $this->session_key));
+            $this->sessionData['SESS_LAST_ACTIVITY'] = time();
+            write_file($this->sessionPath . $sessionId, Encryption::encode(serialize($this->sessionData), $this->sessionKey));
         }
 
         return $default == null ? $default : null;
@@ -207,11 +207,11 @@ class SessionFile
      */
     public function set($key, $value)
     {
-        $session_id = $this->getSessionId();
-        $this->session_data = $this->getSessionData();
-        $this->session_data[$key] = $value;
-        $this->session_data['SESS_LAST_ACTIVITY'] = time();
-        return write_file($this->session_path . $session_id, Encryption::encode(serialize($this->session_data), $this->session_key));
+        $sessionId = $this->getSessionId();
+        $this->sessionData = $this->getSessionData();
+        $this->sessionData[$key] = $value;
+        $this->sessionData['SESS_LAST_ACTIVITY'] = time();
+        return write_file($this->sessionPath . $sessionId, Encryption::encode(serialize($this->sessionData), $this->sessionKey));
     }
 
     /**
@@ -222,11 +222,11 @@ class SessionFile
      */
     public function remove($key)
     {
-        $session_id = $this->getSessionId();
-        $this->session_data = $this->getSessionData();
-        unset($this->session_data[$key]);
-        $this->session_data['SESS_LAST_ACTIVITY'] = time();
-        return write_file($this->session_path . $session_id, Encryption::encode(serialize($this->session_data), $this->session_key));
+        $sessionId = $this->getSessionId();
+        $this->sessionData = $this->getSessionData();
+        unset($this->sessionData[$key]);
+        $this->sessionData['SESS_LAST_ACTIVITY'] = time();
+        return write_file($this->sessionPath . $sessionId, Encryption::encode(serialize($this->sessionData), $this->sessionKey));
     }
 
     /**
@@ -236,10 +236,10 @@ class SessionFile
      */
     public function destroy()
     {
-        $session_id = $this->getSessionId();
-        $this->session_data = null;
-        delete_file($this->session_path . $session_id);
-        Cookie::delete($this->session_name);
+        $sessionId = $this->getSessionId();
+        $this->sessionData = null;
+        delete_file($this->sessionPath . $sessionId);
+        Cookie::delete($this->sessionName);
     }
 
     /**
@@ -247,14 +247,14 @@ class SessionFile
      */
     public function regenerate()
     {
-        $this->session_id = $this->getSessionId();
-        $this->session_data = $this->getSessionData();
-        delete_file($this->session_path . $this->session_id);
+        $this->sessionId = $this->getSessionId();
+        $this->sessionData = $this->getSessionData();
+        delete_file($this->sessionPath . $this->sessionId);
 
-        $this->session_id = $this->generateSessionId();
-        Cookie::set($this->session_name, $this->session_id);
+        $this->sessionId = $this->generateSessionId();
+        Cookie::set($this->sessionName, $this->sessionId);
 
-        write_file($this->session_path . $this->session_id, Encryption::encode(serialize($this->session_data), $this->session_key));
+        write_file($this->sessionPath . $this->sessionId, Encryption::encode(serialize($this->sessionData), $this->sessionKey));
     }
 
 }

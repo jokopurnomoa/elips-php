@@ -13,7 +13,7 @@ use Elips\Libraries\SessionDriver\SessionFile;
 class Session
 {
 
-    private static $session_driver;
+    private static $sessionDriver;
 
     /**
      * Initialize Session Library
@@ -21,9 +21,9 @@ class Session
     public static function init()
     {
         if (get_app_config('session', 'driver') === 'file') {
-            if(self::$session_driver === null){
-                self::$session_driver = new SessionFile();
-                self::$session_driver->init(get_app_config('session'));
+            if(self::$sessionDriver === null){
+                self::$sessionDriver = new SessionFile();
+                self::$sessionDriver->init(get_app_config('session'));
             }
         } elseif(APP_ENV === 'development') {
             error_dump('Session Driver \'' . get_app_config('session', 'driver') . '\' not avaiable.');die();
@@ -39,7 +39,7 @@ class Session
     public static function has($key)
     {
         self::init();
-        return self::$session_driver->has($key);
+        return self::$sessionDriver->has($key);
     }
 
     /**
@@ -52,7 +52,7 @@ class Session
     public static function get($key, $default = null)
     {
         self::init();
-        return self::$session_driver->get($key, $default);
+        return self::$sessionDriver->get($key, $default);
     }
 
     /**
@@ -63,7 +63,7 @@ class Session
     public static function all()
     {
         self::init();
-        return self::$session_driver->all();
+        return self::$sessionDriver->all();
     }
 
     /**
@@ -75,7 +75,7 @@ class Session
     public static function set($key, $value)
     {
         self::init();
-        self::$session_driver->set($key, $value);
+        self::$sessionDriver->set($key, $value);
     }
 
     /**
@@ -86,7 +86,7 @@ class Session
     public static function remove($key)
     {
         self::init();
-        self::$session_driver->remove($key);
+        self::$sessionDriver->remove($key);
     }
 
     /**
@@ -95,7 +95,7 @@ class Session
     public static function destroy()
     {
         self::init();
-        self::$session_driver->destroy();
+        self::$sessionDriver->destroy();
     }
 
     /**
@@ -104,7 +104,7 @@ class Session
     public static function regenerate()
     {
         self::init();
-        self::$session_driver->regenerate();
+        self::$sessionDriver->regenerate();
     }
 
 }
