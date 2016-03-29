@@ -24,7 +24,7 @@ class Route
     {
         $route = null;
         if(file_exists(APP_PATH . 'config/route.php')){
-            $route = require_once APP_PATH . 'config/route.php';
+            $route = require APP_PATH . 'config/route.php';
         } elseif(APP_ENV === 'development') {
             error_dump('File \'' . APP_PATH . 'config/route.php\' not found');
             die();
