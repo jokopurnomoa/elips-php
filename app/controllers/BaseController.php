@@ -8,7 +8,6 @@
 namespace App\Controllers;
 
 use Elips\Core\Controller;
-use Elips\Libraries\Blade;
 
 class BaseController extends Controller
 {

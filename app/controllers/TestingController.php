@@ -24,7 +24,6 @@ use Elips\Libraries\Validate;
 use Elips\Libraries\Security;
 use Elips\Libraries\Input;
 use Elips\Libraries\Encryption;
-use Elips\Libraries\View;
 use JasonGrimes\Paginator;
 use Gregwar\Captcha\CaptchaBuilder;
 
