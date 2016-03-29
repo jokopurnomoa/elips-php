@@ -11,7 +11,7 @@ namespace Elips\Libraries;
 class Encryption
 {
 
-    private static $key_std;
+    private static $keyStd;
 
     /**
      * @var string
@@ -29,7 +29,7 @@ class Encryption
     public static function init()
     {
         if (get_app_config('encryption_key') != '') {
-            self::$key_std = get_app_config('encryption_key');
+            self::$keyStd = get_app_config('encryption_key');
         } elseif(APP_ENV === 'development') {
             error_dump('Encryption key not yet set in \'' . APP_PATH . 'config/app.php\'!');die();
         }
@@ -139,7 +139,7 @@ class Encryption
     private static function getKey($key)
     {
         if ($key === '') {
-            $key = self::$key_std;
+            $key = self::$keyStd;
         }
 
         return md5(hash('sha256', $key));
