@@ -44,10 +44,18 @@ class CacheAPC
     public function store($flag, $data, $maxAge = 60)
     {
         if ($this->cacheActive) {
+            $cache = array(
+                'date_created' => time(),
+                'max_age' => $maxAge,
+                'data' => $data
+            );
+
             if ($this->cacheEncrypt) {
-                $data = Encryption::encode($data);
+                $cache = Encryption::encode(serialize($cache));
+            } else {
+                $cache = serialize($cache);
             }
-            return write_file(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cacheEncrypt ? '_encrypt' : '')), $data);
+            return write_file(MAIN_PATH . 'storage/cache/' . sha1($flag . ($this->cacheEncrypt ? '_encrypt' : '')), $cache);
         }
         return false;
     }
@@ -64,10 +72,14 @@ class CacheAPC
             $cache = apc_fetch(sha1($flag . ($this->cacheEncrypt ? '_encrypt' : '')));
             if ($cache != null) {
                 if ($this->cacheEncrypt) {
-                    $cache = trim(Encryption::decode($cache));
+                    $cache = (array)@unserialize(trim(Encryption::decode($cache)));
+                } else {
+                    $cache = (array)@unserialize($cache);
                 }
 
-                return $cache;
+                if (($cache['date_created'] + $cache['max_age']) > time()) {
+                    return $cache['data'];
+                }
             }
         }
         return null;

@@ -32,11 +32,13 @@ class CacheFile
      */
     public function store($flag, $data, $maxAge = 60)
     {
+        var_dump($this->cacheActive);
+
         if ($this->cacheActive) {
             $cache = array(
-                'DATE_CREATED' => time(),
-                'MAX_AGE' => $maxAge,
-                'DATA' => $data
+                'date_created' => time(),
+                'max_age' => $maxAge,
+                'data' => $data
             );
 
             if ($this->cacheEncrypt) {
@@ -66,8 +68,8 @@ class CacheFile
                     $cache = (array)@unserialize($cache);
                 }
 
-                if (($cache['DATE_CREATED'] + $cache['MAX_AGE']) > time()) {
-                    return $cache['DATA'];
+                if (($cache['date_created'] + $cache['max_age']) > time()) {
+                    return $cache['data'];
                 }
             }
         }

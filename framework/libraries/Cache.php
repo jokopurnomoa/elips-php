@@ -27,14 +27,14 @@ class Cache
         if (get_app_config('cache', 'driver') === 'file') {
             if(self::$cacheDriver === null){
                 self::$cacheDriver = new CacheFile();
-                self::$cacheDriver->cache_active = self::$cacheActive;
-                self::$cacheDriver->cache_encrypt = self::$cacheEncrypt;
+                self::$cacheDriver->cacheActive = self::$cacheActive;
+                self::$cacheDriver->cacheEncrypt = self::$cacheEncrypt;
             }
         } elseif(get_app_config('cache', 'driver') === 'apc') {
             if(self::$cacheDriver === null) {
                 self::$cacheDriver = new CacheAPC();
-                self::$cacheDriver->cache_active = self::$cacheActive;
-                self::$cacheDriver->cache_encrypt = self::$cacheEncrypt;
+                self::$cacheDriver->cacheActive = self::$cacheActive;
+                self::$cacheDriver->cacheEncrypt = self::$cacheEncrypt;
             }
         }
     }
