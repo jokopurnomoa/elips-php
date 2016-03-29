@@ -11,20 +11,20 @@ namespace Elips\Libraries;
 class Upload
 {
 
-    private static $upload_path = '';
+    private static $uploadPath = '';
     private static $filename = '';
-    private static $max_size = 0;
+    private static $maxSize = 0;
     private static $overwrite = true;
-    private static $allowed_types = array('jpeg');
-    private static $file_size = '';
-    private static $file_type = '';
-    private static $is_image = false;
-    private static $image_width = 0;
-    private static $image_height = 0;
-    private static $max_width = 0;
-    private static $max_height = 0;
-    private static $error_message = '';
-    private static $data_upload = '';
+    private static $allowedTypes = array('jpeg');
+    private static $fileSize = '';
+    private static $fileType = '';
+    private static $isImage = false;
+    private static $imageWidth = 0;
+    private static $imageHeight = 0;
+    private static $maxWidth = 0;
+    private static $maxHeight = 0;
+    private static $errorMessage = '';
+    private static $dataUpload = '';
 
     /**
      * Set Config
@@ -48,20 +48,20 @@ class Upload
      */
     public static function resetConfig()
     {
-        self::$upload_path = '';
+        self::$uploadPath = '';
         self::$filename = '';
-        self::$max_size = 0;
+        self::$maxSize = 0;
         self::$overwrite = true;
-        self::$allowed_types = array('jpeg');
-        self::$file_size = '';
-        self::$file_type = '';
-        self::$is_image = false;
-        self::$image_width = 0;
-        self::$image_height = 0;
-        self::$max_width = 0;
-        self::$max_height = 0;
-        self::$error_message = '';
-        self::$data_upload = '';
+        self::$allowedTypes = array('jpeg');
+        self::$fileSize = '';
+        self::$fileType = '';
+        self::$isImage = false;
+        self::$imageWidth = 0;
+        self::$imageHeight = 0;
+        self::$maxWidth = 0;
+        self::$maxHeight = 0;
+        self::$errorMessage = '';
+        self::$dataUpload = '';
     }
 
     /**
@@ -77,53 +77,53 @@ class Upload
         }
 
         $file_extension = pathinfo($_FILES[$fieldname]['name'],PATHINFO_EXTENSION);
-        $target_file = trim(str_replace('//', '/', __DIR__ . '/../../' . self::$upload_path . '/' . self::$filename . '.' . $file_extension));
+        $target_file = trim(str_replace('//', '/', __DIR__ . '/../../' . self::$uploadPath . '/' . self::$filename . '.' . $file_extension));
 
-        self::$file_type = self::getFileType($_FILES[$fieldname]['type']);
-        self::$file_size = $_FILES[$fieldname]['size'];
-        self::$is_image = (getimagesize($_FILES[$fieldname]['tmp_name']) != false ? true : false);
+        self::$fileType = self::getFileType($_FILES[$fieldname]['type']);
+        self::$fileSize = $_FILES[$fieldname]['size'];
+        self::$isImage = (getimagesize($_FILES[$fieldname]['tmp_name']) != false ? true : false);
 
-        if (self::$is_image) {
+        if (self::$isImage) {
             $image_size = getimagesize($_FILES[$fieldname]['tmp_name']);
-            self::$image_width = $image_size[0];
-            self::$image_height = $image_size[1];
+            self::$imageWidth = $image_size[0];
+            self::$imageHeight = $image_size[1];
         }
 
         $upload_ok = true;
 
-        if (self::$allowed_types != null) {
+        if (self::$allowedTypes != null) {
             $is_allowed = false;
-            foreach (self::$allowed_types as $row) {
-                if (trim($row) === self::$file_type) {
+            foreach (self::$allowedTypes as $row) {
+                if (trim($row) === self::$fileType) {
                     $is_allowed = true;break;
                 }
             }
 
             if (!$is_allowed) {
                 $upload_ok = false;
-                self::$error_message = 'File is not allowed.';
+                self::$errorMessage = 'File is not allowed.';
             }
         } else {
             $upload_ok = false;
-            self::$error_message = 'File is not allowed.';
+            self::$errorMessage = 'File is not allowed.';
         }
 
-        if (self::$file_size > self::$max_size && self::$max_size > 0) {
+        if (self::$fileSize > self::$maxSize && self::$maxSize > 0) {
             $upload_ok = false;
-            self::$error_message = 'File is too large.';
+            self::$errorMessage = 'File is too large.';
         }
 
-        if (self::$image_width > 0 && self::$max_height > 0) {
-            if (self::$image_width > self::$max_width || self::$image_height > self::$max_height) {
+        if (self::$imageWidth > 0 && self::$maxHeight > 0) {
+            if (self::$imageWidth > self::$maxWidth || self::$imageHeight > self::$maxHeight) {
                 $upload_ok = false;
-                self::$error_message = 'Image size is too big.';
+                self::$errorMessage = 'Image size is too big.';
             }
         }
 
         if (!self::$overwrite) {
             if (file_exists($target_file)) {
                 $upload_ok = false;
-                self::$error_message = 'File already exists.';
+                self::$errorMessage = 'File already exists.';
             }
         }
 
@@ -131,15 +131,15 @@ class Upload
             if (move_uploaded_file($_FILES[$fieldname]['tmp_name'], $target_file)) {
                 return true;
             } else {
-                self::$error_message = 'There was an error uploading your file.';
+                self::$errorMessage = 'There was an error uploading your file.';
             }
         }
 
-        self::$data_upload = array(
+        self::$dataUpload = array(
             'filename' => self::$filename,
-            'file_size' => self::$file_size,
-            'file_type' => self::$file_type,
-            'is_image' => self::$is_image
+            'file_size' => self::$fileSize,
+            'file_type' => self::$fileType,
+            'is_image' => self::$isImage
         );
 
         return false;
@@ -183,7 +183,7 @@ class Upload
      */
     public static function getUploadData()
     {
-        return self::$data_upload;
+        return self::$dataUpload;
     }
 
     /**
@@ -193,7 +193,7 @@ class Upload
      */
     public static function getError()
     {
-        return self::$error_message;
+        return self::$errorMessage;
     }
 
 }
