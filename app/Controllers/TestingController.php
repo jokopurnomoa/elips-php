@@ -83,7 +83,9 @@ class TestingController extends BaseController
         DB::insert('test', array('val1' => 'A', 'val2' => 'B'));
         $insert_id = DB::insertId();
         DB::update('test', 'test_id', $insert_id - 1, array('val1' => 'A2', 'val2' => 'B2'));
+        DB::table('test')->where('test_id','')->update(array('val1' => '', 'val2' => ''));
         DB::delete('test', 'test_id', $insert_id - 3);
+        DB::table('test')->where('test_id','')->delete();
         DB::commit();
     }
 
