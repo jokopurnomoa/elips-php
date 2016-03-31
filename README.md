@@ -6,7 +6,8 @@ Server Requirements
 -------------------
 
 - PHP version 5.3.0 or newer
-- enable mod_rewrite module in apache
+- Enable mod_rewrite module in apache
+- Mcrypt PHP Extension
 
 License
 -------
