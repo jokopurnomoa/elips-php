@@ -94,7 +94,7 @@ class SessionFile
             $this->sessionData['SESS_LAST_ACTIVITY'] = time();
 
             $this->sessionId = $this->generateSessionId();
-            Cookie::set($this->sessionName, $this->sessionId);
+            Cookie::set($this->sessionName, $this->sessionId, $this->sessionExpire);
             return $this->sessionId;
         } else {
             return Cookie::get($this->sessionName);
