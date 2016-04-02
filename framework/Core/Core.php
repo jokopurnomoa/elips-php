@@ -41,6 +41,13 @@ class Core
         require FW_PATH . 'Helpers/config.php';
 
         /**
+         * Check assets request
+         */
+        if (self::isAssetsRequest(URI::getURI())) {
+            exit;
+        }
+
+        /**
          * Require app config
          */
         if (file_exists(APP_PATH . 'Config/app.php')) {
@@ -133,5 +140,40 @@ class Core
                 }
             }
         }
+    }
+
+    /**
+     * Check assets request
+     *
+     * @param string $uri
+     * @return bool
+     */
+    private static function isAssetsRequest($uri)
+    {
+        if (strpos($uri, base_url() . 'assets/') !== false) {
+            return true;
+        }
+        if (strpos($uri, '.css') !== false) {
+            return true;
+        }
+        if (strpos($uri, '.js') !== false) {
+            return true;
+        }
+        if (strpos($uri, '.png') !== false) {
+            return true;
+        }
+        if (strpos($uri, '.jpg') !== false) {
+            return true;
+        }
+        if (strpos($uri, '.jpeg') !== false) {
+            return true;
+        }
+        if (strpos($uri, '.gif') !== false) {
+            return true;
+        }
+        if (strpos($uri, '.xml') !== false) {
+            return true;
+        }
+        return false;
     }
 }
