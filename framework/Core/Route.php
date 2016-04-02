@@ -59,14 +59,11 @@ class Route
             self::$className = ucfirst(self::$className);
 
             if (file_exists(APP_PATH . 'Controllers/' . self::$className . '.php')) {
-                //require_once APP_PATH . 'Controllers/' . self::$className . '.php';
                 self::callClassMethod();
             } elseif (file_exists(APP_PATH . $_modulePath . 'Controllers/' . self::$className . '.php')) {
-                //require_once APP_PATH . $_modulePath . 'Controllers/' . self::$className . '.php';
                 $GLOBALS['modulePath'] = $_modulePath;
                 self::callClassMethod();
             } elseif (file_exists(APP_PATH . 'views/404.blade.php')) {
-                //require_once FW_PATH . 'core/' . self::$page404 . '.php';
                 $class = new self::$page404();
                 $class->index();
             } else {
