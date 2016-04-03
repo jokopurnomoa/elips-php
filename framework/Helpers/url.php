@@ -32,5 +32,5 @@ function base_url(){
     }
 
     $dir = implode('/', array_reverse($arrDir));
-    return 'http' . (isset($_SERVER["HTTPS"]) == 'on' ? $_SERVER["HTTPS"] == 'on' ? 's' : '' : '') . '://' . $_SERVER['HTTP_HOST'] . '/' . trim($dir) . '/';
+    return 'http' . (isset($_SERVER["HTTPS"]) ? $_SERVER["HTTPS"] == 'on' ? 's' : '' : '') . '://' . $_SERVER['HTTP_HOST'] . '/' . trim($dir) . '/';
 }
