@@ -35,6 +35,7 @@ class Core
          * Require main helper
          */
         require FW_PATH . 'Helpers/file.php';
+        require FW_PATH . 'Helpers/log.php';
         require FW_PATH . 'Helpers/input.php';
         require FW_PATH . 'Helpers/error.php';
         require FW_PATH . 'Helpers/url.php';
