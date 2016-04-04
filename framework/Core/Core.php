@@ -100,10 +100,10 @@ class Core
     private function handleAutoload()
     {
         $autoload = null;
-        if (file_exists(APP_PATH . 'config/autoload.php')) {
-            $autoload = require(APP_PATH . 'config/autoload.php');
+        if (file_exists(APP_PATH . 'Config/autoload.php')) {
+            $autoload = require(APP_PATH . 'Config/autoload.php');
         } elseif (APP_ENV === 'development') {
-            error_dump('File \'' . APP_PATH . 'config/autoload.php\' not found!');
+            error_dump('File \'' . APP_PATH . 'Config/autoload.php\' not found!');
             die();
         }
 

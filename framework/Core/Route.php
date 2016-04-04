@@ -23,10 +23,10 @@ class Route
     public static function run()
     {
         $route = null;
-        if(file_exists(APP_PATH . 'config/route.php')){
-            $route = require APP_PATH . 'config/route.php';
+        if(file_exists(APP_PATH . 'Config/route.php')){
+            $route = require APP_PATH . 'Config/route.php';
         } elseif(APP_ENV === 'development') {
-            error_dump('File \'' . APP_PATH . 'config/route.php\' not found');
+            error_dump('File \'' . APP_PATH . 'Config/route.php\' not found');
             die();
         }
 
