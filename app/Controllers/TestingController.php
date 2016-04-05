@@ -205,6 +205,8 @@ class TestingController extends BaseController
         Session::set('email', 'jokopurnomoa@gmail.com');
         Session::set('address', 'Jl Dipatiukur No. 5 Bandung');
 
+        Session::remove('address');
+        
         echo Session::get('name');
         echo PHP_EOL;
         echo Session::get('email');

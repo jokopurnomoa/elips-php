@@ -31,7 +31,8 @@ return array(
         'driver'    => 'file',
         'expire'    => 7200,
         'match_ip'  => true,
-        'max_size'  => 1048576
+        'max_size'  => 1048576,
+        'encrypt'   => false
     ),
 
     /**
