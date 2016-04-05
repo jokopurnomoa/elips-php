@@ -21,18 +21,18 @@ class DB
      */
     public static function init()
     {
-        if (get_app_config('db', 'main', 'driver') === 'mysqli') {
+        if (app_config('db', 'main', 'driver') === 'mysqli') {
             if(self::$dbDriver === null){
-                self::$dbDriver = new MySQLiDriver(get_app_config('db', 'main'));
+                self::$dbDriver = new MySQLiDriver(app_config('db', 'main'));
                 self::$dbDriver->connect();
             }
-        } elseif(get_app_config('db', 'main', 'driver') === 'sqlite') {
+        } elseif(app_config('db', 'main', 'driver') === 'sqlite') {
             if(self::$dbDriver === null) {
-                self::$dbDriver = new SQLiteDriver(get_app_config('db', 'main'));
+                self::$dbDriver = new SQLiteDriver(app_config('db', 'main'));
                 self::$dbDriver->connect();
             }
         } elseif(APP_ENV === 'development') {
-            error_dump('Database Driver \'' . get_app_config('db', 'main', 'driver') . '\' not avaiable.');die();
+            error_dump('Database Driver \'' . app_config('db', 'main', 'driver') . '\' not avaiable.');die();
         }
     }
 

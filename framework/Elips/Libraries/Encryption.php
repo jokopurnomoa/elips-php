@@ -28,8 +28,8 @@ class Encryption
      */
     public static function init()
     {
-        if (get_app_config('encryption_key') != '') {
-            self::$keyStd = get_app_config('encryption_key');
+        if (app_config('encryption_key') != '') {
+            self::$keyStd = app_config('encryption_key');
         } elseif(APP_ENV === 'development') {
             error_dump('Encryption key not yet set in \'' . APP_PATH . 'config/app.php\'!');die();
         }

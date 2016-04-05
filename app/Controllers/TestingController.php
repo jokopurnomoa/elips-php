@@ -136,7 +136,7 @@ class TestingController extends BaseController
 
     public function database4()
     {
-        $db2 = DB::getInstance(get_app_config('db', 'optional'));
+        $db2 = DB::getInstance(app_config('db', 'optional'));
         $db2->createTable('member', array(
             array('member_id', 'string(20) PRIMARY KEY'),
             array('name', 'string(50)')

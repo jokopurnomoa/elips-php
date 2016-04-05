@@ -10,7 +10,7 @@
  * @param string $item
  * @return mixed | null
  */
-function get_app_config($item, $sub_item = null, $sub_sub_item = null){
+function app_config($item, $sub_item = null, $sub_sub_item = null){
     $config = $GLOBALS['config'];
 
     if($sub_sub_item != null && $sub_item != null && isset($config[$item][$sub_item][$sub_sub_item])){

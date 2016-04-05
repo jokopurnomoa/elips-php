@@ -22,15 +22,15 @@ class Cache
      */
     public static function init()
     {
-        self::$cacheActive = get_app_config('cache', 'active');
-        self::$cacheEncrypt = get_app_config('cache', 'encrypt');
-        if (get_app_config('cache', 'driver') === 'file') {
+        self::$cacheActive = app_config('cache', 'active');
+        self::$cacheEncrypt = app_config('cache', 'encrypt');
+        if (app_config('cache', 'driver') === 'file') {
             if(self::$cacheDriver === null){
                 self::$cacheDriver = new CacheFile();
                 self::$cacheDriver->cacheActive = self::$cacheActive;
                 self::$cacheDriver->cacheEncrypt = self::$cacheEncrypt;
             }
-        } elseif(get_app_config('cache', 'driver') === 'apc') {
+        } elseif(app_config('cache', 'driver') === 'apc') {
             if(self::$cacheDriver === null) {
                 self::$cacheDriver = new CacheAPC();
                 self::$cacheDriver->cacheActive = self::$cacheActive;

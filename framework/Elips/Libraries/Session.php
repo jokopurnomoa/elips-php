@@ -20,13 +20,13 @@ class Session
      */
     public static function init()
     {
-        if (get_app_config('session', 'driver') === 'file') {
+        if (app_config('session', 'driver') === 'file') {
             if(self::$sessionDriver === null){
                 self::$sessionDriver = new SessionFile();
-                self::$sessionDriver->init(get_app_config('session'));
+                self::$sessionDriver->init(app_config('session'));
             }
         } elseif(APP_ENV === 'development') {
-            error_dump('Session Driver \'' . get_app_config('session', 'driver') . '\' not avaiable.');die();
+            error_dump('Session Driver \'' . app_config('session', 'driver') . '\' not avaiable.');die();
         }
     }
 
