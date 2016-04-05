@@ -19,7 +19,7 @@ define('MAIN_PATH', __DIR__ . '/');
 /**
  * Path to the system folder
  */
-define('FW_PATH', __DIR__ . '/framework/');
+define('FW_PATH', __DIR__ . '/framework/Elips/');
 
 /**
  * Path to the application folder
@@ -42,7 +42,7 @@ if(APP_ENV === 'development'){
 /**
  * Register elips autoloader
  */
-require __DIR__ . '/framework/autoload.php';
+require __DIR__ . '/framework/Elips/autoload.php';
 
 /**
  * Register composer autoloader
