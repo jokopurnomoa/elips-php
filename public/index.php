@@ -14,17 +14,17 @@ define('APP_ENV', 'development');
 /**
  * Path to the project / current path
  */
-define('MAIN_PATH', __DIR__ . '/');
+define('MAIN_PATH', __DIR__ . '/../');
 
 /**
  * Path to the system folder
  */
-define('FW_PATH', __DIR__ . '/framework/Elips/');
+define('FW_PATH', __DIR__ . '/../framework/Elips/');
 
 /**
  * Path to the application folder
  */
-define('APP_PATH', __DIR__ . '/app/');
+define('APP_PATH', __DIR__ . '/../app/');
 
 /**
  * Checking Application Environtment
@@ -42,12 +42,12 @@ if(APP_ENV === 'development'){
 /**
  * Register elips autoloader
  */
-require __DIR__ . '/framework/Elips/autoload.php';
+require __DIR__ . '/../framework/Elips/autoload.php';
 
 /**
  * Register composer autoloader
  */
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 /**
  * Starting benchmark
