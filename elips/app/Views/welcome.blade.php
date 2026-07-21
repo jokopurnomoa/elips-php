@@ -5,7 +5,7 @@
 
     <style>
         body{
-            font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+            font-family: "Instrument Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
         }
 
         .content{
