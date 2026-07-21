@@ -10,4 +10,4 @@
 /storage/sessions/*
 /storage/sqlite/*
 !/storage/**/.htaccess
-!/storage/**/index.html
+!/storage/**/.gitkeep
