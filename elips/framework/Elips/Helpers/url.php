@@ -12,7 +12,7 @@
  */
 function base_url(){
     $base_url = app_config('base_url');
-    if($base_url !== ''){
+    if(!empty($base_url)){
         return trim($base_url, '/') . '/';
     }
 
