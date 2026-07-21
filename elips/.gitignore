@@ -1,0 +1,13 @@
+# OS files
+.DS_Store
+
+# Composer dependencies
+/vendor/
+
+# Runtime storage (keep dir guards)
+/storage/cache/*
+/storage/logs/*
+/storage/sessions/*
+/storage/sqlite/*
+!/storage/**/.htaccess
+!/storage/**/index.html
