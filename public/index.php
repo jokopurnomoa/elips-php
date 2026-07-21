@@ -66,12 +66,15 @@ define('APP_PATH', __DIR__ . '/../elips/app/');
 
 /**
  * Checking Application Environtment
+ *
+ * In every environment all errors are reported so the global handler can log
+ * them; display_errors is only turned on in development.
  */
 if(APP_ENV === 'development'){
     error_reporting(E_ALL);
     ini_set('display_errors', 'on');
 } elseif(APP_ENV === 'testing' || APP_ENV === 'production'){
-    error_reporting(0);
+    error_reporting(E_ALL);
     ini_set('display_errors', 'off');
 } else {
     echo 'Application Environtment not set correctly...';die();
@@ -81,6 +84,11 @@ if(APP_ENV === 'development'){
  * Register elips autoloader
  */
 require __DIR__ . '/../elips/framework/Elips/autoload.php';
+
+/**
+ * Register global error/exception/shutdown handler (logs to storage/logs)
+ */
+\Elips\Core\ErrorHandler::register();
 
 /**
  * Register composer autoloader
