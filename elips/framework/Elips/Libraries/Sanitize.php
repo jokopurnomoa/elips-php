@@ -72,23 +72,22 @@ class Sanitize
      */
     public static function magicQuotes($string)
     {
-        return filter_var($string, FILTER_SANITIZE_MAGIC_QUOTES);
+        // FILTER_SANITIZE_MAGIC_QUOTES was deprecated in PHP 8.1; addslashes() is the replacement.
+        return addslashes((string) $string);
     }
 
     /**
      * Sanitize String
      *
      * @param $string
-     * @param $string
+     * @param string $flag
      * @return mixed
      */
     public static function string($string, $flag = '')
     {
-        if ($flag != '') {
-            return filter_var($string, FILTER_SANITIZE_STRING, $flag);
-        } else {
-            return filter_var($string, FILTER_SANITIZE_STRING);
-        }
+        // FILTER_SANITIZE_STRING was deprecated in PHP 8.1. Emulate its default
+        // behaviour: strip tags, then HTML-encode the remaining special characters.
+        return htmlspecialchars(strip_tags((string) $string), ENT_QUOTES, 'UTF-8');
     }
 
     /**
@@ -122,7 +121,8 @@ class Sanitize
      */
     public static function stripped($string)
     {
-        return filter_var($string, FILTER_SANITIZE_STRIPPED);
+        // FILTER_SANITIZE_STRIPPED (alias of FILTER_SANITIZE_STRING) was deprecated in PHP 8.1.
+        return htmlspecialchars(strip_tags((string) $string), ENT_QUOTES, 'UTF-8');
     }
 
     /**

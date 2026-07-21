@@ -14,14 +14,11 @@ class Encryption
     private static $keyStd;
 
     /**
+     * OpenSSL cipher method (mode is part of the name, e.g. aes-256-cbc).
+     *
      * @var string
      */
-    private static $cipher = MCRYPT_RIJNDAEL_128;
-
-    /**
-     * @var string
-     */
-    private static $mode = MCRYPT_MODE_CBC;
+    private static $cipher = 'aes-256-cbc';
 
     /**
      * Initialize Library
@@ -46,9 +43,9 @@ class Encryption
     {
         $key = self::getKey($key);
 
-        $iv_size = mcrypt_get_iv_size(self::$cipher, self::$mode);
-        $iv = mcrypt_create_iv($iv_size, MCRYPT_DEV_RANDOM);
-        $ciphertext = mcrypt_encrypt(self::$cipher, $key, $plaintext, self::$mode, $iv);
+        $iv_size = openssl_cipher_iv_length(self::$cipher);
+        $iv = random_bytes($iv_size);
+        $ciphertext = openssl_encrypt($plaintext, self::$cipher, $key, OPENSSL_RAW_DATA, $iv);
 
         $ciphertext = trim(base64_encode($iv . $ciphertext));
         return self::addSalt($ciphertext);
@@ -72,19 +69,21 @@ class Encryption
         $key = self::getKey($key);
 
         $ciphertext_dec = base64_decode($ciphertext);
-        $iv_size = mcrypt_get_iv_size(self::$cipher, self::$mode);
+        $iv_size = openssl_cipher_iv_length(self::$cipher);
+
+        if ($ciphertext_dec === false || strlen($ciphertext_dec) <= $iv_size) {
+            return null;
+        }
+
         $iv_dec = substr($ciphertext_dec, 0, $iv_size);
         $ciphertext_dec = substr($ciphertext_dec, $iv_size);
 
-        ob_start();
-        echo mcrypt_decrypt(self::$cipher, $key, $ciphertext_dec, self::$mode, $iv_dec);
-        $result = ob_get_contents();
-        @ob_end_clean();
+        $result = openssl_decrypt($ciphertext_dec, self::$cipher, $key, OPENSSL_RAW_DATA, $iv_dec);
 
-        if (strpos($result, '<b>Warning</b>:  mcrypt_decrypt():') === false) {
+        if ($result !== false) {
             return trim($result);
-        } elseif(APP_ENV === 'development') {
-            error_dump($result);
+        } elseif (APP_ENV === 'development') {
+            error_dump('Encryption::decode() failed to decrypt the given data.');
             die();
         }
 
@@ -148,6 +147,8 @@ class Encryption
     /**
      * Set Encryption Cipher
      *
+     * Accepts an OpenSSL cipher method name, e.g. 'aes-256-cbc' or 'aes-128-cbc'.
+     *
      * @param $cipher
      */
     public static function setCipher($cipher)
@@ -156,13 +157,17 @@ class Encryption
     }
 
     /**
-     * Set Encryption Mode
+     * Set Encryption Mode (backward-compatibility shim)
+     *
+     * The block mode is now part of the OpenSSL cipher name, so use setCipher()
+     * instead (e.g. 'aes-256-cbc'). Kept to avoid breaking existing callers.
      *
      * @param $mode
+     * @deprecated
      */
     public static function setMode($mode)
     {
-        self::$mode = $mode;
+        // no-op: mode is encoded in the cipher name (see setCipher()).
     }
 
 }

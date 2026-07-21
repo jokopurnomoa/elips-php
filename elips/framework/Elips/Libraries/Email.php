@@ -281,60 +281,81 @@ class Email
      */
     public static function send()
     {
-        if (self::$smtp){
-            if (self::$encryption != null) {
-                $transport = \Swift_SmtpTransport::newInstance(self::$host, self::$port, self::$encryption);
-            } else {
-                $transport = \Swift_SmtpTransport::newInstance(self::$host, self::$port);
-            }
-        } else {
-            $transport = \Swift_SmtpTransport::newInstance();
-        }
-
-
-        $transport->setUsername(self::$username)->setPassword(self::$password);
-
-        $mailer = \Swift_Mailer::newInstance($transport);
-
-        $message = \Swift_Message::newInstance()
-            ->setSubject(self::$subject)
-            ->setFrom(self::$from)
-            ->setTo(self::$to)
-            ->setBody(self::$body);
-
-        if (self::$altBody != null) {
-            $message->addPart(self::$altBody);
-        }
-
-        if (self::$attachment != null) {
-            $message->attach(\Swift_Attachment::fromPath(self::$attachment));
-        }
-
-        if (self::$cc != null){
-            $message->setCc(self::$cc);
-        }
-
-        if (self::$bcc != null){
-            $message->setBcc(self::$bcc);
-        }
-
-        if (self::$html) {
-            $message->setContentType('text/html');
-        } else {
-            $message->setContentType('text/plain');
-        }
+        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
 
         $result = false;
         try {
-            if ($mailer->send($message)) {
-                $result = true;
+            if (self::$smtp) {
+                $mail->isSMTP();
+
+                if (self::$host != null) {
+                    $mail->Host = self::$host;
+                }
+
+                if (self::$username != null) {
+                    $mail->SMTPAuth = true;
+                    $mail->Username = self::$username;
+                    $mail->Password = self::$password;
+                }
+
+                if (self::$encryption != null) {
+                    // Accepts 'tls' or 'ssl', matching the previous SwiftMailer values.
+                    $mail->SMTPSecure = self::$encryption;
+                }
+
+                if (self::$port != null) {
+                    $mail->Port = self::$port;
+                }
             }
-        } catch (\Swift_TransportException $e) {
+
+            self::applyAddresses($mail, 'setFrom', self::$from);
+            self::applyAddresses($mail, 'addAddress', self::$to);
+            self::applyAddresses($mail, 'addCC', self::$cc);
+            self::applyAddresses($mail, 'addBCC', self::$bcc);
+            self::applyAddresses($mail, 'addReplyTo', self::$replyTo);
+
+            if (self::$attachment != null) {
+                $mail->addAttachment(self::$attachment);
+            }
+
+            $mail->isHTML((bool) self::$html);
+            $mail->Subject = self::$subject;
+            $mail->Body = self::$body;
+
+            if (self::$altBody != null) {
+                $mail->AltBody = self::$altBody;
+            }
+
+            $result = $mail->send();
+        } catch (\PHPMailer\PHPMailer\Exception $e) {
             self::$sendingMessage = $e->getMessage();
-            $mailer->getTransport()->stop();
         }
 
         return $result;
+    }
+
+    /**
+     * Apply a set of addresses to a PHPMailer method, accepting the same
+     * shapes the setters store: a plain string, a list of emails, or an
+     * associative email => name array.
+     *
+     * @param \PHPMailer\PHPMailer\PHPMailer $mail
+     * @param string $method
+     * @param mixed  $addresses
+     */
+    private static function applyAddresses($mail, $method, $addresses)
+    {
+        if ($addresses === null || $addresses === '') {
+            return;
+        }
+
+        foreach ((array) $addresses as $email => $name) {
+            if (is_string($email)) {
+                $mail->{$method}($email, $name);
+            } else {
+                $mail->{$method}($name);
+            }
+        }
     }
 
     /**
