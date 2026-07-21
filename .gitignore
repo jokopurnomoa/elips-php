@@ -3,3 +3,6 @@
 
 # IDE files
 .idea/
+
+# Environment file (never commit; use .env.example as template)
+.env

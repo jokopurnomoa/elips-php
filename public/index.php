@@ -1,6 +1,41 @@
 <?php
 /*
 |----------------------------------------------------------
+| Load environment variables from .env
+|----------------------------------------------------------
+|
+| The .env file lives outside the web root (project root) and is
+| never committed. Real environment variables always take precedence
+| over values in the file.
+|
+*/
+$envFile = __DIR__ . '/../.env';
+if (is_file($envFile)) {
+    foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
+        $line = trim($line);
+        if ($line === '' || $line[0] === '#' || strpos($line, '=') === false) {
+            continue;
+        }
+
+        list($key, $value) = explode('=', $line, 2);
+        $key = trim($key);
+        $value = trim($value);
+
+        // Strip a single pair of surrounding quotes, if present.
+        if (strlen($value) >= 2 && ($value[0] === '"' || $value[0] === "'") && $value[strlen($value) - 1] === $value[0]) {
+            $value = substr($value, 1, -1);
+        }
+
+        if ($key !== '' && getenv($key) === false) {
+            putenv($key . '=' . $value);
+            $_ENV[$key] = $value;
+            $_SERVER[$key] = $value;
+        }
+    }
+}
+
+/*
+|----------------------------------------------------------
 | Set application environtment
 |----------------------------------------------------------
 |
@@ -8,8 +43,11 @@
 |     testing
 |     production
 |
+| Defaults to 'production' so a missing/misconfigured .env never
+| leaks errors in a live environment.
+|
 */
-define('APP_ENV', 'development');
+define('APP_ENV', getenv('APP_ENV') ?: 'production');
 
 /**
  * Path to the project / current path
